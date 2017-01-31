@@ -6,8 +6,11 @@
 
     <groupId>se.kth.IV1201.project</groupId>
     <artifactId>the-recruitment-system</artifactId>
+    <packaging>pom</packaging>
     <version>0.1</version>
-
+    <modules>
+        <module>configservice</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>

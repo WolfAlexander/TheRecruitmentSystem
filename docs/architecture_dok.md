@@ -1,4 +1,4 @@
-#Architecture Documentation
+# Architecture Documentation
 ## The Recruiting Application
 ### Team
 Adrian Gortzak <br/>
@@ -19,7 +19,7 @@ Alexander Nikalayeu nikal@kth.se
 
 ### Collection of information that has to be put under right part of the documentation later:
 
-####Architecture ![overall architecture](https://www.safaribooksonline.com/library/view/software-architecture-patterns/9781491971437/assets/sapr_0402.png)
+#### Architecture ![overall architecture](https://www.safaribooksonline.com/library/view/software-architecture-patterns/9781491971437/assets/sapr_0402.png)
 
 This application is build using Microservices Architecture Pattern. More specifically API REST-based topography.
 There are several reasons for choosing this architecture:
@@ -29,7 +29,7 @@ There are several reasons for choosing this architecture:
 - Easy to maintain and continue independent development - decoupled parts are easy to change and as long as same API is used system will not be broken and different teams can independently change implementations of different parts
 - Good testability - decoupled parts are simple to test since every test can be targeted for a specific code without any dependencies
 
-####Microservice nodes:
+#### Microservice nodes:
  - Eurika-server - discovery-service, a way for services to find other services
  - Configuration service - to have configuration in one place for all services
  - Edge service (probably API Gateway, not Micro-proxy) - controller that handles all requests to the service, authentication, circuit breaker, load balancer. Responses with JSON or HTML
@@ -42,7 +42,7 @@ There are several reasons for choosing this architecture:
  - Logging service - handles logging all over the system or every service should have it's own???
  - Redis Message Broker Service - message broker for messages between services
 
-####Tools:
+#### Tools:
 - Spring Framework with Spring Boot, Spring Cloud, Spring Security and more Spring projects - main development framework
 - Maven - for dependency managing, test running, building docker images 
 - JUnit 4/5 - testing framework
@@ -54,12 +54,12 @@ There are several reasons for choosing this architecture:
 - Docker - packeting and deployment tool
 
 
-####Design Decision
-#####Write to and read from services
+#### Design Decision
+##### Write to and read from services
 Writing to services is performed by Redis Message Broker to prevent any loss of POST/PUT requests
 Reading performed by using RESTapi.
 
-#####Authentication
+##### Authentication
 Authentication is done by OAuth2 SSO and OAuth2 Server with tokens.
 When client authenticates on Edge Service, it gets a token from OAuth2 Server. 
 This token then send by client in the header of a request, service that will handle
