@@ -5,6 +5,8 @@ spring:
     config:
       server:
         git:
-          uri: https://git.gortz.org/WolfAlexander/config-repo.git
+          uri: ${config.git.uri}
+          username: ${config.git.user}
+          password: ${config.git.pass}
 server:
   port: 9999
