@@ -64,3 +64,8 @@ Authentication is done by OAuth2 SSO and OAuth2 Server with tokens.
 When client authenticates on Edge Service, it gets a token from OAuth2 Server. 
 This token then send by client in the header of a request, service that will handle
 the request will check the token with OAuth2 Server to check if token is valid.
+
+#### Old SSN to new dateOfBirth
+In old system SSN were entered by applicants and in the new system date of birth will be used
+instead. New database will be redesigned but old data cannot be lost. Solution is to create a new 
+db table where persons id is a foreign key to the person and SSN store in SSN column. 
