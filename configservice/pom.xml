@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>se.kth.IV1201.project</groupId>
-    <artifactId>config-service</artifactId>
+    <artifactId>config-test.service</artifactId>
     <version>0.1</version>
 
     <parent>

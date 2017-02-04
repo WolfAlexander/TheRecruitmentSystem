@@ -1,6 +1,6 @@
 spring:
   application:
-    name: config-service
+    name: config-jobApplicationApp.service
   cloud:
     config:
       server:
