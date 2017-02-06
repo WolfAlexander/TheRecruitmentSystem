@@ -1,8 +1,8 @@
-##The Recruitment System
+## The Recruitment System
 
 Project in IV1201 Architecture and design of global applications
 
-####Docker build and run
+#### Docker build and run
 1. Have docker installed on the machine
 2. Open terminal and go to shell_scripts directory
 3. 
