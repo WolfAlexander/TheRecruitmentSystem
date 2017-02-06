@@ -17,8 +17,6 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <docker.host></docker.host>
-        <docker.cert.path></docker.cert.path>
     </properties>
 
     <dependencyManagement>
@@ -65,8 +63,7 @@
                 <configuration>
                     <imageName>${project.artifactId}</imageName>
                     <dockerDirectory>${project.basedir}</dockerDirectory>
-                    <dockerHost>${docker.host}</dockerHost>
-                    <dockerCertPath>${docker.cert.path}</dockerCertPath>
+
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>
