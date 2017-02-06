@@ -10,6 +10,9 @@
     <version>0.1</version>
     <modules>
         <module>configservice</module>
+        <module>discoveryservice</module>
+        <module>edgeservice</module>
+        <module>test</module>
     </modules>
 
     <properties>

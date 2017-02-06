@@ -17,8 +17,8 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <docker.host>https://192.168.99.100:2376</docker.host>
-        <docket.cert.path>C:\Users\Alexander\.docker\machine\machines\default</docket.cert.path>
+        <docker.host></docker.host>
+        <docker.cert.path></docker.cert.path>
     </properties>
 
     <dependencies>
