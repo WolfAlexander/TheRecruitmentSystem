@@ -13,3 +13,8 @@ Project in IV1201 Architecture and design of global applications
         1. Run build-service-docker-unix.sh
 4. Run start-config-service.sh - it has to be started before other services
 5. Run start-other-services.sh
+
+#### Services
+Config service - host:9999
+Discovery service - host:9090
+Edge service - host 8080
