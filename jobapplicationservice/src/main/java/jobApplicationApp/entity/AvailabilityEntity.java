@@ -5,7 +5,7 @@ import java.util.Date;
 
 @Entity
 @Table(name="availability")
-public class PeriodEntity {
+public class AvailabilityEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,19 +17,26 @@ public class PeriodEntity {
     @Column(name = "to_date")
     private Date toDate;
 
+    public AvailabilityEntity(){}
+
+    public AvailabilityEntity(Date fromDate, Date toDate) {
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+    }
+
     /**
      * Get from date of period
      * @return fromDate of period
      */
-    public String getFrom(){
-        return fromDate.toString();
+    public Date getFromDate(){
+        return fromDate;
     }
 
     /**
      * Get to date of period
      * @return toDate of period
      */
-    public String getTo(){
-        return toDate.toString();
+    public Date getToDate(){
+        return toDate;
     }
 }

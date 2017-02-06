@@ -14,6 +14,13 @@ public class RoleEntity {
     @NotNull
     private String name;
 
+    public RoleEntity() {
+    }
+
+    public RoleEntity(String name) {
+        this.name = name;
+    }
+
     /**
      * Get role name
      * @return name of role

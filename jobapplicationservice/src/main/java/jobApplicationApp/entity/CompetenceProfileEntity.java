@@ -20,12 +20,21 @@ public class CompetenceProfileEntity {
 
     private int years_of_experience;
 
+    public CompetenceProfileEntity() {
+    }
+
+    public CompetenceProfileEntity(ApplicationEntity application, CompetenceEntity competence, int yearsOfExperience) {
+        this.application = application;
+        this.competence = competence;
+        this.years_of_experience = years_of_experience;
+    }
+
     /**
      * Get competence
      * @return competence
      */
-    public String getCompetence(){
-       return competence.getName();
+    public CompetenceEntity getCompetence(){
+       return competence;
     }
 
     /**

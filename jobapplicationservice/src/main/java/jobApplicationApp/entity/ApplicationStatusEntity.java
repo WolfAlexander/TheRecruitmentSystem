@@ -14,6 +14,12 @@ public class ApplicationStatusEntity {
     @NotNull
     private String name;
 
+    public ApplicationStatusEntity() {
+    }
+
+    public ApplicationStatusEntity(String name) {
+        this.name = name;
+    }
 
     /**
      * Get the name of the status

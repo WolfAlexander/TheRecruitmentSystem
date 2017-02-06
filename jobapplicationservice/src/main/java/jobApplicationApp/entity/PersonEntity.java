@@ -22,6 +22,20 @@ public class PersonEntity {
     @JoinColumn(name = "role_id")
     private RoleEntity role;
 
+    public PersonEntity() {}
+
+    public PersonEntity(String firstname, String lastname, Date dateOfBirth, String email, RoleEntity role) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.dateOfBirth = dateOfBirth;
+        this.email = email;
+        this.role = role;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
     /**
      * Get first name of person
      * @return firstName of person
@@ -42,8 +56,8 @@ public class PersonEntity {
      * Get date of birth
      * @return dateOfBirth of person
      */
-    public String getDateOfBirth(){
-        return this.dateOfBirth.toString();
+    public Date getDateOfBirth(){
+        return this.dateOfBirth;
     }
 
     /**
@@ -58,7 +72,7 @@ public class PersonEntity {
      * Get role of person
      * @return role of person
      */
-    public String getRole(){
-        return this.role.getRole();
+    public RoleEntity getRole(){
+        return this.role;
     }
 }

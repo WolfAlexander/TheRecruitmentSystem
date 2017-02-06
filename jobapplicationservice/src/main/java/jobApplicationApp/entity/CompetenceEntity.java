@@ -14,6 +14,16 @@ public class CompetenceEntity {
     @NotNull
     private String name;
 
+    public CompetenceEntity() {}
+
+    public CompetenceEntity(String name) {
+        this.name = name;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
     /**
      * Get name of competence
      * @return name of competence

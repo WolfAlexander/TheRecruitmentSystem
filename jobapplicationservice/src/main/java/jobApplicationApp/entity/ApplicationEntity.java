@@ -1,8 +1,6 @@
 package jobApplicationApp.entity;
 
-
 import javax.persistence.*;
-
 import java.util.Collection;
 import java.util.Date;
 
@@ -11,7 +9,7 @@ import java.util.Date;
 public class ApplicationEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @OneToOne
@@ -27,33 +25,48 @@ public class ApplicationEntity {
 
     @OneToOne
     @JoinColumn(name = "availability_id")
-    private PeriodEntity availableForWork;
+    private AvailabilityEntity availableForWork;
 
     @OneToMany(mappedBy = "application")
     private Collection<CompetenceProfileEntity> competenceProfile;
 
-    public ApplicationEntity(PersonEntity person, Date dateOfRegistration, ApplicationStatusEntity status, PeriodEntity availableForWork, Collection<CompetenceProfileEntity> competenceProfile) {
+    public ApplicationEntity(){}
+
+    public ApplicationEntity(PersonEntity person, Date dateOfRegistration, ApplicationStatusEntity status, AvailabilityEntity availableForWork, Collection<CompetenceProfileEntity> competenceProfile) {
+        this.person = person;
+        this.dateOfRegistration = dateOfRegistration;
+        this.status = status;
+        this.competenceProfile = competenceProfile;
+        this.availableForWork = availableForWork;
+    }
+
+
+    public ApplicationEntity(PersonEntity person, Date dateOfRegistration, ApplicationStatusEntity status, AvailabilityEntity availableForWork) {
         this.person = person;
         this.dateOfRegistration = dateOfRegistration;
         this.status = status;
         this.availableForWork = availableForWork;
-        this.competenceProfile = competenceProfile;
     }
 
     /**
      * Set application status
      * @param newStatus  to set on the application
      */
-    public void setStatus(ApplicationStatusEntity newStatus) {
-        this.status = status;
+
+    public void changeStatus(ApplicationStatusEntity newStatus) {
+        this.status = newStatus;
     }
+
 
     /**
      * Get application id
      * @return id of application
      */
-    public int getApplicationId(){
-        return this.id;
+    public int getId(){
+        if(this.id == null)
+            return -1;
+        else
+            return this.id;
     }
 
     /**
@@ -68,23 +81,23 @@ public class ApplicationEntity {
      * Get date of registration on the application
      * @return date of registration
      */
-    public String getDateOfRegistration(){
-        return this.dateOfRegistration.toString();
+    public Date getDateOfRegistration(){
+        return this.dateOfRegistration;
     }
 
     /**
      * Get current status of the application
      * @return status of the application
      */
-    public String getStatus(){
-       return this.status.getName();
+    public ApplicationStatusEntity getStatus(){
+       return this.status;
     }
 
     /**
      * Get availability period for work
      * @return period that the person is available for work
      */
-    public PeriodEntity getAvailability(){
+    public AvailabilityEntity getAvailableForWork(){
         return this.availableForWork;
     }
 

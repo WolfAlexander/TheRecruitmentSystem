@@ -5,12 +5,14 @@ import jobApplicationApp.entity.ApplicationEntity;
 import jobApplicationApp.entity.ApplicationStatusEntity;
 
 import java.util.Collection;
+import java.util.Map;
 
 public interface ApplicationDao {
 
-    ApplicationEntity getById(int id);
-    void changeStatus(int applicationId, ApplicationStatusEntity status);
-    boolean exists(int id);
-    void insert(ApplicationEntity application);
+    ApplicationEntity getApplicationById(int id);
+    void changeApplicationStatus(int applicationId, ApplicationStatusEntity status);
+    boolean applicationExists(int id);
+    void insertApplication(ApplicationEntity application);
     Collection<ApplicationEntity> getAHundredApplicationsFrom(int index);
+    Map<Integer, ApplicationEntity> getAllApplication();
 }
