@@ -1,0 +1,14 @@
+<groups xmlns="http://www.isdc.ro/wro">
+    <group name="angular-bootstrap">
+        <css>webjar:bootstrap/3.3.7-1/less/bootstrap.less</css>
+        <css>file:@project.basedir@/src/main/wro/main.less</css>
+        <js>webjar:jquery/2.2.4/jquery.min.js</js>
+        <js>webjar:angularjs/1.6.1/angular.min.js</js>
+        <js>webjar:angularjs/1.6.1/angular-route.min.js</js>
+        <js>webjar:angularjs/1.6.1/angular-cookies.min.js</js>
+        <js>webjar:angular-messages/1.6.1/angular-messages.min.js</js>
+        <js>webjar:angular-translate/2.13.1/angular-translate.min.js</js>
+        <js>webjar:angular-translate-storage-local/2.10.0/angular-translate-storage-local.min.js</js>
+        <js>webjar:angular-translate-loader-url/2.13.1/angular-translate-loader-url.min.js</js>
+    </group>
+</groups>

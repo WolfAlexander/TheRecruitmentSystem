@@ -1,0 +1,42 @@
+<!--User registration form container-->
+<div ng-controller="registration" class="container">
+    <!--Registration form-->
+    <form name = "registrationForm" role="form" ng-submit="registration.submitForm(registrationForm)">
+        <!--First name input field and error messages-->
+        <div class="form-group">
+            <label for="firstname" translate>registration.form.firstName</label>
+            <input type="text"
+                   class="form-control"
+                   id="firstname"
+                   name="firstname"
+                   ng-model="registration.firstname"
+                   minlength="2"
+                   required/>
+        </div>
+
+        <div ng-messages="registrationForm.firstname.$error" role="alert" ng-show="registrationForm.firstname.$dirty">
+            <div ng-message="required" translate>registration.form.fields.errorMsg.required</div>
+            <div ng-message="minlength" translate>registration.form.firstName.errorMsg.minlength</div>
+        </div>
+
+        <!--Last name input field and error messages-->
+        <div class="form-group">
+            <label for="lastname" translate>registration.form.lastName</label>
+            <input type="text"
+                   class="form-control"
+                   id="lastname"
+                   name="lastname"
+                   ng-model="registration.lastname"
+                   minlength="3"
+                   required/>
+
+            <div ng-messages="registrationForm.lastname.$error" role="alert" ng-show="registrationForm.lastname.$dirty">
+                <div ng-message="required" translate>registration.form.fields.errorMsg.required</div>
+                <div ng-message="minlength" translate>registration.form.lastName.errorMsg.minlength</div>
+            </div>
+        </div>
+
+        <!--Submit button-->
+        <button type="submit" ng-disabled = "registrationForm.$invalid" class="btn btn-primary" translate>registration.form.submitBttn</button>
+    </form>
+</div>
