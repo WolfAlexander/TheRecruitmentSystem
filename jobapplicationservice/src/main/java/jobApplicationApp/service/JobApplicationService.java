@@ -1,11 +1,11 @@
 package jobApplicationApp.service;
 
 import jobApplicationApp.dao.ApplicationDao;
-import jobApplicationApp.dto.ApplicationParam;
+import jobApplicationApp.dto.ApplicationParamForm;
 import jobApplicationApp.entity.ApplicationEntity;
 import jobApplicationApp.entity.CompetenceEntity;
 import jobApplicationApp.entity.CompetenceProfileEntity;
-import jobApplicationApp.entity.ApplicationStatusEntity;
+import jobApplicationApp.exception.NotValidIdException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.Map;
 public class JobApplicationService {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-
+    private final int PAGESIZE = 100;
     @Autowired
     @Qualifier("mysql")
     private ApplicationDao applicationDao;
@@ -31,7 +31,7 @@ public class JobApplicationService {
      * @param id of application
      * @return application
      */
-    public ApplicationEntity getApplicationById(int id){
+    public ApplicationEntity getApplicationById(int id) throws NotValidIdException {
         validId(id);
         ApplicationEntity applicationEntity = applicationDao.getApplicationById(id);
         log.info("Application with id " + String.valueOf(id) + " was retrieved from db");
@@ -43,18 +43,10 @@ public class JobApplicationService {
      * @param id on application we want to change status on
      * @param newStatus on application
      */
-    public void changeStatusOnApplicationById(int id, ApplicationStatusEntity newStatus) {
+    public void changeStatusOnApplicationById(int id, String newStatus) throws NotValidIdException {
         validId(id);
         applicationDao.changeApplicationStatus(id,newStatus);
-        log.info("Changing status on application with id " + id +" to " + newStatus.getName());
-    }
-
-    /**
-     * Change status on application
-     * @param application to change status on
-     */
-    public void changeStatusOnApplication(ApplicationEntity application) {
-        changeStatusOnApplicationById(application.getId(), application.getStatus());
+        log.info("Changing status on application with id " + id +" to " + newStatus);
     }
 
     public void registerJobApplication(ApplicationEntity application) {
@@ -62,14 +54,14 @@ public class JobApplicationService {
         log.info("A new application was created by userId [" + application.getPerson().getId() + "]");
     }
 
-    public Collection<ApplicationEntity> getApplicationPage(int id) {
-        validId(id*100);
-        Collection<ApplicationEntity>  applications = applicationDao.getAHundredApplicationsFrom(id*100);
+    public Collection<ApplicationEntity> getApplicationPage(int id) throws NotValidIdException {
+        validId(id*PAGESIZE);
+        Collection<ApplicationEntity>  applications = applicationDao.getXApplicationsFrom(id*PAGESIZE,PAGESIZE);
         log.info("applications page " + id + " was retrieved");
         return applications;
     }
 
-    public Collection<ApplicationEntity> getApplicationByParam(ApplicationParam param) {
+    public Collection<ApplicationEntity> getApplicationByParam(ApplicationParamForm param) {
         Map<Integer, ApplicationEntity> allApplication = applicationDao.getAllApplication();
 
         if(param.getAvailableFrom() != null){
@@ -109,15 +101,13 @@ public class JobApplicationService {
         return allApplication.values();
     }
 
-    private void validId(int id ){
+    private void validId(int id ) throws NotValidIdException {
         if(id < 0){
-         //   return false;
+         throw new NotValidIdException("Id " + id + " is too low");
         }
         else if(applicationDao.applicationExists(id))
         {
-         //   return false;
-        }else {
-
+         throw new NotValidIdException("Id " + id +" was does not exist");
         }
     }
 }

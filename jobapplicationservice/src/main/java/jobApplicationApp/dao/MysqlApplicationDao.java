@@ -9,11 +9,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 
+import javax.persistence.EntityManager;
 import java.util.*;
 
 @Repository
 @Qualifier("mysql")
 public class MysqlApplicationDao implements ApplicationDao{
+
+    @Autowired
+    private EntityManager entityManager;
+
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     @Autowired private ApplicationRepository applicationRepository;
@@ -28,9 +33,9 @@ public class MysqlApplicationDao implements ApplicationDao{
     }
 
     @Override
-    public void changeApplicationStatus(int applicationId, ApplicationStatusEntity status) {
+    public void changeApplicationStatus(int applicationId, String status) {
         ApplicationEntity a = getApplicationById(applicationId);
-        ApplicationStatusEntity newStatus = statusRepository.findByName(status.getName());
+        ApplicationStatusEntity newStatus = statusRepository.findByName(status);
         a.changeStatus(newStatus);
         applicationRepository.save(a);
     }
@@ -65,12 +70,11 @@ public class MysqlApplicationDao implements ApplicationDao{
            CompetenceProfileEntity c = new CompetenceProfileEntity(newApplication, competenceProfileEntity.getCompetence(), competenceProfileEntity.getYearsOfExperience());
            competenceProfileRepository.save(c);
         }
-
     }
 
     @Override
-    public Collection<ApplicationEntity> getAHundredApplicationsFrom(int index) {
-        return applicationRepository.getAHundredApplicationsFrom(index);
+    public Collection<ApplicationEntity> getXApplicationsFrom(int startId, int numberOfApplication) {
+        return applicationRepository.getXApplicationsFrom(startId,numberOfApplication);
     }
 
     @Override
@@ -81,7 +85,6 @@ public class MysqlApplicationDao implements ApplicationDao{
         for(ApplicationEntity application : applications){
             list.put(application.getId(),application);
         }
-
         return list;
     }
 

@@ -14,6 +14,6 @@ import java.util.Collection;
 @Transactional
 public interface ApplicationRepository extends CrudRepository<ApplicationEntity, Integer> {
 
-    @Query(value = "SELECT * FROM application LIMIT :startId,100", nativeQuery = true)
-    Collection<ApplicationEntity> getAHundredApplicationsFrom(@Param("startId") int startId);
+    @Query(value = "SELECT * FROM application LIMIT :startId, :numberOfApplication", nativeQuery = true)
+    Collection<ApplicationEntity> getXApplicationsFrom(@Param("startId") int startId,@Param("numberOfApplication") int numberOfApplications);
 }

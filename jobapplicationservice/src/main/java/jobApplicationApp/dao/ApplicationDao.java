@@ -10,9 +10,9 @@ import java.util.Map;
 public interface ApplicationDao {
 
     ApplicationEntity getApplicationById(int id);
-    void changeApplicationStatus(int applicationId, ApplicationStatusEntity status);
+    void changeApplicationStatus(int applicationId, String status);
     boolean applicationExists(int id);
     void insertApplication(ApplicationEntity application);
-    Collection<ApplicationEntity> getAHundredApplicationsFrom(int index);
+    Collection<ApplicationEntity> getXApplicationsFrom(int startId, int numberOfApplication);
     Map<Integer, ApplicationEntity> getAllApplication();
 }

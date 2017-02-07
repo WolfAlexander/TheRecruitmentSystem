@@ -1,0 +1,20 @@
+server:
+  port: 9090
+
+---
+spring:
+  datasource:
+    primary:
+      url: jdbc:mysql://gortz.org:6603/recruitmentsystem?useSSL=false
+      username: server
+      password: cf1e8c14e54505f60aa10ceb8d5d8ab3
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      generate-unique-name: true
+
+---
+spring:
+  datasource:
+    secoundary:
+      driver-class-name: org.h2.Driver
+      url: jdbc:h2:mem:dataSource
+

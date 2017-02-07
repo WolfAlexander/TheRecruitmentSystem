@@ -6,7 +6,7 @@ import jobApplicationApp.entity.CompetenceEntity;
 import java.util.Collection;
 import java.util.Date;
 
-public class ApplicationParam {
+public class ApplicationParamForm {
 
     private Date availableFrom;
     private Date availableTo;
@@ -15,7 +15,7 @@ public class ApplicationParam {
     private String name;
 
 
-    public ApplicationParam(Date availableFrom, Date availableTo, String name) {
+    public ApplicationParamForm(Date availableFrom, Date availableTo, String name) {
         this.availableFrom = availableFrom;
         this.availableTo = availableTo;
         this.name = name;
