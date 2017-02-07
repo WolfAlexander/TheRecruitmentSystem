@@ -11,41 +11,30 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = JobApplicationLauncher.class)
-@DataJpaTest
+@ActiveProfiles("test")
 public class MysqlApplicationDaoTest  {
 
-    @Autowired private ApplicationRepository applicationRepository;
-    @Autowired private StatusRepository statusRepository;
-    @Autowired private PersonRepository personRepository;
-    @Autowired private CompetenceProfileRepository competenceProfileRepository;
-    @Autowired private AvailableRepository availableRepository;
+    @Test
+    public void fuckOfTest(){
+        fail("Noooo..");
+    }
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-
+/*
     @Autowired
     @Qualifier("mysql")
     private ApplicationDao applicationDao;
+*/
 
-    @Autowired
-    private TestEntityManager entityManager;
-
+/*
     private int applicationId;
     private Date dateOfBirth = null;
     private Date registrationDate = null;
@@ -128,5 +117,5 @@ public class MysqlApplicationDaoTest  {
     public void getAllApplication() {
         assertThat(applicationRepository.findAll()).isNotNull();
     }
-
+*/
 }

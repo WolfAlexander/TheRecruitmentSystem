@@ -105,7 +105,7 @@ public class JobApplicationService {
         if(id < 0){
          throw new NotValidIdException("Id " + id + " is too low");
         }
-        else if(applicationDao.applicationExists(id))
+        else if(!applicationDao.applicationExists(id))
         {
          throw new NotValidIdException("Id " + id +" was does not exist");
         }
