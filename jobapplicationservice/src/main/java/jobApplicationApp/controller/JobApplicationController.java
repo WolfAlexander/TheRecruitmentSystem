@@ -1,8 +1,11 @@
 package jobApplicationApp.controller;
 
+import jobApplicationApp.dto.ApplicationForm;
 import jobApplicationApp.dto.ApplicationParamForm;
 import jobApplicationApp.entity.ApplicationEntity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -11,9 +14,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jobApplicationApp.service.JobApplicationService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/jobapplication")
 public class JobApplicationController {
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 
     @Autowired
     private JobApplicationService jobApplicationService;
@@ -29,29 +37,31 @@ public class JobApplicationController {
 
     //todo get param
     @PostMapping(value = "/byparam")
-    public HttpEntity getApplicationByParam(ApplicationParamForm param){
+    public HttpEntity getApplicationsByParam(ApplicationParamForm param){
         try {
-            return new HttpEntity(jobApplicationService.getApplicationByParam(param));
+            return new HttpEntity(jobApplicationService.getApplicationsByParam(param));
         }catch (Exception e){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping(value = "/page/{id}")
-    public HttpEntity getApplicationPage(@PathVariable(value = "id") int id){
+    @GetMapping(value = "/page/{pageSize}/{pageNmr}")
+    public HttpEntity getApplicationsPage(@PathVariable(value = "pageNmr") int pageNmr, @PathVariable(value = "pageSize") int pageSize){
         try{
-            return new HttpEntity(jobApplicationService.getApplicationPage(id));
+            return new HttpEntity(jobApplicationService.getApplicationsPage(pageSize, pageNmr));
         }catch (Exception e){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity registerJobApplication(@RequestBody ApplicationEntity application){
+    public HttpEntity registerJobApplication(@Valid @RequestBody ApplicationForm application){
+
         try{
             jobApplicationService.registerJobApplication(application);
             return new ResponseEntity<String>(HttpStatus.ACCEPTED);
         }catch (Exception e){
+            log.info(e.getMessage());
             return new ResponseEntity<String>(HttpStatus.NOT_ACCEPTABLE);
         }
     }
