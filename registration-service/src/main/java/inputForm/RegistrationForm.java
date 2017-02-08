@@ -16,16 +16,16 @@ public class RegistrationForm
 {
     @NotNull
     @Size(min = 2)
-    private String firstName;
-    
+    private String firstname;
+
     @NotNull
-    @Size(min = 2)
-    private String lastName;
-    
+    @Size(min = 3)
+    private String lastname;
+
     @NotNull
     @DateTimeFormat(pattern="yyyy-MM-dd", iso = DateTimeFormat.ISO.DATE)
-    private String dateOfBirth;
-    
+    private LocalDate dateOfBirth;
+
     @NotNull
     @Email
     private String email;
