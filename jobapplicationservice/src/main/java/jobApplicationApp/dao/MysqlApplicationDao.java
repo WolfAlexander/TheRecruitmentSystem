@@ -4,6 +4,7 @@ import jobApplicationApp.dao.repository.*;
 import jobApplicationApp.dto.form.ApplicationForm;
 import jobApplicationApp.dto.form.ApplicationParamForm;
 import jobApplicationApp.dto.form.CompetenceForm;
+import jobApplicationApp.dto.form.StatusForm;
 import jobApplicationApp.entity.*;
 import jobApplicationApp.exception.NotValidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +41,9 @@ public class MysqlApplicationDao implements ApplicationDao{
     }
 
     @Override
-    public void changeApplicationStatus(int applicationId, String status) {
+    public void changeApplicationStatus(int applicationId, StatusForm status) {
         ApplicationEntity a = getApplicationById(applicationId);
-        ApplicationStatusEntity newStatus = statusRepository.findByName(status);
+        ApplicationStatusEntity newStatus = statusRepository.findByName(status.getName());
         a.changeStatus(newStatus);
         applicationRepository.save(a);
     }

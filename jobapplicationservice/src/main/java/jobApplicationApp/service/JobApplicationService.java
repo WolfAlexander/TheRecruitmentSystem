@@ -3,6 +3,7 @@ package jobApplicationApp.service;
 import jobApplicationApp.dao.ApplicationDao;
 import jobApplicationApp.dto.form.ApplicationForm;
 import jobApplicationApp.dto.form.ApplicationParamForm;
+import jobApplicationApp.dto.form.StatusForm;
 import jobApplicationApp.entity.ApplicationEntity;
 import jobApplicationApp.exception.NotValidArgumentException;
 import org.slf4j.Logger;
@@ -43,7 +44,7 @@ public class JobApplicationService {
      * @param id on application we want to change status on
      * @param newStatus on application
      */
-    public void changeStatusOnApplicationById(int id, String newStatus) throws NotValidArgumentException {
+    public void changeStatusOnApplicationById(int id, StatusForm newStatus) throws NotValidArgumentException {
         validateId(id);
         applicationDao.changeApplicationStatus(id,newStatus);
         log.info("Changing status on application with id " + id +" to " + newStatus);

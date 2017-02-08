@@ -3,6 +3,7 @@ package jobApplicationApp.controller;
 import jobApplicationApp.dto.form.ApplicationForm;
 import jobApplicationApp.dto.form.ApplicationParamForm;
 
+import jobApplicationApp.dto.form.StatusForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +37,12 @@ public class JobApplicationController {
     //todo get param
     @PostMapping(value = "/byparam",consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity getApplicationsByParam(@Valid @RequestBody ApplicationParamForm param){
-        return new HttpEntity(jobApplicationService.getApplicationsByParam(param));
-       /**  try {
-            return new HttpEntity(jobApplicationService.getApplicationsByParam(param));
+         try {
+             return new HttpEntity(jobApplicationService.getApplicationsByParam(param));
         }catch (Exception e){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
-        */
+
     }
 
     @GetMapping(value = "/page/{pageSize}/{pageNmr}")
@@ -67,7 +67,7 @@ public class JobApplicationController {
     }
 
     @PutMapping(value = "/change/status/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity changeStatusOnApplicationById(@PathVariable(value = "id") int id, @PathVariable(value = "newStatus") String newstatus){
+    public HttpEntity changeStatusOnApplicationById(@PathVariable(value = "id") int id, StatusForm newstatus){
         try {
 
             jobApplicationService.changeStatusOnApplicationById(id, newstatus);
