@@ -2,18 +2,13 @@ package jobApplicationApp.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import java.util.Collection;
+
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
-public class RequestResponse {
-
+public class RequestListResponse {
     private HttpStatus status;
-    private String message;
-
-    public RequestResponse(HttpStatus status) {
-        this.status = status;
-    }
+    private Collection<String> messages;
 }

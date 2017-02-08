@@ -3,9 +3,6 @@ package dao;
 import jobApplicationApp.JobApplicationLauncher;
 import jobApplicationApp.dao.repository.*;
 import jobApplicationApp.entity.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,8 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import static junit.framework.TestCase.fail;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,7 +34,7 @@ public class MysqlApplicationDaoTest  {
 
 
     @Autowired private ApplicationRepository applicationRepository;
-    @Autowired private StatusRepository statusRepository;
+    @Autowired private ApplicationStatusRepository statusRepository;
     @Autowired private PersonRepository personRepository;
     @Autowired private CompetenceProfileRepository competenceProfileRepository;
     @Autowired private AvailableRepository availableRepository;
