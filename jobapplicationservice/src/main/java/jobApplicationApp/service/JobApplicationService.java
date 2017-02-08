@@ -3,13 +3,16 @@ package jobApplicationApp.service;
 import jobApplicationApp.dao.ApplicationDao;
 import jobApplicationApp.dto.form.ApplicationForm;
 import jobApplicationApp.dto.form.ApplicationParamForm;
-import jobApplicationApp.dto.form.StatusForm;
+import jobApplicationApp.dto.form.ApplicationStatusForm;
 import jobApplicationApp.entity.ApplicationEntity;
+import jobApplicationApp.entity.ApplicationStatusEntity;
+import jobApplicationApp.entity.CompetenceEntity;
 import jobApplicationApp.exception.NotValidArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import java.util.Collection;
 
@@ -44,7 +47,7 @@ public class JobApplicationService {
      * @param id on application we want to change status on
      * @param newStatus on application
      */
-    public void changeStatusOnApplicationById(int id, StatusForm newStatus) throws NotValidArgumentException {
+    public void changeStatusOnApplicationById(int id, ApplicationStatusForm newStatus) throws NotValidArgumentException {
         validateId(id);
         applicationDao.changeApplicationStatus(id,newStatus);
         log.info("Changing status on application with id " + id +" to " + newStatus);
@@ -73,5 +76,13 @@ public class JobApplicationService {
             log.error("Request with illegal id ->" + id);
             throw new NotValidArgumentException("Id " + id + " is too low");
         }
+    }
+
+    public Collection<CompetenceEntity> getAllValidCompetences() {
+        return applicationDao.getAllValidCompetences();
+    }
+
+    public Collection<ApplicationStatusEntity> getAllValidStatus() {
+        return applicationDao.getAllValidStatus();
     }
 }

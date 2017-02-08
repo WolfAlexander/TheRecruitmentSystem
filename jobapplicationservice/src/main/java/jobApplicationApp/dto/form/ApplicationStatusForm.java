@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class StatusForm {
+public class ApplicationStatusForm {
 
     @NotNull
     private String name;

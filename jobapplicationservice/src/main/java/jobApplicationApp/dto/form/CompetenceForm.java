@@ -18,10 +18,6 @@ public class CompetenceForm {
     @NotNull
     private String name;
 
-    public int getYearsOfExperience() {
-        return yearsOfExperience;
-    }
-
     @NotNull
     @Min(0)
     @Max(120)

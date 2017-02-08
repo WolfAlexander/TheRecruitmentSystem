@@ -8,7 +8,7 @@ import javax.transaction.Transactional;
 
 
 @Transactional
-public interface StatusRepository extends CrudRepository<ApplicationStatusEntity, Integer> {
+public interface ApplicationStatusRepository extends CrudRepository<ApplicationStatusEntity, Integer> {
 
     ApplicationStatusEntity findByName(String name);
 }

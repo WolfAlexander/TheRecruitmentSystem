@@ -4,7 +4,7 @@ import jobApplicationApp.dao.repository.*;
 import jobApplicationApp.dto.form.ApplicationForm;
 import jobApplicationApp.dto.form.ApplicationParamForm;
 import jobApplicationApp.dto.form.CompetenceForm;
-import jobApplicationApp.dto.form.StatusForm;
+import jobApplicationApp.dto.form.ApplicationStatusForm;
 import jobApplicationApp.entity.*;
 import jobApplicationApp.exception.NotValidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.util.*;
 
 @Repository
@@ -26,7 +25,7 @@ public class MysqlApplicationDao implements ApplicationDao{
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     @Autowired private ApplicationRepository applicationRepository;
-    @Autowired private StatusRepository statusRepository;
+    @Autowired private ApplicationStatusRepository statusRepository;
     @Autowired private PersonRepository personRepository;
     @Autowired private CompetenceProfileRepository competenceProfileRepository;
     @Autowired private AvailableRepository availableRepository;
@@ -41,9 +40,10 @@ public class MysqlApplicationDao implements ApplicationDao{
     }
 
     @Override
-    public void changeApplicationStatus(int applicationId, StatusForm status) {
+    public void changeApplicationStatus(int applicationId, ApplicationStatusForm status) throws NotValidArgumentException {
         ApplicationEntity a = getApplicationById(applicationId);
         ApplicationStatusEntity newStatus = statusRepository.findByName(status.getName());
+        if(newStatus == null) throw new NotValidArgumentException("Non existing status type");
         a.changeStatus(newStatus);
         applicationRepository.save(a);
     }
@@ -140,6 +140,20 @@ public class MysqlApplicationDao implements ApplicationDao{
             }
         }
         return resultListOfApplication;
+    }
+
+    @Override
+    public Collection<CompetenceEntity> getAllValidCompetences() {
+        Collection<CompetenceEntity> ce = new ArrayList<>();
+        competenceRepository.findAll().forEach((c)->ce.add(c));
+        return ce;
+    }
+
+    @Override
+    public Collection<ApplicationStatusEntity> getAllValidStatus() {
+        Collection<ApplicationStatusEntity> ase = new ArrayList<>();
+        statusRepository.findAll().forEach((c)->ase.add(c));
+        return ase;
     }
 
     private Collection<ApplicationEntity> getListOfIntersectionBetweenApplicationList(Collection<ApplicationEntity> map1, Collection<ApplicationEntity> map2){
