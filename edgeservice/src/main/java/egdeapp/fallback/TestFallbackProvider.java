@@ -4,6 +4,7 @@ import org.springframework.cloud.netflix.zuul.filters.route.ZuulFallbackProvider
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.ByteArrayInputStream;
@@ -21,17 +22,17 @@ public class TestFallbackProvider implements ZuulFallbackProvider {
         return new ClientHttpResponse() {
             @Override
             public HttpStatus getStatusCode() throws IOException {
-                return HttpStatus.OK;
+                return HttpStatus.GONE;
             }
 
             @Override
             public int getRawStatusCode() throws IOException {
-                return 200;
+                return 410;
             }
 
             @Override
             public String getStatusText() throws IOException {
-                return "OK";
+                return "GONE";
             }
 
             @Override
@@ -41,13 +42,13 @@ public class TestFallbackProvider implements ZuulFallbackProvider {
 
             @Override
             public InputStream getBody() throws IOException {
-                return new ByteArrayInputStream("fallback".getBytes());
+                return new ByteArrayInputStream("Registration service is gone!".getBytes());
             }
 
             @Override
             public HttpHeaders getHeaders() {
                 HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
+                headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
                 return headers;
             }
         };

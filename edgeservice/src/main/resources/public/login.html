@@ -1,0 +1,38 @@
+<section ng-controller="login" class="container">
+    <h3 translate>login.page.title</h3>
+
+    <!--Alert messages-->
+    <div class="alert alert-success" ng-show="registration_success_alert" translate>
+        registration.alert.registrationSuccessAlert
+    </div>
+
+    <!--Login form-->
+    <form name = "loginForm" role="form" ng-submit="login.login(loginForm)">
+        <!--Username and error messages-->
+        <div class="form-group">
+            <label for="username" translate>login.form.username</label>
+            <input type="text"
+                   class="form-control"
+                   id="username"
+                   name="username"
+                   ng-model="login.password"
+                   minlength="2"
+                   required/>
+        </div>
+
+        <!--Password and error messages-->
+        <div class="form-group">
+            <label for="password" translate>login.form.password</label>
+            <input type="password"
+                   class="form-control"
+                   id="password"
+                   name="password"
+                   ng-model="login.password"
+                   minlength="8"
+                   required/>
+        </div>
+
+        <!--Login Bttn-->
+        <button type="submit" ng-disabled = "loginForm.$invalid" class="btn btn-primary" translate>login.form.submitBttn</button>
+    </form>
+</section>

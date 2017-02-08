@@ -1,10 +1,21 @@
 angular.module("application", ['ngRoute', 'ngMessages', 'pascalprecht.translate']).config(function ($routeProvider, $translateProvider) {
-    $routeProvider.when('/', {
+    /*Routing*/
+    $routeProvider
+    .when('/', {
+        templateUrl: 'form.html',
+        controller: 'registration',
+        controllerAs: 'registration'
+    }).when('/login', {
+        templateUrl: 'login.html',
+        controller: 'login',
+        controllerAs: 'login'
+    }).when('/registration', {
         templateUrl: 'form.html',
         controller: 'registration',
         controllerAs: 'registration'
     });
 
+    /*Translate config*/
     $translateProvider.useUrlLoader('/messageBundle');
     $translateProvider.useStorage('UrlLanguageStorage');
     $translateProvider.preferredLanguage('en');
@@ -15,19 +26,31 @@ angular.module("application", ['ngRoute', 'ngMessages', 'pascalprecht.translate'
         $translate.use(lang);
         $location.search('lang', lang);
     }
-}).controller('registration', function ($http) {
+}).controller('registration', function ($scope, $rootScope, $http, $location) {
     var self = this;
 
     self.submitForm = function (registrationForm) {
+        $rootScope.registration_unavailable_error = false;
+
         $http({
             method: 'POST',
-            url: 'http://localhost:8080/api/test/registration',
-            data: $.param({firstname: self.firstname, lastname: self.lastname}),
+            url: '/api/test/registration',
+            data: $.param({firstname : $scope.registration.firstname,
+                            lastname : $scope.registration.lastname,
+                            dateOfBirth: $scope.registration.dateOfBirth,
+                            email: $scope.registration.email,
+                            username : $scope.registration.username,
+                            password : $scope.registration.password}),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).then(function (response) {
-            handlingRegistrationResponse(registrationForm, response);
+        }).then(function successCallback(response) {
+            handlingRegistrationResponse($rootScope, registrationForm, response, $location);
+        }, function errorCallback(response) {
+            $rootScope.registration_unavailable_error = true;
         });
     }
+}).controller('login', function () {
+    var self = this;
+
 }).factory('UrlLanguageStorage', ['$location', function($location) {
     return {
         put: function (name, value) {},
@@ -42,11 +65,12 @@ angular.module("application", ['ngRoute', 'ngMessages', 'pascalprecht.translate'
  * @param registrationForm
  * @param response
  */
-function handlingRegistrationResponse(registrationForm, response) {
+function handlingRegistrationResponse($rootScope, registrationForm, response, $location) {
     if(response.data.status == "BAD_REQUEST")
         handleFailedRegistration(registrationForm, response);
-    else if(response.data.status == "CREATED")
-        handleSuccessfulRegistration();
+    else if(response.data.status == "CREATED"){
+        handleSuccessfulRegistration($rootScope, $location);
+    }
 }
 
 /**
@@ -56,7 +80,7 @@ function handlingRegistrationResponse(registrationForm, response) {
  */
 function handleFailedRegistration(registrationForm, response) {
     response.data.errorList.forEach(function (entry) {
-        showErrorMessageForGiveField($scope, entry.field);
+        showErrorMessageForGiveField(registrationForm, entry.field);
     });
 }
 
@@ -64,11 +88,23 @@ function handleFailedRegistration(registrationForm, response) {
  * Showing error message for given field
  * @param registrationForm
  * @param field
+ * TODO: change to proper error recognition
  */
 function showErrorMessageForGiveField(registrationForm, field) {
-    registrationForm[field].$error.minlength = true;
+    if(field == "dateOfBirth")
+        registrationForm[field].$error.date = true;
+    else if(field == "email")
+        registrationForm[field].$error.email = true;
+    else
+        registrationForm[field].$error.minlength = true;
 }
 
-function handleSuccessfulRegistration() {
-    alert("User registered");
+/**
+ * Handling successful outcome of registration process
+ * @param $rootScope
+ * @param $location
+ */
+function handleSuccessfulRegistration($rootScope, $location) {
+    $location.path("/login");
+    $rootScope.registration_success_alert = true;
 }

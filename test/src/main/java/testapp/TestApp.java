@@ -1,12 +1,15 @@
 package testapp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jdk.nashorn.internal.objects.annotations.Constructor;
 import lombok.*;
+import org.hibernate.validator.constraints.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.net.DatagramSocket;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -42,6 +48,7 @@ public class TestApp {
     public ValidationResponse registration(@Valid RegistrationForm form, BindingResult bindingResult){
         log.info("Request to /registration received! Form data: " + form);
 
+        log.info(form.getDateOfBirth().toString());
         if(bindingResult.hasErrors()) {
             log.warn("Error in the form!");
             return new ValidationResponse(HttpStatus.BAD_REQUEST, bindingResult.getFieldErrors());
@@ -49,6 +56,7 @@ public class TestApp {
             log.info("No errors in form!");
             return new ValidationResponse(HttpStatus.CREATED);
         }
+
     }
 }
 
@@ -65,6 +73,22 @@ class RegistrationForm{
     @NotNull
     @Size(min = 3)
     private String lastname;
+
+    @NotNull
+    @DateTimeFormat(pattern="yyyy-MM-dd", iso = DateTimeFormat.ISO.DATE)
+    private LocalDate dateOfBirth;
+
+    @NotNull
+    @Email
+    private String email;
+
+    @NotNull
+    @Size(min = 2)
+    private String username;
+
+    @NotNull
+    @Size(min = 8)
+    private String password;
 }
 
 @Getter

@@ -14,10 +14,21 @@
     <h2 translate>homepage.title</h2>
 
     <div ng-controller ="navigation as nav" class="container">
-        <ul class="nav nab-pills" role="tablist">
-            <li><a href="" ng-click="changeLanguage('en')">en</a></li>
-            <li><a href="" ng-click="changeLanguage('sv')">sv</a></li>
-        </ul>
+        <nav class="navbar navbar-default">
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav" role="tablist">
+                    <li ng-class="{active:nav.tab('login')}"><a href="#/login">Login</a></li>
+                    <li ng-class="{active:nav.tab('registration')}"><a href="#/registration">Registration</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right" role="tablist">
+                    <li><a href="" ng-click="changeLanguage('en')">en</a></li>
+                    <li><a href="" ng-click="changeLanguage('sv')">sv</a></li>
+                </ul>
+            </div>
+        </nav>
+
+
     </div>
 
     <div ng-view class="container"></div>
