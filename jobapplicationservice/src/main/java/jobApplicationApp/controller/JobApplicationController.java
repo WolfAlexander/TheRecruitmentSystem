@@ -147,5 +147,4 @@ public class JobApplicationController {
             return new ResponseEntity<>(new RequestResponse(e.getMessage()),HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
-
 }
