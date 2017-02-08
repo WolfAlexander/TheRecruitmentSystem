@@ -1,77 +1,134 @@
 package controller;
 
 import jobApplicationApp.JobApplicationLauncher;
-import jobApplicationApp.controller.JobApplicationController;
+import jobApplicationApp.dao.repository.ApplicationStatusRepository;
+import jobApplicationApp.dao.repository.RoleRepository;
+import jobApplicationApp.dto.form.ApplicationForm;
+import jobApplicationApp.dto.form.ApplicationParamForm;
+import jobApplicationApp.dto.form.AvailabilityForm;
+import jobApplicationApp.dto.form.CompetenceForm;
 import jobApplicationApp.entity.*;
-import jobApplicationApp.service.JobApplicationService;
-import org.junit.Before;
-import org.junit.Test;
+import junit.framework.TestCase;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
+
+
+@RunWith(SpringRunner.class)
+@ActiveProfiles("test")
+@SpringBootTest(classes = JobApplicationLauncher.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class JobApplicationControllerTest {
 
+    @Autowired
+    private TestRestTemplate restTemplate;
+
     @Test
-    public void contextLoads(){
-    fail("s");
+    public void getApplicationById() {
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/jobapplication/2", String.class);
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
-/**
     @Test
-    public void getApplicationById(){
+    public void getApplicationByBadId() {
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/jobapplication/-4", String.class);
+        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
-    public void getApplicationByParam(){
-        String body = this.restTemplate.getForObject("/jobapplication/byparam", String.class);
-        assertThat(body).isEqualTo("Hello World");
+    public void getApplicationByParamName(){
+        ApplicationParamForm inputParam = new ApplicationParamForm("henrik",null,null);
+        ResponseEntity response = this.restTemplate.postForEntity("/jobapplication/byparam", inputParam, String.class);
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+    }
+
+
+    @Test
+    public void getApplicationByParamAvailableForWork(){
+        Date readyToWorkFrom = null;
+        Date readyToWorkTo = null;
+        try {
+            readyToWorkFrom = new SimpleDateFormat("yyyy-MM-dd").parse("1995-02-14");
+            readyToWorkTo = new SimpleDateFormat("yyyy-MM-dd").parse("2016-02-17");
+        } catch (ParseException e) {
+            TestCase.fail("Could not create dateOfBirth from string");
+        }
+        AvailabilityForm af = new AvailabilityForm(readyToWorkFrom,readyToWorkTo);
+        ApplicationParamForm inputParam = new ApplicationParamForm("henrik",null,null);
+        ResponseEntity response = this.restTemplate.postForEntity("/jobapplication/byparam", inputParam, String.class);
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+    }
+
+    @Test
+    public void getApplicationByParamNotExistingCompetence(){
+        ArrayList<CompetenceForm> acf = new ArrayList<>();
+        CompetenceForm cf = new CompetenceForm("dsföäsdölföalösfaäsdfläösdf",8);
+        acf.add(cf);
+        ApplicationParamForm inputParam = new ApplicationParamForm(null,null,acf);
+        ResponseEntity response = this.restTemplate.postForEntity("/jobapplication/byparam", inputParam, String.class);
+        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
     public void getApplicationPage(){
-        String body = this.restTemplate.getForObject("/jobapplication/page/1", String.class);
-        assertThat(body).isEqualTo("Hello World");
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/jobapplication/page/0/10", String.class);
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
 
     @Test
-    public void registerJobApplication(){
-        ApplicationEntity a = new ApplicationEntity();
-        String body = this.restTemplate.postForObject("/jobapplication",ApplicationEntity.class, a);
-
-        assertThat(body).isEqualTo("Hello World");
+    public void getApplicationPageWithBadPageNmr(){
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/jobapplication/page/10/-3", String.class);
+        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
-    public void changeStatusOnApplicationById(){
-        String body = this.restTemplate.getForObject("/jobapplication/change/status/1", String.class);
-        assertThat(body).isEqualTo("Hello World");
+    public void getApplicationPageWithBadPageSize(){
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/jobapplication/page/-3/10", String.class);
+        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
-    public void changeStatusOnApplication(){
-        String body = this.restTemplate.getForObject("/jobapplication/change/status", String.class);
-        assertThat(body).isEqualTo("Hello World");
+    public void registerJobApplicationWithNoneExistingApplication() {
+        ResponseEntity response = this.restTemplate.postForEntity("/jobapplication",null,String.class);
+        assertEquals(response.getStatusCode(), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
-*/
+
+    @Test
+    public void changeStatusOnApplicationByIdWithNoNewStatus(){
+        ResponseEntity<String> response = this.restTemplate.exchange("/jobapplication/change/status/2", HttpMethod.PUT,null, String.class);
+        assertEquals(response.getStatusCode(), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    }
+
+    @Test
+    public void getAllValidStatus(){
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/jobapplication/getAllValidStatus", String.class);
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+    }
+    @Test
+    public void getAllValidCompetences(){
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/jobapplication/getAllValidCompetences", String.class);
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+    }
 
 }

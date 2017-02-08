@@ -3,14 +3,13 @@ package jobApplicationApp.controller;
 import jobApplicationApp.dto.form.ApplicationForm;
 import jobApplicationApp.dto.form.ApplicationParamForm;
 import jobApplicationApp.dto.form.ApplicationStatusForm;
+import jobApplicationApp.dto.response.RequestListResponse;
 import jobApplicationApp.dto.response.RequestResponse;
+import jobApplicationApp.entity.ApplicationEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import jobApplicationApp.service.JobApplicationService;
@@ -24,90 +23,128 @@ public class JobApplicationController {
     @Autowired
     private JobApplicationService jobApplicationService;
 
+    /**
+     * Get an application by its id
+     * @param id of the application
+     * @return an application and a http status
+     */
     @GetMapping(value = "/{id}")
-    public HttpEntity getApplicationById(@PathVariable(value = "id") int id){
+    public ResponseEntity getApplicationById(@PathVariable(value = "id") int id){
         try{
-            return new HttpEntity(jobApplicationService.getApplicationById(id));
+            return new ResponseEntity<>(jobApplicationService.getApplicationById(id),HttpStatus.OK);
         }catch (Exception e){
-            return new HttpEntity(new RequestResponse(HttpStatus.BAD_REQUEST,e.getMessage()));
+           return new ResponseEntity<>(new RequestResponse(e.getMessage()),HttpStatus.BAD_REQUEST);
         }
     }
 
+    /**
+     * get applications by parameters
+     * @param param is the parameters to filter with
+     * @param bindingResult handles validation of input from user
+     * @return collection of application and a http status
+     */
     @PostMapping(value = "/byparam",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity getApplicationsByParam(@Valid @RequestBody ApplicationParamForm param, BindingResult bindingResult){
+    public ResponseEntity getApplicationsByParam(@Valid @RequestBody ApplicationParamForm param, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             ArrayList<String> errorMessages = new ArrayList<>();
             bindingResult.getAllErrors().forEach((e)->{errorMessages.add(e.getDefaultMessage());});
-            return new HttpEntity(errorMessages);
+            return new ResponseEntity<>(new RequestListResponse(errorMessages), HttpStatus.BAD_REQUEST);
         }else {
             try {
-                return new HttpEntity(jobApplicationService.getApplicationsByParam(param));
+                return new ResponseEntity<>(jobApplicationService.getApplicationsByParam(param),HttpStatus.OK);
             } catch (Exception e) {
-                return new HttpEntity(new RequestResponse(HttpStatus.BAD_REQUEST,e.getMessage()));
+                return new ResponseEntity<>(new RequestResponse(e.getMessage()),HttpStatus.BAD_REQUEST);
             }
         }
     }
 
+    /**
+     * Get an application page, containing a defined amount of applications starting from a defined page number
+     * @param pageNmr to retrieve
+     * @param pageSize of a page
+     * @return collection of application and a http status
+     */
     @GetMapping(value = "/page/{pageSize}/{pageNmr}")
-    public HttpEntity getApplicationsPage(@PathVariable(value = "pageNmr") int pageNmr, @PathVariable(value = "pageSize") int pageSize){
+    public ResponseEntity getApplicationsPage(@PathVariable(value = "pageNmr") int pageNmr, @PathVariable(value = "pageSize") int pageSize){
         try{
-            return new HttpEntity(jobApplicationService.getApplicationsPage(pageSize, pageNmr));
+            return new ResponseEntity<>(jobApplicationService.getApplicationsPage(pageSize, pageNmr),HttpStatus.OK);
         }catch (Exception e){
-            return new HttpEntity(new RequestResponse(HttpStatus.BAD_REQUEST,e.getMessage()));
+            return new ResponseEntity<>(new RequestResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
+    /**
+     * Register a new job application
+     * @param application to register
+     * @param bindingResult  handles validation of input from user
+     * @return a message and http status describing if the application was accepted
+     */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity registerJobApplication(@Valid @RequestBody ApplicationForm application, BindingResult bindingResult) {
+    public ResponseEntity registerJobApplication(@Valid @RequestBody ApplicationForm application, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ArrayList<String> errorMessages = new ArrayList<>();
             bindingResult.getAllErrors().forEach((e) -> {
                 errorMessages.add(e.getDefaultMessage());
             });
-            return new HttpEntity(errorMessages);
+            return new ResponseEntity<>(new RequestListResponse(errorMessages),HttpStatus.BAD_REQUEST);
         } else {
             try {
                 jobApplicationService.registerJobApplication(application);
-                return new HttpEntity(new RequestResponse(HttpStatus.ACCEPTED,"new application was registered"));
+                return new ResponseEntity<>(new RequestResponse("new application was registered"),HttpStatus.ACCEPTED);
             } catch (Exception e) {
-                return new HttpEntity(new RequestResponse(HttpStatus.BAD_REQUEST,e.getMessage()));
+                return new ResponseEntity<>(new RequestResponse(e.getMessage()),HttpStatus.BAD_REQUEST);
             }
         }
     }
 
+    /**
+     * Changes status on an application
+     * @param id of application to change status on
+     * @param newStatus of the application
+     * @param bindingResult handles validation of input from user
+     * @return a message and http status describing if the application was accepted
+     */
     @PutMapping(value = "/change/status/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity changeStatusOnApplicationById(@PathVariable(value = "id") int id,@Valid @RequestBody ApplicationStatusForm newStatus, BindingResult bindingResult) {
+    public ResponseEntity changeStatusOnApplicationById(@PathVariable(value = "id") int id,@Valid @RequestBody ApplicationStatusForm newStatus, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ArrayList<String> errorMessages = new ArrayList<>();
             bindingResult.getAllErrors().forEach((e) -> {
                 errorMessages.add(e.getDefaultMessage());
             });
-            return new HttpEntity(errorMessages);
+            return new ResponseEntity<>(new RequestListResponse(errorMessages),HttpStatus.BAD_REQUEST);
         } else {
             try {
                 jobApplicationService.changeStatusOnApplicationById(id, newStatus);
                 return new ResponseEntity<String>(HttpStatus.ACCEPTED);
             } catch (Exception e) {
-                return new HttpEntity(new RequestResponse(HttpStatus.BAD_REQUEST,e.getMessage()));
+                return new ResponseEntity<>(new RequestResponse(e.getMessage()),HttpStatus.BAD_REQUEST);
             }
         }
     }
 
+    /**
+     * Get all statuses allowed on an application
+     * @return collection of application statuses and a http status
+     */
     @GetMapping(value = "/getAllValidStatus")
-    public HttpEntity getAllValidStatus(){
+    public ResponseEntity getAllValidStatus(){
         try {
-            return new HttpEntity(jobApplicationService.getAllValidStatus());
+            return new ResponseEntity<>(jobApplicationService.getAllValidStatus(),HttpStatus.OK);
         }catch (Exception e){
-            return new HttpEntity(new RequestResponse(HttpStatus.SERVICE_UNAVAILABLE,e.getMessage()));
+            return new ResponseEntity<>(new RequestResponse(e.getMessage()),HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 
+    /**
+     * Get all competences allowed on an application
+     * @return collection of competences and a http status
+     */
     @GetMapping(value = "/getAllValidCompetences")
-    public HttpEntity getAllValidCompetences(){
+    public ResponseEntity getAllValidCompetences(){
         try {
-            return new HttpEntity(jobApplicationService.getAllValidCompetences());
+            return new ResponseEntity<>(jobApplicationService.getAllValidCompetences(),HttpStatus.OK);
         }catch (Exception e){
-            return new HttpEntity(new RequestResponse(HttpStatus.SERVICE_UNAVAILABLE,e.getMessage()));
+            return new ResponseEntity<>(new RequestResponse(e.getMessage()),HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 

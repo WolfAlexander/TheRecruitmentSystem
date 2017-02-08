@@ -9,6 +9,5 @@ import java.util.Collection;
 @Getter
 @AllArgsConstructor
 public class RequestListResponse {
-    private HttpStatus status;
     private Collection<String> messages;
 }

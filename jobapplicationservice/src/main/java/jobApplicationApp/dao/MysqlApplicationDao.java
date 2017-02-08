@@ -12,8 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -39,6 +37,12 @@ public class MysqlApplicationDao implements ApplicationDao{
         return applicationRepository.findOne(id);
     }
 
+    /**
+     * Changes the application status in database by od
+     * @param applicationId of application to change status on
+     * @param status to change application to
+     * @throws NotValidArgumentException
+     */
     @Override
     public void changeApplicationStatus(int applicationId, ApplicationStatusForm status) throws NotValidArgumentException {
         ApplicationEntity a = getApplicationById(applicationId);
@@ -48,6 +52,11 @@ public class MysqlApplicationDao implements ApplicationDao{
         applicationRepository.save(a);
     }
 
+    /**
+     * Insert new application to database
+     * @param application to be inserted into database
+     * @throws NotValidArgumentException
+     */
     @Override
     public void insertApplication(ApplicationForm application) throws NotValidArgumentException {
         ApplicationStatusEntity status = statusRepository.findByName("PENDING");
@@ -65,7 +74,6 @@ public class MysqlApplicationDao implements ApplicationDao{
         }else {
             availability = a.get(0);
         }
-
         ApplicationEntity newApplication = new ApplicationEntity(person,registrationDate,status,availability);
         newApplication = applicationRepository.save(newApplication);
         ArrayList<CompetenceProfileEntity> competenceProfileEntities = new ArrayList<>();
@@ -81,11 +89,22 @@ public class MysqlApplicationDao implements ApplicationDao{
         competenceProfileEntities.forEach((c)->competenceProfileRepository.save(c));
     }
 
+    /**
+     * Get a specified number of application from a specified application defined by id from database
+     * @param startId is the start point of the list of application
+     * @param numberOfApplication to retrieve
+     * @return collection of applications
+     */
     @Override
     public Collection<ApplicationEntity> getXApplicationsFrom(int startId, int numberOfApplication) {
         return applicationRepository.getXApplicationsFrom(startId,numberOfApplication);
     }
 
+    /**
+     * Get applications by parameters
+     * @param param to filter with
+     * @return a collection of applications
+     */
     @Override
     public Collection<ApplicationEntity> getApplicationByParam(ApplicationParamForm param) {
         Collection<ApplicationEntity> resultListOfApplication= new ArrayList<>();
@@ -143,6 +162,10 @@ public class MysqlApplicationDao implements ApplicationDao{
         return resultListOfApplication;
     }
 
+    /**
+     * Get all valid competences allowed on applications form database
+     * @return collection of competences
+     */
     @Override
     public Collection<CompetenceEntity> getAllValidCompetences() {
         Collection<CompetenceEntity> ce = new ArrayList<>();
@@ -150,6 +173,10 @@ public class MysqlApplicationDao implements ApplicationDao{
         return ce;
     }
 
+    /**
+     * Get allowed application statuses on applications from database
+     * @return collection of application status
+     */
     @Override
     public Collection<ApplicationStatusEntity> getAllValidStatus() {
         Collection<ApplicationStatusEntity> ase = new ArrayList<>();

@@ -4,6 +4,7 @@ import jobApplicationApp.JobApplicationLauncher;
 import jobApplicationApp.dao.repository.*;
 import jobApplicationApp.entity.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -87,12 +88,32 @@ public class MysqlApplicationDaoTest  {
     }
 
     @Test
-    public void getPersonInformation(){
+    public void getPersonInformationFirstName(){
         ApplicationEntity requestedApplication = applicationRepository.findOne(applicationId);
         assertThat(requestedApplication.getPerson().getFirstname()).isEqualTo("Henrik");
+    }
+
+    @Test
+    public void getPersonInformationLastName(){
+        ApplicationEntity requestedApplication = applicationRepository.findOne(applicationId);
         assertThat(requestedApplication.getPerson().getLastname()).isEqualTo("Gustavsson");
+    }
+
+    @Test
+    public void getPersonInformationEmail(){
+        ApplicationEntity requestedApplication = applicationRepository.findOne(applicationId);
         assertThat(requestedApplication.getPerson().getDateOfBirth()).isEqualTo(dateOfBirth);
+    }
+
+    @Test
+    public void getPersonInformationDateOfBirth() {
+        ApplicationEntity requestedApplication = applicationRepository.findOne(applicationId);
         assertThat(requestedApplication.getPerson().getEmail()).isEqualTo("henrik.gustavsson@hotmail.com");
+    }
+
+    @Test
+    public void getPersonInformationRole() {
+        ApplicationEntity requestedApplication = applicationRepository.findOne(applicationId);
         assertThat(requestedApplication.getPerson().getRole().getName()).isEqualTo("Recruiter");
     }
 
@@ -121,19 +142,15 @@ public class MysqlApplicationDaoTest  {
                 new AvailabilityEntity());
         ApplicationEntity newApplication = applicationRepository.save(a);
         assertThat(applicationRepository.findOne(newApplication.getId())).isNotNull();
+        applicationRepository.delete(a);
     }
 
+    @Ignore
     @Test
     public void getXApplicationsFrom() {
         assertThat(applicationRepository.getXApplicationsFrom(0,100).size()).isEqualTo(1);
         assertThat(applicationRepository.getXApplicationsFrom(100,100).size()).isEqualTo(0);
     }
 
-    @Test
-    public void getAllApplication() {
-
-        Iterable<ApplicationEntity> p = applicationRepository.findAll();
-        assertThat(new String()).isNotNull();
-    }
 
 }
