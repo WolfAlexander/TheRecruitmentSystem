@@ -27,7 +27,7 @@ public class CompetenceProfileEntity {
     public CompetenceProfileEntity(ApplicationEntity application, CompetenceEntity competence, int yearsOfExperience) {
         this.application = application;
         this.competence = competence;
-        this.years_of_experience = years_of_experience;
+        this.years_of_experience = yearsOfExperience;
     }
 
     /**

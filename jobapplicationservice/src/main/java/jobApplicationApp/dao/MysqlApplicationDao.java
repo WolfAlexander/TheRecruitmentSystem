@@ -74,6 +74,7 @@ public class MysqlApplicationDao implements ApplicationDao{
                 if(competence == null){
                     throw new NotValidArgumentException("Not valid name on competence");
                 }
+                log.info("years of experience" +  competenceProfileEntity.getYearsOfExperience());
                 CompetenceProfileEntity c = new CompetenceProfileEntity(newApplication,competence, competenceProfileEntity.getYearsOfExperience());
                 competenceProfileEntities.add(c);
         }
