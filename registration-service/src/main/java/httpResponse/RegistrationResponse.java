@@ -1,44 +1,23 @@
 package httpResponse;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
-/**
- * This class holds the response that will be sent to the client when trying to register
- * a new user to the recruit system
- *
- * @author Albin Friedner
- *
- */
+import java.util.List;
 
-public class RegistrationResponse
-{
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class RegistrationResponse{
     private HttpStatus status;
-    private String message;
+    private List errorList;
 
-    public RegistrationResponse(HttpStatus status, String message)
-    {
+    public RegistrationResponse(HttpStatus status) {
         this.status = status;
-        this.message = message;
-    }
-
-    public void setStatus(HttpStatus status) {
-        this.status = status;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public HttpStatus getStatus() {
-        return status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("RegistrationResponse status = %s message = %s", status.toString(), message);
     }
 }

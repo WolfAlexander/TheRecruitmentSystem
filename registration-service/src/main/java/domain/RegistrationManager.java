@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import persistance.RoleRepository;
 import persistance.UserRepository;
 
+import java.time.LocalDate;
+
 /**
  * This class is used as a logic service that is handling registration of a new user
  * to the recruit system
@@ -46,7 +48,7 @@ public class RegistrationManager
      * @param username  the username of the user that is added to the database
      * @param password  the password of the user that is added to the database
      */
-    public void register(String firstName, String lastName, String dateOfBirth, String email, String username, String password)
+    public void register(String firstName, String lastName, LocalDate dateOfBirth, String email, String username, String password)
     {
         Role role = roleRepository.findOne(1L);
         User user = new User(firstName, lastName, dateOfBirth, email, username, password);

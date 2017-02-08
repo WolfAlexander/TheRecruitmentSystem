@@ -14,7 +14,7 @@ import launcher.RegistrationServiceApplication;
 @SpringBootTest(classes = RegistrationServiceApplication.class)
 @DataJpaTest
 public class UserRepositoryTest{
-
+/*
     @Autowired
     private TestEntityManager entityManager;
 
@@ -22,7 +22,7 @@ public class UserRepositoryTest{
     private UserRepository userRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private RoleRepository roleRepository;*/
     /*
     @Test
     public void testRegisterUserWithOKParameters() throws Exception

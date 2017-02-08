@@ -33,15 +33,18 @@ public class RegistrationController
     @PostMapping("/register")
     public RegistrationResponse register(@Valid RegistrationForm registrationForm, BindingResult bindingResult)
     {
-        if(bindingResult.hasErrors())
-        {
-            return new RegistrationResponse(HttpStatus.BAD_REQUEST, "Number of validation errors "
-                    + bindingResult.getErrorCount());
-        }
-        registrationManager.register(registrationForm.getFirstName(), registrationForm.getLastName(), registrationForm.getDateOfBirth()
-                , registrationForm.getEmail(), registrationForm.getUsername(), registrationForm.getPassword());
+        if(bindingResult.hasErrors()) {
+            return new RegistrationResponse(HttpStatus.BAD_REQUEST, bindingResult.getFieldErrors());
+        }else{
+            try{
+                registrationManager.register(registrationForm.getFirstname(), registrationForm.getLastname(), registrationForm.getDateOfBirth()
+                        , registrationForm.getEmail(), registrationForm.getUsername(), registrationForm.getPassword());
 
-        return new RegistrationResponse(HttpStatus.CREATED, "The user with username "
-                + registrationForm.getUsername() + " was registered.");
+                return new RegistrationResponse(HttpStatus.CREATED);
+            }catch (RuntimeException ex){
+                //handle
+                return null;
+            }
+        }
     }
 }

@@ -1,6 +1,11 @@
 package entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 
 /**
  * Entity class for users of the recruit system that is persisted in an external database.
@@ -9,6 +14,8 @@ import javax.persistence.*;
  */
 
 @Entity
+@Getter
+@Setter
 public class User
 {
     @Id
@@ -16,7 +23,7 @@ public class User
     private Long id;
     private String firstName;
     private String lastName;
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
     private String email;
     @ManyToOne
     private Role role;
@@ -36,7 +43,7 @@ public class User
      * @param username the username that the user choose
      * @param password the password that the user choose
      */
-    public User(String firstName, String lastName, String dateOfBirth, String email,
+    public User(String firstName, String lastName, LocalDate dateOfBirth, String email,
                 String username, String password)
     {
         this.firstName = firstName;
@@ -47,65 +54,6 @@ public class User
         this.password = password;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 
     @Override
     public String toString() {
