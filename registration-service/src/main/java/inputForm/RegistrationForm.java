@@ -1,6 +1,8 @@
 package inputForm;
 
+import org.hibernate.validator.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * This class backs the registration form created on the client side. It also validates
@@ -12,16 +14,23 @@ import javax.validation.constraints.NotNull;
 public class RegistrationForm
 {
     @NotNull
+    @Size(min = 2, max = 40)
     private String firstName;
     @NotNull
+    @Size(min = 2, max = 45)
     private String lastName;
     @NotNull
+    @Size(min = 10, max = 12)
     private String dateOfBirth;
     @NotNull
+    @Size(min = 2, max = 45)
+    @Email
     private String email;
     @NotNull
+    @Size(min = 2, max = 25)
     private String username;
     @NotNull
+    @Size(min = 8, max = 25)
     private String password;
 
 

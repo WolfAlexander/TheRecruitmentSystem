@@ -24,14 +24,17 @@ public class RegistrationManager
 
     /**
      * Checks if a user, that tries to register, is already registered in the database.
+     * (NOT IMPLEMENTED YET)
      *
      * @param username the username of the user that tries to register
      * @return true if the user exists in the database, false otherwise
      */
+    /*
     public boolean checkUser(String username)
     {
         return true;
     }
+    */
 
     /**
      * Adds a new user to an external database and assigns a role to that user
