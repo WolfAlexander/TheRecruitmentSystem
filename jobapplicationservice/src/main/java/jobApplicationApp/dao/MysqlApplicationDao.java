@@ -1,7 +1,10 @@
 package jobApplicationApp.dao;
 
 import jobApplicationApp.dao.repository.*;
+import jobApplicationApp.dto.ApplicationForm;
+import jobApplicationApp.dto.CompetenceForm;
 import jobApplicationApp.entity.*;
+import jobApplicationApp.exception.NotValidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +29,7 @@ public class MysqlApplicationDao implements ApplicationDao{
     @Autowired private PersonRepository personRepository;
     @Autowired private CompetenceProfileRepository competenceProfileRepository;
     @Autowired private AvailableRepository availableRepository;
+    @Autowired private CompetenceRepository competenceRepository;
 
     @Override
     public ApplicationEntity getApplicationById(int id) {
@@ -46,10 +50,10 @@ public class MysqlApplicationDao implements ApplicationDao{
     }
 
     @Override
-    public void insertApplication(ApplicationEntity application) {
+    public void insertApplication(ApplicationForm application) throws NotValidArgumentException {
         ApplicationStatusEntity status = statusRepository.findByName("PENDING");
         Date registrationDate = new Date();
-        PersonEntity person = personRepository.findOne(application.getPerson().getId());
+        PersonEntity person = personRepository.findOne(application.getPersonId());
 
         AvailabilityEntity availability;
         Date from = application.getAvailableForWork().getFromDate();
@@ -64,12 +68,17 @@ public class MysqlApplicationDao implements ApplicationDao{
         }
 
         ApplicationEntity newApplication = new ApplicationEntity(person,registrationDate,status,availability);
-        applicationRepository.save(newApplication);
-        //todo test
-        for(CompetenceProfileEntity competenceProfileEntity:application.getCompetenceProfile()){
-           CompetenceProfileEntity c = new CompetenceProfileEntity(newApplication, competenceProfileEntity.getCompetence(), competenceProfileEntity.getYearsOfExperience());
-           competenceProfileRepository.save(c);
+        newApplication = applicationRepository.save(newApplication);
+        ArrayList<CompetenceProfileEntity> competenceProfileEntities = new ArrayList<>();
+            for (CompetenceForm competenceProfileEntity : application.getCompetenceProfile()) {
+                CompetenceEntity competence = competenceRepository.findByName(competenceProfileEntity.getName());
+                if(competence == null){
+                    throw new NotValidArgumentException("Not valid name on competence");
+                }
+                CompetenceProfileEntity c = new CompetenceProfileEntity(newApplication,competence, competenceProfileEntity.getYearsOfExperience());
+                competenceProfileEntities.add(c);
         }
+        competenceProfileEntities.forEach((c)->competenceProfileRepository.save(c));
     }
 
     @Override
