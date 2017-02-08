@@ -1,10 +1,12 @@
 package jobApplicationApp.dto;
 
+import org.springframework.stereotype.Component;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
-import java.util.Date;
 
+@Component
 public class ApplicationForm {
 
   @NotNull
@@ -12,35 +14,28 @@ public class ApplicationForm {
   Integer personId;
 
   @NotNull
-  Date availableForWorkFrom;
+  AvailabilityForm availableForWork;
 
   @NotNull
-  Date availableForWorkTo;
-
-  Collection<CompetenceForm> competences;
+  Collection<CompetenceForm> competenceProfile;
 
     public ApplicationForm(){};
 
-    public ApplicationForm(Integer personId, Date availableForWorkFrom, Date availableForWorkTo, Collection<CompetenceForm> competences) {
+    public ApplicationForm(Integer personId, AvailabilityForm availableForWork, Collection<CompetenceForm> competenceProfile) {
         this.personId = personId;
-        this.availableForWorkFrom = availableForWorkFrom;
-        this.availableForWorkTo = availableForWorkTo;
-        this.competences = competences;
+        this.availableForWork = availableForWork;
+        this.competenceProfile = competenceProfile;
     }
 
     public Integer getPersonId() {
         return personId;
     }
 
-    public Date getAvailableForWorkFrom() {
-        return availableForWorkFrom;
+    public AvailabilityForm getAvailableForWork() {
+        return availableForWork;
     }
 
-    public Date getAvailableForWorkTo() {
-        return availableForWorkTo;
-    }
-
-    public Collection<CompetenceForm> getCompetences() {
-        return competences;
+    public Collection<CompetenceForm> getCompetenceProfile() {
+        return competenceProfile;
     }
 }

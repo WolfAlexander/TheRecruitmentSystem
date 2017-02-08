@@ -8,32 +8,26 @@ import java.util.Date;
 
 public class ApplicationParamForm {
 
-    private Date availableFrom;
-    private Date availableTo;
+    private AvailabilityForm availability;
 
-    private Collection<CompetenceEntity> competences;
+    private Collection<CompetenceForm> competences;
     private String name;
 
-
-    public ApplicationParamForm(Date availableFrom, Date availableTo, String name) {
-        this.availableFrom = availableFrom;
-        this.availableTo = availableTo;
+    public ApplicationParamForm(AvailabilityForm availability, Collection<CompetenceForm> competences, String name) {
+        this.availability = availability;
+        this.competences = competences;
         this.name = name;
     }
 
-    public Date getAvailableFrom() {
-        return availableFrom;
+    public AvailabilityForm getAvailability() {
+        return availability;
     }
 
-    public Date getAvailableTo() {
-        return availableTo;
+    public Collection<CompetenceForm> getCompetences() {
+        return competences;
     }
 
     public String getName() {
         return name;
-    }
-
-    public Collection<CompetenceEntity> getCompetences() {
-        return competences;
     }
 }
