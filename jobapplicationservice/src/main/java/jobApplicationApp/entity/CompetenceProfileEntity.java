@@ -1,10 +1,13 @@
 package jobApplicationApp.entity;
 
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "competence_profile")
+@NoArgsConstructor
 public class CompetenceProfileEntity {
 
     @Id
@@ -20,8 +23,6 @@ public class CompetenceProfileEntity {
 
     private int years_of_experience;
 
-    public CompetenceProfileEntity() {
-    }
 
     public CompetenceProfileEntity(ApplicationEntity application, CompetenceEntity competence, int yearsOfExperience) {
         this.application = application;

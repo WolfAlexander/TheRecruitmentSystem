@@ -1,8 +1,9 @@
 package jobApplicationApp.dao;
 
 import jobApplicationApp.dao.repository.*;
-import jobApplicationApp.dto.ApplicationForm;
-import jobApplicationApp.dto.CompetenceForm;
+import jobApplicationApp.dto.form.ApplicationForm;
+import jobApplicationApp.dto.form.ApplicationParamForm;
+import jobApplicationApp.dto.form.CompetenceForm;
 import jobApplicationApp.entity.*;
 import jobApplicationApp.exception.NotValidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +14,14 @@ import org.springframework.stereotype.Repository;
 
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.*;
 
 @Repository
 @Qualifier("mysql")
 public class MysqlApplicationDao implements ApplicationDao{
-
-    @Autowired
-    private EntityManager entityManager;
-
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     @Autowired private ApplicationRepository applicationRepository;
@@ -30,6 +30,9 @@ public class MysqlApplicationDao implements ApplicationDao{
     @Autowired private CompetenceProfileRepository competenceProfileRepository;
     @Autowired private AvailableRepository availableRepository;
     @Autowired private CompetenceRepository competenceRepository;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Override
     public ApplicationEntity getApplicationById(int id) {
@@ -42,11 +45,6 @@ public class MysqlApplicationDao implements ApplicationDao{
         ApplicationStatusEntity newStatus = statusRepository.findByName(status);
         a.changeStatus(newStatus);
         applicationRepository.save(a);
-    }
-
-    @Override
-    public boolean applicationExists(int id) {
-        return applicationRepository.exists(id);
     }
 
     @Override
@@ -87,16 +85,72 @@ public class MysqlApplicationDao implements ApplicationDao{
     }
 
     @Override
-    public Map<Integer, ApplicationEntity> getAllApplication() {
-        Map<Integer,ApplicationEntity> list = new HashMap<>();
+    public Collection<ApplicationEntity> getApplicationByParam(ApplicationParamForm param) {
+        Collection<ApplicationEntity> resultListOfApplication= new ArrayList<>();
+        Collection<ApplicationEntity> sqlResultOfApplication;
 
-        Iterable<ApplicationEntity> applications = applicationRepository.findAll();
-        for(ApplicationEntity application : applications){
-            list.put(application.getId(),application);
+        if(param.getAvailableForWork() != null) {
+            if (param.getAvailableForWork().getFromDate() != null) {
+                sqlResultOfApplication = applicationRepository.getApplicationsThatCanWorkFrom(param.getAvailableForWork().getFromDate());
+                if (sqlResultOfApplication.size() == 0) {return new ArrayList<>();}
+                if(resultListOfApplication.size() == 0){
+                    resultListOfApplication = sqlResultOfApplication;
+                }else {
+                    resultListOfApplication = getListOfIntersectionBetweenApplicationList(sqlResultOfApplication, resultListOfApplication);
+                }
+            }
+            if (param.getAvailableForWork().getToDate() != null) {
+                sqlResultOfApplication = applicationRepository.getApplicationsThatCanWorkTo(param.getAvailableForWork().getToDate());
+                if (sqlResultOfApplication.size() == 0) {return new ArrayList<>();}
+                if(resultListOfApplication.size() == 0){
+                    resultListOfApplication = sqlResultOfApplication;
+                }else {
+                    resultListOfApplication = getListOfIntersectionBetweenApplicationList(sqlResultOfApplication, resultListOfApplication);
+                }
+            }
         }
-        return list;
+        if(param.getCompetenceProfile() != null){
+            StringBuilder sqlCondition = new StringBuilder("SELECT a FROM ApplicationEntity a WHERE 1=1 ");
+            for(CompetenceForm cf : param.getCompetenceProfile()){
+                CompetenceEntity competenceEntity = competenceRepository.findByName(cf.getName());
+                if(competenceEntity== null){
+                    throw new NotValidArgumentException("Not existing competence");
+                }else {
+                    sqlCondition.append("AND " +competenceEntity.getId()+ " IN (SELECT co.competence.id FROM CompetenceProfileEntity co WHERE co.application.id=a.id)");
+                }
+                log.info(sqlCondition.toString());
+                Query query = em.createQuery(sqlCondition.toString());
+                sqlResultOfApplication =  query.getResultList();
+                if (sqlResultOfApplication.size() == 0) {return new ArrayList<>();}
+                if(resultListOfApplication.size() == 0){
+                    resultListOfApplication = sqlResultOfApplication;
+                }else {
+                    resultListOfApplication = getListOfIntersectionBetweenApplicationList(sqlResultOfApplication, resultListOfApplication);
+                }
+            }
+        }
+        if(param.getName() != null){
+            sqlResultOfApplication = applicationRepository.getApplicationsByPersonName(param.getName());
+            if (sqlResultOfApplication.size() == 0) {return new ArrayList<>();}
+            if(resultListOfApplication.size() == 0){
+                resultListOfApplication = sqlResultOfApplication;
+            }else {
+                resultListOfApplication = getListOfIntersectionBetweenApplicationList(sqlResultOfApplication, resultListOfApplication);
+            }
+        }
+        return resultListOfApplication;
     }
 
+    private Collection<ApplicationEntity> getListOfIntersectionBetweenApplicationList(Collection<ApplicationEntity> map1, Collection<ApplicationEntity> map2){
+        Collection<ApplicationEntity> applicationListResult = new ArrayList<>();
+        map1.forEach((k)->{
+            if(map2.contains(k)){
+                applicationListResult.add(k);
+            }
+        });
+
+        return applicationListResult;
+    }
 }
 
 

@@ -1,12 +1,9 @@
 package jobApplicationApp.service;
 
 import jobApplicationApp.dao.ApplicationDao;
-import jobApplicationApp.dto.ApplicationForm;
-import jobApplicationApp.dto.ApplicationParamForm;
-import jobApplicationApp.dto.AvailabilityForm;
-import jobApplicationApp.dto.CompetenceForm;
+import jobApplicationApp.dto.form.ApplicationForm;
+import jobApplicationApp.dto.form.ApplicationParamForm;
 import jobApplicationApp.entity.ApplicationEntity;
-import jobApplicationApp.entity.CompetenceProfileEntity;
 import jobApplicationApp.exception.NotValidArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import java.util.Collection;
-import java.util.IllegalFormatCodePointException;
-import java.util.Map;
+
+
 
 /**
  * Service for handling with job application
@@ -37,7 +34,7 @@ public class JobApplicationService {
     public ApplicationEntity getApplicationById(int id) throws NotValidArgumentException {
         validateId(id);
         ApplicationEntity applicationEntity = applicationDao.getApplicationById(id);
-        log.info("Application with id " + String.valueOf(id) + " was retrieved from db");
+        log.info("Application with id " + String.valueOf(id) + " was retrieved");
         return applicationEntity;
     }
 
@@ -59,63 +56,14 @@ public class JobApplicationService {
 
     public Collection<ApplicationEntity> getApplicationsPage(int pageSize ,int pageNmr) throws NotValidArgumentException {
         Collection<ApplicationEntity>  applications = applicationDao.getXApplicationsFrom(pageNmr*pageSize,pageSize);
-        log.info("applications page " + pageNmr + " with size " + pageSize + "was retrieved");
+        log.info("applications page " + pageNmr + " with size " + pageSize + " was retrieved");
         return applications;
     }
 
     public Collection<ApplicationEntity> getApplicationsByParam(ApplicationParamForm param) {
-        Map<Integer, ApplicationEntity> allApplication = applicationDao.getAllApplication();
-
-        if(param.getAvailability().getFromDate() != null){
-         allApplication = removeApplicationsThatIsNotAvailableAtRequiredStartDate(allApplication,param.getAvailability());
-        }
-
-        if(param.getAvailability().getToDate() != null){
-         allApplication = removeApplicationsThatIsNotAvailableToRequiredEndDate(allApplication,param.getAvailability());
-        }
-
-        if(param.getCompetences() != null){
-            allApplication = removeApplicationThatDoesntContainCompetence(allApplication,param.getCompetences());
-        }
-
-        if(param.getName() != null){
-            //Todo what is this!?
-        }
-        log.info(allApplication.size() + " application was found in search with param");
-        return allApplication.values();
-    }
-
-    private Map<Integer, ApplicationEntity> removeApplicationsThatIsNotAvailableAtRequiredStartDate(Map<Integer, ApplicationEntity> allApplication, AvailabilityForm availability){
-        allApplication.forEach((k,v)->{
-            if(!(availability.getFromDate().before(v.getAvailableForWork().getFromDate()) && (v.getAvailableForWork().getToDate() == null || v.getAvailableForWork().getToDate().after(availability.getFromDate())))){
-                allApplication.remove(v.getId());
-            }
-        });
-        return allApplication;
-    }
-
-    private Map<Integer, ApplicationEntity> removeApplicationsThatIsNotAvailableToRequiredEndDate(Map<Integer, ApplicationEntity> allApplication, AvailabilityForm availability) {
-        allApplication.forEach((k,v)->{
-            if(v.getAvailableForWork().getToDate().after(availability.getToDate()) && (v.getAvailableForWork().getFromDate().before(availability.getToDate()) || v.getAvailableForWork().getFromDate() == null)){
-                allApplication.remove(v.getId());
-            }
-        });
-        return allApplication;
-    }
-
-    private Map<Integer, ApplicationEntity> removeApplicationThatDoesntContainCompetence(Map<Integer, ApplicationEntity> allApplication, Collection<CompetenceForm> requiredCompetences){
-        allApplication.forEach((k,v)->{
-            Collection<CompetenceForm> competences = requiredCompetences;
-            for(CompetenceProfileEntity c : v.getCompetenceProfile()){
-                if(competences.contains(c)){
-                    competences.remove(c);
-                }
-            }
-            if(competences.size() > 0){
-                allApplication.remove(v.getId());
-            }
-        });
-        return allApplication;
+        Collection<ApplicationEntity> applicationsByParam = applicationDao.getApplicationByParam(param);
+        log.info("Search for application resulted in " + applicationsByParam.size() + " applications");
+        return applicationsByParam;
     }
 
 

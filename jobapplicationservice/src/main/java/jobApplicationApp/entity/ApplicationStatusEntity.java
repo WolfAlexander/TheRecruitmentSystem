@@ -1,9 +1,12 @@
 package jobApplicationApp.entity;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "status")
 public class ApplicationStatusEntity {
 
@@ -13,9 +16,6 @@ public class ApplicationStatusEntity {
 
     @NotNull
     private String name;
-
-    public ApplicationStatusEntity() {
-    }
 
     public ApplicationStatusEntity(String name) {
         this.name = name;

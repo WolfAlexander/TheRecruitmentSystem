@@ -1,10 +1,14 @@
 package jobApplicationApp.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "role")
+@NoArgsConstructor
 public class RoleEntity {
 
     @Id
@@ -13,8 +17,6 @@ public class RoleEntity {
 
     @NotNull
     private String name;
-
-    public RoleEntity() {}
 
     public RoleEntity(String name) {
         this.name = name;

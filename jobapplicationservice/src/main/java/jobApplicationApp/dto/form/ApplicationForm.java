@@ -1,5 +1,7 @@
-package jobApplicationApp.dto;
+package jobApplicationApp.dto.form;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.Min;
@@ -7,11 +9,13 @@ import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
 @Component
+@Getter
+@NoArgsConstructor
 public class ApplicationForm {
 
   @NotNull
   @Min(0)
-  Integer personId;
+  int personId;
 
   @NotNull
   AvailabilityForm availableForWork;
@@ -19,23 +23,9 @@ public class ApplicationForm {
   @NotNull
   Collection<CompetenceForm> competenceProfile;
 
-    public ApplicationForm(){};
-
     public ApplicationForm(Integer personId, AvailabilityForm availableForWork, Collection<CompetenceForm> competenceProfile) {
         this.personId = personId;
         this.availableForWork = availableForWork;
         this.competenceProfile = competenceProfile;
-    }
-
-    public Integer getPersonId() {
-        return personId;
-    }
-
-    public AvailabilityForm getAvailableForWork() {
-        return availableForWork;
-    }
-
-    public Collection<CompetenceForm> getCompetenceProfile() {
-        return competenceProfile;
     }
 }

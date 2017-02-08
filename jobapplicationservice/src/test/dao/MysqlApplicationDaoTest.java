@@ -67,8 +67,8 @@ public class MysqlApplicationDaoTest  {
                 new ApplicationEntity(new PersonEntity("Henrik","Gustavsson",dateOfBirth,"henrik.gustavsson@hotmail.com",roleRepository.findByName("Recruiter")),
                         new Date(),
                         statusRepository.findByName("PENDING"),
-                        new AvailabilityEntity(),
-                        new ArrayList<CompetenceProfileEntity>()));
+                        new AvailabilityEntity()));
+
         this.applicationId=application.getId();
     }
 
@@ -116,20 +116,14 @@ public class MysqlApplicationDaoTest  {
         assertThat(newApplication.getStatus().getName()).isEqualTo("ACCEPTED");
     }
 
-    @Test
-    public void applicationExists() {
-        log.info("Does it exist ->" +applicationRepository.exists(applicationId));
-        assertThat(applicationRepository.exists(applicationId)).isTrue();
-       // assertThat(applicationRepository.exists(applicationId+10000)).isFalse();
-    }
+
 
     @Test
     public void insertApplication() {
         ApplicationEntity a = new ApplicationEntity(new PersonEntity("Fredrik","Gustavsson",dateOfBirth,"fredrik.gustavsson@hotmail.com",new RoleEntity("Recruiter")),
                 new Date(),
                 new ApplicationStatusEntity("Pending"),
-                new AvailabilityEntity(),
-                new ArrayList<CompetenceProfileEntity>());
+                new AvailabilityEntity());
         ApplicationEntity newApplication = applicationRepository.save(a);
         assertThat(applicationRepository.findOne(newApplication.getId())).isNotNull();
     }

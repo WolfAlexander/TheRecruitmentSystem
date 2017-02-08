@@ -1,10 +1,13 @@
 package jobApplicationApp.entity;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name="availability")
+@NoArgsConstructor
 public class AvailabilityEntity {
 
     @Id
@@ -16,8 +19,6 @@ public class AvailabilityEntity {
 
     @Column(name = "to_date")
     private Date toDate;
-
-    public AvailabilityEntity(){}
 
     public AvailabilityEntity(Date fromDate, Date toDate) {
         this.fromDate = fromDate;

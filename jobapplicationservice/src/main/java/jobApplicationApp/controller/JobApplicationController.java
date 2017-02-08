@@ -1,8 +1,7 @@
 package jobApplicationApp.controller;
 
-import jobApplicationApp.dto.ApplicationForm;
-import jobApplicationApp.dto.ApplicationParamForm;
-import jobApplicationApp.entity.ApplicationEntity;
+import jobApplicationApp.dto.form.ApplicationForm;
+import jobApplicationApp.dto.form.ApplicationParamForm;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,6 @@ public class JobApplicationController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-
     @Autowired
     private JobApplicationService jobApplicationService;
 
@@ -36,13 +34,15 @@ public class JobApplicationController {
     }
 
     //todo get param
-    @PostMapping(value = "/byparam")
-    public HttpEntity getApplicationsByParam(ApplicationParamForm param){
-        try {
+    @PostMapping(value = "/byparam",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpEntity getApplicationsByParam(@Valid @RequestBody ApplicationParamForm param){
+        return new HttpEntity(jobApplicationService.getApplicationsByParam(param));
+       /**  try {
             return new HttpEntity(jobApplicationService.getApplicationsByParam(param));
         }catch (Exception e){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
+        */
     }
 
     @GetMapping(value = "/page/{pageSize}/{pageNmr}")
@@ -66,7 +66,7 @@ public class JobApplicationController {
         }
     }
 
-    @PutMapping(value = "/change/status/{id}/{newStatus}")
+    @PutMapping(value = "/change/status/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity changeStatusOnApplicationById(@PathVariable(value = "id") int id, @PathVariable(value = "newStatus") String newstatus){
         try {
             jobApplicationService.changeStatusOnApplicationById(id, newstatus);
