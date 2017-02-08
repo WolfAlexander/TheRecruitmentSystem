@@ -69,6 +69,7 @@ public class JobApplicationController {
     @PutMapping(value = "/change/status/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity changeStatusOnApplicationById(@PathVariable(value = "id") int id, @PathVariable(value = "newStatus") String newstatus){
         try {
+
             jobApplicationService.changeStatusOnApplicationById(id, newstatus);
             return new ResponseEntity<String>(HttpStatus.ACCEPTED);
         }catch (Exception e){
