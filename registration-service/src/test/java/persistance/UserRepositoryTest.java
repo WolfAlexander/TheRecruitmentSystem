@@ -7,8 +7,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import entity.*;
-import launcher.RegistrationServiceApplication;
+import registrationapp.RegistrationServiceApplication;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RegistrationServiceApplication.class)

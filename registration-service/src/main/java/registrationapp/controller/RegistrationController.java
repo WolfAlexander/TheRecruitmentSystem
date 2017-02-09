@@ -1,12 +1,14 @@
-package controller;
+package registrationapp.controller;
 
-import domain.RegistrationManager;
-import httpResponse.RegistrationResponse;
-import inputForm.RegistrationForm;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import registrationapp.domain.RegistrationManager;
+import registrationapp.httpResponse.RegistrationResponse;
+import registrationapp.inputForm.RegistrationForm;
+
 import javax.validation.Valid;
 
 /**
@@ -17,6 +19,7 @@ import javax.validation.Valid;
  */
 
 @RestController
+@RequestMapping("/register")
 public class RegistrationController
 {
     @Autowired
@@ -30,13 +33,15 @@ public class RegistrationController
      * @param bindingResult binds the results of the validation and checks for errors
      * @return a response with a HTTP status and a response message
      */
-    @PostMapping("/register")
-    public RegistrationResponse register(@Valid RegistrationForm registrationForm, BindingResult bindingResult)
+    @PostMapping
+    public RegistrationResponse register(@Valid @RequestBody RegistrationForm registrationForm, BindingResult bindingResult)
     {
         if(bindingResult.hasErrors()) {
             return new RegistrationResponse(HttpStatus.BAD_REQUEST, bindingResult.getFieldErrors());
         }else{
             try{
+
+
                 registrationManager.register(registrationForm.getFirstname(), registrationForm.getLastname(), registrationForm.getDateOfBirth()
                         , registrationForm.getEmail(), registrationForm.getUsername(), registrationForm.getPassword());
 

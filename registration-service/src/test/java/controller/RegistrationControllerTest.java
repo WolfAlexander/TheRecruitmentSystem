@@ -1,8 +1,6 @@
 package controller;
 
-import httpResponse.RegistrationResponse;
-import inputForm.RegistrationForm;
-import launcher.RegistrationServiceApplication;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
+import registrationapp.RegistrationServiceApplication;
+import registrationapp.httpResponse.RegistrationResponse;
+import registrationapp.inputForm.RegistrationForm;
 
 import java.time.LocalDate;
 
@@ -36,7 +37,7 @@ public class RegistrationControllerTest {
 
         validRegistrationForm.setFirstname("Test");
         validRegistrationForm.setLastname("Testlast");
-        validRegistrationForm.setDateOfBirth(LocalDate.of(1992, 12, 10));
+       // validRegistrationForm.setDateOfBirth(LocalDate.of(1992, 12, 10));
         validRegistrationForm.setEmail("test@tst.se");
         validRegistrationForm.setUsername("Username");
         validRegistrationForm.setPassword("testtestest");

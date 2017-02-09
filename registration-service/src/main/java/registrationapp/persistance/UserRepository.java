@@ -1,7 +1,8 @@
-package persistance;
+package registrationapp.persistance;
 
 import org.springframework.data.repository.CrudRepository;
-import entity.User;
+import registrationapp.entity.User;
+
 import java.util.List;
 
 /**

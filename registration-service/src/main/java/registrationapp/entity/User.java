@@ -1,11 +1,10 @@
-package entity;
+package registrationapp.entity;
+
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * Entity class for users of the recruit system that is persisted in an external database.
@@ -14,18 +13,23 @@ import java.time.LocalDate;
  */
 
 @Entity
+@Table(name = "person")
 @Getter
 @Setter
 public class User
 {
     @Id
+    @Column(name = "person_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "firstname")
     private String firstName;
+    @Column(name = "lastname")
     private String lastName;
-    private LocalDate dateOfBirth;
+    private Date dateOfBirth;
     private String email;
     @ManyToOne
+    @JoinColumn(name = "role_id")
     private Role role;
     private String username;
     private String password;
@@ -43,7 +47,7 @@ public class User
      * @param username the username that the user choose
      * @param password the password that the user choose
      */
-    public User(String firstName, String lastName, LocalDate dateOfBirth, String email,
+    public User(String firstName, String lastName, Date dateOfBirth, String email,
                 String username, String password)
     {
         this.firstName = firstName;

@@ -1,7 +1,8 @@
-package persistance;
+package registrationapp.persistance;
 
 import org.springframework.data.repository.CrudRepository;
-import entity.Role;
+import registrationapp.entity.Role;
+
 
 /**
  * This interface is a repository that extends the CrudRepository interface. Default CRUD

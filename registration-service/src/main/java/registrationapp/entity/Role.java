@@ -1,5 +1,6 @@
-package entity;
+package registrationapp.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -17,7 +18,9 @@ import java.util.List;
 public class Role
 {
     @Id
+    @Column(name = "role_id")
     private Long roleId;
+    @Column(name = "name")
     private String roleName;
     @OneToMany(mappedBy = "role")
     private List<User> users;

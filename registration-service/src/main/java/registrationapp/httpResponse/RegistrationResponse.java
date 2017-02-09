@@ -1,4 +1,4 @@
-package httpResponse;
+package registrationapp.httpResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

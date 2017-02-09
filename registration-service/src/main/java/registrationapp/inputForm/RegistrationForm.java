@@ -1,5 +1,6 @@
-package inputForm;
+package registrationapp.inputForm;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * This class backs the registration form created on the client side. It also validates
@@ -29,10 +31,14 @@ public class RegistrationForm
     @NotNull
     @Size(min = 3)
     private String lastname;
-
+    /*
     @NotNull
     @DateTimeFormat(pattern="yyyy-MM-dd", iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateOfBirth;
+*/
+    @NotNull
+    //@JsonFormat(pattern = "yyyy-MM-dd")
+    private Date dateOfBirth;
 
     @NotNull
     @Email

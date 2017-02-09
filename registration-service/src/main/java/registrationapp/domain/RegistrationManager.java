@@ -1,13 +1,16 @@
-package domain;
+package registrationapp.domain;
 
-import entity.Role;
-import entity.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import persistance.RoleRepository;
-import persistance.UserRepository;
+import registrationapp.entity.Role;
+import registrationapp.entity.User;
+import registrationapp.persistance.RoleRepository;
+import registrationapp.persistance.UserRepository;
+
 
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * This class is used as a logic service that is handling registration of a new user
@@ -48,9 +51,9 @@ public class RegistrationManager
      * @param username  the username of the user that is added to the database
      * @param password  the password of the user that is added to the database
      */
-    public void register(String firstName, String lastName, LocalDate dateOfBirth, String email, String username, String password)
+    public void register(String firstName, String lastName, Date dateOfBirth, String email, String username, String password)
     {
-        Role role = roleRepository.findOne(1L);
+        Role role = roleRepository.findOne(2L);
         User user = new User(firstName, lastName, dateOfBirth, email, username, password);
         role.addUser(user);
         userRepository.save(user);
