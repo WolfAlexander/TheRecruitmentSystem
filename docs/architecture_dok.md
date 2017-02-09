@@ -67,13 +67,21 @@ Self-seined certificate and HTTPS.
 Access to config files is restricted and only config service has credentials. In future, information in config-files can be encrypted.
 
 ### Data View
+There are two data sources for this project. The first one, used at runtime, is a mysql server. It is accessible from anywhere on the internet by username, password and the non standard port. The second database is an embedded h2 server meant for testing so we don't change the real data during a test. Both databases have the same structure (see picture 3). In the application we make transactions to one or more specific
+ parts of the database by repository (see picture 1). The data retrieved will be handled as entities, objects that represent the database and also has the connections that the database has. 
 
-
+```java
+@Transactional
+public interface CompetenceProfileRepository extends CrudRepository<CompetenceProfileEntity, Integer> {
+}
+```
+1. repository
+<br/>
 ![db architecture](./images/db.png)
-1.Database design
-
+2. Database design
+<br/>
 ![or-mapping](./images/OR-mapping.png)
-2.OR-mapping
+3. OR-mapping
 
 #### Old SSN to new dateOfBirth
 In old system SSN were entered by applicants and in the new system date of birth will be used
