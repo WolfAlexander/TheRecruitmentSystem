@@ -1,9 +1,12 @@
 # Architecture Documentation
 ## The Recruiting Application
 ### Team
-Adrian Gortzak <br/>
-Albin Friedner <br/>
-Alexander Nikalayeu nikal@kth.se
+
+Name | Email
+------------ | -------------
+**Adrian Gortzak** | gortzak@kth.se <br/>
+**Albin Friedner** | <br/>
+**Alexander Nikalayeu** | nikal@kth.se
 
 ### 1. Introduction
 In this document the architecture for the recruit system we have developed is explained. The document will describe
@@ -88,7 +91,7 @@ Job application service will handle all interactions with the job applications. 
 
 The structure of the JobApplication services can be seen in picture 1
 ![job-application-service_architecture](./images/JobApplicationService.png)
-1. jobApplication service architecture
+2.1. jobApplication service architecture
 
 ### 3. Security View
 ##### Security issues considered
