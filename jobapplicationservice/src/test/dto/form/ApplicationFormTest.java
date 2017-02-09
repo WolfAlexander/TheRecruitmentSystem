@@ -51,11 +51,6 @@ public class ApplicationFormTest {
 
 
     @Test
-    public void applicationFormTestGetPersonId(){
-        assertEquals(applicationForm.getPersonId(),1);
-    }
-
-    @Test
     public void applicationFormTestGetCompetences(){
         Collection<String> expectedCompetences = new ArrayList<>();
         expectedCompetences.add("running");
@@ -69,4 +64,8 @@ public class ApplicationFormTest {
         assertEquals(expectedCompetences.size(),0);
     }
 
+    @Test
+    public void applicationFormTestGetPersonId(){
+        assertEquals(applicationForm.getPersonId(),1);
+    }
 }

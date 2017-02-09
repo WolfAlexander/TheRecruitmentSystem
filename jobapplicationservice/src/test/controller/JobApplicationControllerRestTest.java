@@ -2,6 +2,7 @@ package controller;
 
 import jobApplicationApp.JobApplicationLauncher;
 import jobApplicationApp.dto.form.ApplicationParamForm;
+import jobApplicationApp.dto.form.ApplicationStatusForm;
 import jobApplicationApp.dto.form.AvailabilityForm;
 import jobApplicationApp.dto.form.CompetenceForm;
 import junit.framework.TestCase;
@@ -28,10 +29,12 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
 @SpringBootTest(classes = JobApplicationLauncher.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class JobApplicationControllerTest {
+public class JobApplicationControllerRestTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+
 
     @Test
     public void getApplicationById() {
@@ -83,6 +86,10 @@ public class JobApplicationControllerTest {
         ResponseEntity<String> response = this.restTemplate.getForEntity("/jobapplication/page/0/10", String.class);
         assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
+
+
+
+
 
     @Test
     public void getApplicationPageWithBadPageNmr(){

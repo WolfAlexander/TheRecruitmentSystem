@@ -1,16 +1,23 @@
 package dto.form;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jobApplicationApp.JobApplicationLauncher;
+import jobApplicationApp.dto.form.ApplicationStatusForm;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import static org.junit.Assert.assertEquals;
 
-import javax.validation.constraints.NotNull;
-
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = JobApplicationLauncher.class)
 public class ApplicationStatusFormTest {
 
-    @NotNull
-    private String name;
+    @Test
+    public void getAplicationStatusFormName(){
+        ApplicationStatusForm applicationStatusFormTest = new ApplicationStatusForm("test");
+        assertEquals(applicationStatusFormTest.getName(),"test");
+
+    }
+
+
 }
