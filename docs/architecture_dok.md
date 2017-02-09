@@ -64,7 +64,7 @@ Access to config files is restricted and only config service has credentials. In
 
 ### Data View
 
-![db architecture](images/db.png)
+![db architecture](./images/db.png)
 #### Old SSN to new dateOfBirth
 In old system SSN were entered by applicants and in the new system date of birth will be used
 instead. New database will be redesigned but old data cannot be lost. Solution is to create a new 
