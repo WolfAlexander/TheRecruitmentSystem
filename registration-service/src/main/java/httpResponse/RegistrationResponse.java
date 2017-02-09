@@ -8,6 +8,12 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+/**
+ * This class encapsulates a response on a HTTP request. The response that is being converted to JSON is
+ * providing the client with information on how the registration went.
+ *
+ * @author Albin Friedner
+ */
 
 @Getter
 @Setter

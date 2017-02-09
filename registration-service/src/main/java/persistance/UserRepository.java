@@ -5,7 +5,10 @@ import entity.User;
 import java.util.List;
 
 /**
- * Created by friedner on 2017-02-08.
+ * This interface is a repository that extends the CrudRepository interface. Default CRUD
+ * operations can be used to access the database. This interface handles the User entity.
+ *
+ * @author Albin Friedner
  */
 public interface UserRepository extends CrudRepository<User, Long>{
 
