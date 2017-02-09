@@ -164,7 +164,7 @@ we send all POST/PUT traffic will be send using Redis message broker. As long as
 
 ### Deployment View
 
-Though the structure on this project is micro-services, every service could run on separate hardware. The different services has all a important part in the system.
+Though the structure on this project is micro-services, every service could run on separate hardware. The different services all have an important part in the system.
  
  1. systemConfiguration Service has secured connection to all services in the systems and holds configuration for every service and
 shared resources - for example password to DB which are of course decrypted
