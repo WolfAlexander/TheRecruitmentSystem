@@ -166,7 +166,7 @@ we send all POST/PUT traffic will be send using Redis message broker. As long as
 
 Though the structure on this project is micro-services, every service could run on separate hardware. The different services all have an important part in the system.
  
- 1. systemConfiguration Service has secured connection to all services in the systems and holds configuration for every service and
+1. systemConfiguration Service has secured connection to all services in the systems and holds configuration for every service and
 shared resources - for example password to DB which are of course decrypted
 2. Discovery Service is connected to all bussiness-logic services so they can be found by load balancer and them selves.
 3. Registration and JobApplication Services has several ways of communication - using RestAPI for read and Redis for write to
