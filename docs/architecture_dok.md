@@ -86,6 +86,9 @@ a form on the client side. The form input is validated by the service and persis
 ###### JobApplication Service
 Job application service will handle all interactions with the job applications. it has a RESTapi and is used to create new applications, updating application statuses by a recruiter after being looked over, retrieving a single application or a list of applications in a more page-like form, filtering applications by parameters and storing everything consistently. 
 
+The structure of the JobApplication services can be seen in picture 1
+![job-application-service_architecture](./images/JobApplicationService.png)
+1. jobApplication service architecture
 
 ### Security View
 ##### Security issues considered
@@ -110,6 +113,24 @@ Access to config files is restricted and only config service has credentials. Cr
  distributed between developers. In future, information in config-files can be encrypted.
 
 ### Data View
+There are two data sources for this project. The first one, used at runtime, is a mysql server. It is accessible from anywhere on the internet by username, password and the non standard port. The second database is an embedded h2 server meant for testing so we don't change the real data during a test. Both databases have the same structure (see picture 3). In the application we make transactions to one or more specific
+ parts of the database by repository (see picture 1). The data retrieved will be handled as entities, objects that represent the database and also has the connections that the database has. 
+
+```java
+@Transactional
+public interface CompetenceProfileRepository extends CrudRepository<CompetenceProfileEntity, Integer> {
+}
+```
+1. repository
+<br/>
+![db architecture](./images/db.png)
+2. Database design
+<br/>
+![or-mapping](./images/OR-mapping.png)
+3. OR-mapping
+
+
+
 ##### Old SSN to new dateOfBirth
 In old system SSN were entered by applicants and in the new system date of birth will be used
 instead. New database will be redesigned but old data cannot be lost. Solution is to create a new 
@@ -143,6 +164,25 @@ we send all POST/PUT traffic will be send using Redis message broker. As long as
 
 ### Deployment View
 
+Though the structure on this project is micro-services, every service could run on separate hardware. The different services has all a important part in the system.
+ 
+ 1. systemConfiguration Service has secured connection to all services in the systems and holds configuration for every service and
+shared resources - for example password to DB which are of course decrypted
+2. Discovery Service is connected to all bussiness-logic services so they can be found by load balancer and them selves.
+3. Registration and JobApplication Services has several ways of communication - using RestAPI for read and Redis for write to
+make sure that no write request disappear if service is down and need time to get back up again.
+
+
+![micro-services-deployment_diagram](./images/micro-services-deployment_diagram.png)
+
+
+
+Explanation to the diagram:
+* <b>Blue containers</b> - has connection to outside world
+* <b>Green containers</b> - bussiness logic
+* <b>Yellow containers</b> - services that handle non-functional requirements, connected to all nodes except DB (and Client)
+* <b>Red containers</b> - databases
+* <b>White components</b> - components inside a service
 
 ### Implementation View
 ###### Running Environment
@@ -195,9 +235,14 @@ Due to time constraint and resources limitation in this course project we implem
  
 ### References
 [1] Richards, M. (2015) ‘Microservices Architecture Pattern, Pattern Description’, in Scherer, H. (ed.) Software Architecture Patterns Understanding Common Architecture Patterns and When to Use them. 1005 Gravenstein Highway North, Sebastopol, CA 95472.: O’Reilly Media, Inc, pp. 27.
+
 [2] Richards, M. (2015) ‘Microservices Architecture Pattern, Pattern Analysis’, in Scherer, H. (ed.) Software Architecture Patterns Understanding Common Architecture Patterns and When to Use them. 1005 Gravenstein Highway North, Sebastopol, CA 95472.: O’Reilly Media, Inc, pp. 34–35.
+
 [3] Richards, M. (2015) ‘Microservices Architecture Pattern, Pattern Topologies’, in Scherer, H. (ed.) Software Architecture Patterns Understanding Common Architecture Patterns and When to Use them. 1005 Gravenstein Highway North, Sebastopol, CA 95472.: O’Reilly Media, Inc, pp. 29–32.
+
 [4] Li, R., Oliver, K. and Rajagopalan, R. (2015) Baker street: Avoiding bottlenecks with a client-side load Balancer for Microservices. Available at: http://thenewstack.io/baker-street-avoiding-bottlenecks-with-a-client-side-load-balancer-for-microservices/ (Accessed: 9 February 2017).
+
 [5] NewCircle Training (2016) Building Microservices with spring cloud. Available at: https://youtu.be/ZyK5QrKCbwM?t=17m39s (Accessed: 9 February 2017).
+
 [6] Syer, D. (2015) Spring and angular JS: A secure single Page Application. Available at: https://spring.io/blog/2015/01/12/spring-and-angular-js-a-secure-single-page-application (Accessed: 9 February 2017).
 ![overall architecture](https://www.safaribooksonline.com/library/view/software-architecture-patterns/9781491971437/assets/sapr_0402.png)
