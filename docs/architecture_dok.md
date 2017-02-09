@@ -5,16 +5,16 @@ Adrian Gortzak <br/>
 Albin Friedner <br/>
 Alexander Nikalayeu nikal@kth.se
 
-### Introduction
+### 1. Introduction
 In this document the architecture for the recruit system we have developed is explained. The document will describe
 the features and properties as well as the decisions behind them. We also explain considerations we have made before 
 the decision of a solution. Non-functional requirements and possible unsolved issues is also described.
 
-### Functionality View
+### 2. Functionality View
 What user can do at this stage? <br/>
 At this stage a user can register them selves. They can enter information in a web page and send it in to the system.
 
-### Design View
+### 3. Design View
 ##### Architecture choice
 This application is implemented as microservices distributed-system. Microservices architecture means separately deployed 
 units and each unit(microservice) has it own objective[1]. Reasons for choosing microservices pattern are: 
@@ -90,7 +90,7 @@ The structure of the JobApplication services can be seen in picture 1
 ![job-application-service_architecture](./images/JobApplicationService.png)
 1. jobApplication service architecture
 
-### Security View
+### 3. Security View
 ##### Security issues considered
 - Authentication on each service and different access level/roles
 - Accessing services without gateway
@@ -112,7 +112,7 @@ Self-seined certificate and HTTPS.
 Access to config files is restricted and only config service has credentials. Credentials are not saved in repository but 
  distributed between developers. In future, information in config-files can be encrypted.
 
-### Data View
+### 4. Data View
 There are two data sources for this project. The first one, used at runtime, is a mysql server. It is accessible from anywhere on the internet by username, password and the non standard port. The second database is an embedded h2 server meant for testing so we don't change the real data during a test. Both databases have the same structure (see picture 3). In the application we make transactions to one or more specific
  parts of the database by repository (see picture 1). The data retrieved will be handled as entities, objects that represent the database and also has the connections that the database has. 
 
@@ -121,13 +121,13 @@ There are two data sources for this project. The first one, used at runtime, is 
 public interface CompetenceProfileRepository extends CrudRepository<CompetenceProfileEntity, Integer> {
 }
 ```
-1. repository
+4.1. repository
 <br/>
 ![db architecture](./images/db.png)
-2. Database design
+4.2. Database design
 <br/>
 ![or-mapping](./images/OR-mapping.png)
-3. OR-mapping
+4.3. OR-mapping
 
 
 
@@ -136,7 +136,7 @@ In old system SSN were entered by applicants and in the new system date of birth
 instead. New database will be redesigned but old data cannot be lost. Solution is to create a new 
 db table where persons id is a foreign key to the person and SSN store in SSN column. 
 
-### Non-Functional View 
+### 5. Non-Functional View 
 This part includes information about non-functional requirements that are not mentioned in other parts of the documentation.
  For security see security section, for packaging see implementation view and so on.
  
@@ -162,19 +162,21 @@ Since we have independent services that can be horizontally scaled something has
 Services can go down. That happens. To make sure that no write (POST/PUT) request gets lost due to down service
 we send all POST/PUT traffic will be send using Redis message broker. As long as message broker is up no write request will be lost.
 
-### Deployment View
+### 6. Deployment View
 
 Though the structure on this project is micro-services, every service could run on separate hardware. The different services all have an important part in the system.
  
-1. systemConfiguration Service has secured connection to all services in the systems and holds configuration for every service and
+1. <b>systemConfiguration Service</b> has secured connection to all services in the systems and holds configuration for every service and
 shared resources - for example password to DB which are of course decrypted
-2. Discovery Service is connected to all bussiness-logic services so they can be found by load balancer and them selves.
-3. Registration and JobApplication Services has several ways of communication - using RestAPI for read and Redis for write to
+2. <b>Discovery Service</b> is connected to all bussiness-logic services so they can be found by load balancer and them selves.
+3. <b>Registration and JobApplication Services</b> has several ways of communication - using RestAPI for read and Redis for write to
 make sure that no write request disappear if service is down and need time to get back up again.
+
+The structure of the micro-serves can be seen in picture 6.1 
 
 
 ![micro-services-deployment_diagram](./images/micro-services-deployment_diagram.png)
-
+6.1 micro-services deployment diagram
 
 
 Explanation to the diagram:
@@ -184,7 +186,7 @@ Explanation to the diagram:
 * <b>Red containers</b> - databases
 * <b>White components</b> - components inside a service
 
-### Implementation View
+### 7. Implementation View
 ###### Running Environment
 To run the application all that is needed is Docker machine to run containers. All needed component already exists in 
 docker containers like Java 8.
