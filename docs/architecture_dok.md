@@ -63,17 +63,20 @@ Self-seined certificate and HTTPS.
 Access to config files is restricted and only config service has credentials. In future, information in config-files can be encrypted.
 
 ### Data View
-Database design
+
+
 ![db architecture](./images/db.png)
+1.Database design
 
-OR-mapping
 ![or-mapping](./images/OR-mapping.png)
-
+2.OR-mapping
 
 #### Old SSN to new dateOfBirth
 In old system SSN were entered by applicants and in the new system date of birth will be used
 instead. New database will be redesigned but old data cannot be lost. Solution is to create a new 
 db table where persons id is a foreign key to the person and SSN store in SSN column. 
+
+
 
 ### Deployment View
 #### Microservices in the system
