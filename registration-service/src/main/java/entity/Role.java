@@ -39,13 +39,16 @@ public class Role
         this.roleName = roleName;
     }
 
-    public void addUser(User student) {
-        if (!getUsers().contains(student)) {
-            getUsers().add(student);
-            if (student.getRole() != null) {
-                student.getRole().getUsers().remove(student);
+    public void addUser(User user)
+    {
+        if (!getUsers().contains(user))
+        {
+            getUsers().add(user);
+            if (user.getRole() != null)
+            {
+                user.getRole().getUsers().remove(user);
             }
-            student.setRole(this);
+            user.setRole(this);
         }
     }
 
