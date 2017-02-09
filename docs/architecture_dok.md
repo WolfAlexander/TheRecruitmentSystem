@@ -2,10 +2,14 @@
 ## The Recruiting Application
 ### Team
 Adrian Gortzak <br/>
-AlAlbin Friedner <br/>
+AlAlAlAlAlbin Friedner <br/>
 Alexander Nikalayeu nikal@kth.se
 
 ### Introduction
+In this document the architecture for the recruit system we have developed is explained. The document will describe
+the features and properties as well as the decisions behind them. We also explain considerations we have made before 
+the decision of a solution. Non-functional requirements and possible unsolved issues is also described.
+
 ### Functionality View
 What user can do at this stage? <br/>
 User can register them selves.
@@ -113,7 +117,10 @@ Redis will de used as message broker. Idea is to use Redis in future stage for P
 Authentication service will provide tokens and check if they are valid. 
 
 ###### Registration Service
-Registration service will perform registration of the users. This service now has RESTapi. Later on Redis will be configured.
+Registration service will perform registration of new users. This service has a REST API that accepts HTTP POST requests from
+a form on the client side. The form input is validated by the service and persisted in a database. The service is also 
+ going to assign the role 'Applicant' to each new user that registers. Later on Redis will be configured.
+
 
 ###### JobApplication Service
 Job application service will handle all interactions with the job applications. it has a RESTapi and is used to create new applications, updating application statuses by a recruiter after being looked over, retrieving a single application or a list of applications in a more page-like form, filtering applications by parameters and storing everything consistently. 
