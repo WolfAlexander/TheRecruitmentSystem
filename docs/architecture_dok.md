@@ -63,6 +63,8 @@ Self-seined certificate and HTTPS.
 Access to config files is restricted and only config service has credentials. In future, information in config-files can be encrypted.
 
 ### Data View
+
+![db architecture](images/db.png)
 #### Old SSN to new dateOfBirth
 In old system SSN were entered by applicants and in the new system date of birth will be used
 instead. New database will be redesigned but old data cannot be lost. Solution is to create a new 
@@ -106,6 +108,7 @@ Authentication service will provide tokens and check if they are valid.
 Registration service will perform registration of the users. This service now has RESTapi. Later on Redis will be configured.
 
 ###### JobApplication Service
+Job application service will handle all interactions with the job applications. it has a RESTapi and is used to create new applications, updating application statuses by a recruiter after being looked over, retrieving a single application or a list of applications in a more page-like form, filtering applications by parameters and storing everything consistently. 
 
 ### Implementation View
 ###### Creation
