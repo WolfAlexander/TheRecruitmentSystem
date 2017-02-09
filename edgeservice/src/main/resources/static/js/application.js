@@ -32,20 +32,26 @@ angular.module("application", ['ngRoute', 'ngMessages', 'pascalprecht.translate'
     self.submitForm = function (registrationForm) {
         $rootScope.registration_unavailable_error = false;
 
+        var params = JSON.stringify(
+            { firstname : $scope.registration.firstname,
+                lastname : $scope.registration.lastname,
+                dateOfBirth : $scope.registration.dateOfBirth,
+                email : $scope.registration.email,
+                username : $scope.registration.username,
+                password : $scope.registration.password
+            }
+        );
+
         $http({
             method: 'POST',
             url: '/api/test/registration',
-            data: $.param({firstname : $scope.registration.firstname,
-                            lastname : $scope.registration.lastname,
-                            dateOfBirth: $scope.registration.dateOfBirth,
-                            email: $scope.registration.email,
-                            username : $scope.registration.username,
-                            password : $scope.registration.password}),
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            headers: {'Content-Type': 'application/json'},
+            data: params
         }).then(function successCallback(response) {
             handlingRegistrationResponse($rootScope, registrationForm, response, $location);
         }, function errorCallback(response) {
-            $rootScope.registration_unavailable_error = true;
+            if(response.status === 410)
+                $rootScope.registration_unavailable_error = true;
         });
     }
 }).controller('login', function () {

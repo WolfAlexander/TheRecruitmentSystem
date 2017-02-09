@@ -35,6 +35,8 @@ cd ..
 cd edgeservice
 mvn package docker:build -Ddocker.host=$DOCKER_HOST -Ddocker.cert.path=$DOCKER_CERT_PATH
 
+#Going to resgistration-service
+
 echo
 echo
 echo
