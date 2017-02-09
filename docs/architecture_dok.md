@@ -175,7 +175,7 @@ shared resources - for example password to DB which are of course decrypted
 3. <b>Registration and JobApplication Services</b> has several ways of communication - using RestAPI for read and Redis for write to
 make sure that no write request disappear if service is down and need time to get back up again.
 
-The structure of the micro-serves can be seen in picture 6.1 
+The structure of the micro-services can be seen in picture 6.1 
 
 
 ![micro-services-deployment_diagram](./images/micro-services-deployment_diagram.png)
