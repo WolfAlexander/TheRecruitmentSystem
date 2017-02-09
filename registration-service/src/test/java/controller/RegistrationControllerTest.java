@@ -17,11 +17,11 @@ import registrationapp.inputForm.RegistrationForm;
 import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
-
+/*
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = RegistrationServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = RegistrationServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)*/
 public class RegistrationControllerTest {
-    @Autowired
+   /* @Autowired
     private TestRestTemplate testRestTemplate;
 
     @Ignore
@@ -43,5 +43,5 @@ public class RegistrationControllerTest {
         validRegistrationForm.setPassword("testtestest");
 
         return validRegistrationForm;
-    }
+    }*/
 }

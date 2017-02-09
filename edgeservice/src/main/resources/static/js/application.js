@@ -44,7 +44,7 @@ angular.module("application", ['ngRoute', 'ngMessages', 'pascalprecht.translate'
 
         $http({
             method: 'POST',
-            url: '/api/test/registration',
+            url: '/api/registerservice/register',
             headers: {'Content-Type': 'application/json'},
             data: params
         }).then(function successCallback(response) {

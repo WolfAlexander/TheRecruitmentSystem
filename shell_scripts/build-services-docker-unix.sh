@@ -19,7 +19,7 @@ echo
 echo
 echo
 
-#Going to discoveryservice folder
+#Building discoveryservice with maven docker plugin
 echo Building discoveryservice
 cd ..
 cd discoveryservice
@@ -29,14 +29,14 @@ echo
 echo
 echo
 
-#Going to edgeservice folder
+#Building edgeservice with maven docker plugin
 echo Building edgeservice
 cd ..
 cd edgeservice
 mvn package docker:build -Ddocker.host=$DOCKER_HOST -Ddocker.cert.path=$DOCKER_CERT_PATH
 
-#Going to resgistration-service
-
-echo
-echo
-echo
+#Building registration-service with maven docker plugin
+echo Building registration service
+cd ..
+cd registration-service
+mvn package docker:build -Ddocker.host=$DOCKER_HOST -Ddocker.cert.path=$DOCKER_CERT_PATH

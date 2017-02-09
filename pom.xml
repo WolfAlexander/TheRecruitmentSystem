@@ -13,7 +13,8 @@
         <module>discoveryservice</module>
         <module>edgeservice</module>
         <module>registration-service</module>
-        <!--<module>test</module>-->
+        <module>jobapplicationservice</module>
+
     </modules>
 
     <properties>
