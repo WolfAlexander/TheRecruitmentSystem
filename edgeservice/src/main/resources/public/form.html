@@ -93,6 +93,7 @@
                 <div ng-message="required" translate>registration.form.fields.errorMsg.required</div>
                 <div ng-message="minlength" translate>registration.form.username.errorMsg.minlength</div>
             </div>
+        </div>
 
             <!-- Password field and error messages-->
             <div class="form-group">
@@ -113,5 +114,6 @@
 
         <!--Submit button-->
         <button type="submit" ng-disabled = "registrationForm.$invalid" class="btn btn-primary" translate>registration.form.submitBttn</button>
+        <span ng-show="registrationForm_pending_request">Registering...</span>
     </form>
 </section>
