@@ -85,13 +85,16 @@ Registration service will perform registration of new users. This service has a 
 a form on the client side. The form input is validated by the service and persisted in a database. The service is also 
  going to assign the role 'Applicant' to each new user that registers. Later on Redis will be configured.
 
+The structure of the register services can be seen in picture 2.1
+![register-service_architecture](./images/RegistrationService_ClassPackageDiagram.png)
+2.1. Register service architecture
 
 ###### JobApplication Service
 Job application service will handle all interactions with the job applications. it has a RESTapi and is used to create new applications, updating application statuses by a recruiter after being looked over, retrieving a single application or a list of applications in a more page-like form, filtering applications by parameters and storing everything consistently. 
 
-The structure of the JobApplication services can be seen in picture 1
+The structure of the JobApplication services can be seen in picture 2.2
 ![job-application-service_architecture](./images/JobApplicationService.png)
-2.1. jobApplication service architecture
+2.2. JobApplication service architecture
 
 ### 3. Security View
 ##### Security issues considered
