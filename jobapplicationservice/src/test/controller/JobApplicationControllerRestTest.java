@@ -89,8 +89,6 @@ public class JobApplicationControllerRestTest {
 
 
 
-
-
     @Test
     public void getApplicationPageWithBadPageNmr(){
         ResponseEntity<String> response = this.restTemplate.getForEntity("/jobapplication/page/10/-3", String.class);
@@ -114,6 +112,7 @@ public class JobApplicationControllerRestTest {
         ResponseEntity<String> response = this.restTemplate.exchange("/jobapplication/change/status/2", HttpMethod.PUT,null, String.class);
         assertEquals(response.getStatusCode(), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
+
 
     @Test
     public void getAllValidStatus(){

@@ -10,5 +10,5 @@ import java.util.List;
 @Transactional
 public interface AvailableRepository extends CrudRepository<AvailabilityEntity, Integer> {
 
-    List<AvailabilityEntity> findByFromDateAndToDate(Date fromDate, Date toDate);
+    AvailabilityEntity findByFromDateAndToDate(Date fromDate, Date toDate);
 }

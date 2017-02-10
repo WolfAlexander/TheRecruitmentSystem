@@ -4,6 +4,7 @@ import jobApplicationApp.JobApplicationLauncher;
 import jobApplicationApp.dao.MysqlApplicationDao;
 import jobApplicationApp.dto.form.ApplicationForm;
 import jobApplicationApp.dto.form.ApplicationParamForm;
+import jobApplicationApp.dto.form.ApplicationStatusForm;
 import jobApplicationApp.entity.*;
 import jobApplicationApp.exception.NotValidArgumentException;
 import jobApplicationApp.service.JobApplicationService;
@@ -14,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import utils.JobApplicationEntityGenerater;
+import utils.JobApplicationFormGenerater;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,6 +33,8 @@ import static org.mockito.BDDMockito.given;
 @SpringBootTest(classes = JobApplicationLauncher.class)
 @ActiveProfiles("test")
 public class JobApplicationServiceTest {
+
+    private JobApplicationFormGenerater jobApplicationFormGenerater = new JobApplicationFormGenerater();
 
     @MockBean
     private MysqlApplicationDao mysqlApplicationDao;
@@ -161,6 +166,25 @@ public class JobApplicationServiceTest {
             Collection<ApplicationEntity> returnApplicationEntities  = jobApplicationService.getApplicationsPage(10,-5);
             fail("Not valid page size was accepted");
         }catch (NotValidArgumentException e){
+        }
+    }
+
+    @Test
+    public void changeStatusOnApplicationByIdTest(){
+        ApplicationStatusForm applicationStatusForm = jobApplicationFormGenerater.getApplicationStatusForm();
+        try {
+            jobApplicationService.changeStatusOnApplicationById(5, applicationStatusForm);
+        }catch (Exception e){
+            fail("could not change on fake application");
+        }
+    }
+
+    @Test
+    public void registerJobApplicationTest(){
+        try {
+            jobApplicationService.registerJobApplication(jobApplicationFormGenerater.generateApplicationForm());
+        }catch (Exception e){
+            fail("could not register new application from service");
         }
     }
 }

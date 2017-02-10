@@ -1,11 +1,9 @@
 package jobApplicationApp.dao;
 
 import jobApplicationApp.dao.repository.*;
-import jobApplicationApp.dto.form.ApplicationForm;
-import jobApplicationApp.dto.form.ApplicationParamForm;
-import jobApplicationApp.dto.form.CompetenceForm;
-import jobApplicationApp.dto.form.ApplicationStatusForm;
+import jobApplicationApp.dto.form.*;
 import jobApplicationApp.entity.*;
+import jobApplicationApp.exception.NoMatchException;
 import jobApplicationApp.exception.NotValidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
@@ -62,29 +60,45 @@ public class MysqlApplicationDao implements ApplicationDao{
         ApplicationStatusEntity status = statusRepository.findByName("PENDING");
         Date registrationDate = new Date();
         PersonEntity person = personRepository.findOne(application.getPersonId());
+        AvailabilityEntity availability = getAvailability(application.getAvailableForWork());
 
-        AvailabilityEntity availability;
-        Date from = application.getAvailableForWork().getFromDate();
-        Date to = application.getAvailableForWork().getToDate();
-        List<AvailabilityEntity> a = availableRepository.findByFromDateAndToDate(from,to);
-
-        if(a.size() == 0){
-            availability = new AvailabilityEntity(from,to);
-            availableRepository.save(availability);
-        }else {
-            availability = a.get(0);
-        }
         ApplicationEntity newApplication = new ApplicationEntity(person,registrationDate,status,availability);
         newApplication = applicationRepository.save(newApplication);
+        saveCompetenceProfilesToApplication(application.getCompetenceProfile(), newApplication);
+    }
+
+    /**
+     * Get availability entity for application
+     * @param availabilityForm for from and to date
+     * @return a valid availability entity
+     */
+    private AvailabilityEntity getAvailability(AvailabilityForm availabilityForm){
+        AvailabilityEntity availability;
+        AvailabilityEntity a = availableRepository.findByFromDateAndToDate(availabilityForm.getFromDate(),availabilityForm.getToDate());
+
+        if(a == null){
+            availability = new AvailabilityEntity(availabilityForm.getFromDate(),availabilityForm.getToDate());
+            return availableRepository.save(availability);
+        }else {
+            return a;
+        }
+    }
+
+    /**
+     * Save competence profiles to application
+     * @param competenceLists of competences to be added to the application
+     * @param newApplication to attached the competences to
+     */
+    private void saveCompetenceProfilesToApplication(Collection<CompetenceForm> competenceLists, ApplicationEntity newApplication){
         ArrayList<CompetenceProfileEntity> competenceProfileEntities = new ArrayList<>();
-            for (CompetenceForm competenceProfileEntity : application.getCompetenceProfile()) {
-                CompetenceEntity competence = competenceRepository.findByName(competenceProfileEntity.getName());
-                if(competence == null){
-                    throw new NotValidArgumentException("Not valid name on competence");
-                }
-                log.info("years of experience" +  competenceProfileEntity.getYearsOfExperience());
-                CompetenceProfileEntity c = new CompetenceProfileEntity(newApplication,competence, competenceProfileEntity.getYearsOfExperience());
-                competenceProfileEntities.add(c);
+        for (CompetenceForm competenceProfileEntity : competenceLists) {
+            CompetenceEntity competence = competenceRepository.findByName(competenceProfileEntity.getName());
+            if(competence == null){
+                throw new NotValidArgumentException("Not valid name on competence");
+            }
+            log.info("years of experience" +  competenceProfileEntity.getYearsOfExperience());
+            CompetenceProfileEntity c = new CompetenceProfileEntity(newApplication,competence, competenceProfileEntity.getYearsOfExperience());
+            competenceProfileEntities.add(c);
         }
         competenceProfileEntities.forEach((c)->competenceProfileRepository.save(c));
     }
@@ -108,51 +122,84 @@ public class MysqlApplicationDao implements ApplicationDao{
     @Override
     public Collection<ApplicationEntity> getApplicationByParam(ApplicationParamForm param) {
         Collection<ApplicationEntity> resultListOfApplication= new ArrayList<>();
-        Collection<ApplicationEntity> sqlResultOfApplication;
+        Collection<ApplicationEntity> newResultOfApplicationFilter;
+        try {
+            if (param.getAvailableForWork() != null) {
+                resultListOfApplication = filterApplicationsByAvailability(param.getAvailableForWork());
+            }
+            if (param.getCompetenceProfile() != null) {
+                newResultOfApplicationFilter = filterApplicationsByCompetence(param.getCompetenceProfile());
+                if (resultListOfApplication.size() == 0) {
+                    resultListOfApplication = newResultOfApplicationFilter;
+                } else {
+                    getListOfIntersectionBetweenApplicationList(resultListOfApplication, newResultOfApplicationFilter);
+                }
+            }
+            if (param.getName() != null) {
+                newResultOfApplicationFilter = applicationRepository.getApplicationsByPersonName(param.getName());
+                if (newResultOfApplicationFilter.size() == 0) {
+                    throw new NoMatchException("No matches will be found");
+                }
+                if (resultListOfApplication.size() == 0) {
+                    resultListOfApplication = newResultOfApplicationFilter;
+                } else {
+                    resultListOfApplication = getListOfIntersectionBetweenApplicationList(newResultOfApplicationFilter, resultListOfApplication);
+                }
+            }
+        }catch (NotValidArgumentException e){
+            throw e;
+        }catch (NoMatchException e){
+            return new ArrayList<>();
+        }
+        return resultListOfApplication;
+    }
 
-        if(param.getAvailableForWork() != null) {
-            if (param.getAvailableForWork().getFromDate() != null) {
-                sqlResultOfApplication = applicationRepository.getApplicationsThatCanWorkFrom(param.getAvailableForWork().getFromDate());
-                if (sqlResultOfApplication.size() == 0) {return new ArrayList<>();}
-                if(resultListOfApplication.size() == 0){
-                    resultListOfApplication = sqlResultOfApplication;
-                }else {
-                    resultListOfApplication = getListOfIntersectionBetweenApplicationList(sqlResultOfApplication, resultListOfApplication);
-                }
-            }
-            if (param.getAvailableForWork().getToDate() != null) {
-                sqlResultOfApplication = applicationRepository.getApplicationsThatCanWorkTo(param.getAvailableForWork().getToDate());
-                if (sqlResultOfApplication.size() == 0) {return new ArrayList<>();}
-                if(resultListOfApplication.size() == 0){
-                    resultListOfApplication = sqlResultOfApplication;
-                }else {
-                    resultListOfApplication = getListOfIntersectionBetweenApplicationList(sqlResultOfApplication, resultListOfApplication);
-                }
+    /**
+     * Filter applications by availability
+     * @param availabilityForm that have from and to date of availability from user
+     * @return collection of applications that match requirements.
+     * @throws RuntimeException if no application could be found on a search by parameters
+     */
+    private Collection<ApplicationEntity> filterApplicationsByAvailability(AvailabilityForm availabilityForm) throws RuntimeException {
+        Collection<ApplicationEntity> resultListOfApplication= new ArrayList<>();
+        Collection<ApplicationEntity> sqlResultOfApplication;
+        if (availabilityForm != null) {
+            sqlResultOfApplication = applicationRepository.getApplicationsThatCanWorkFrom(availabilityForm.getFromDate());
+                resultListOfApplication = sqlResultOfApplication;
+        }
+        if (availabilityForm.getToDate() != null) {
+            sqlResultOfApplication = applicationRepository.getApplicationsThatCanWorkTo(availabilityForm.getToDate());
+            if (sqlResultOfApplication.size() == 0) {throw new NoMatchException("No matches will be found");}
+            if(resultListOfApplication.size() == 0){
+                resultListOfApplication = sqlResultOfApplication;
+            }else {
+                resultListOfApplication = getListOfIntersectionBetweenApplicationList(sqlResultOfApplication, resultListOfApplication);
             }
         }
-        if(param.getCompetenceProfile() != null){
-            StringBuilder sqlCondition = new StringBuilder("SELECT a FROM ApplicationEntity a WHERE 1=1 ");
-            for(CompetenceForm cf : param.getCompetenceProfile()){
-                CompetenceEntity competenceEntity = competenceRepository.findByName(cf.getName());
-                if(competenceEntity== null){
-                    throw new NotValidArgumentException("Not existing competence");
-                }else {
-                    sqlCondition.append("AND " +competenceEntity.getId()+ " IN (SELECT co.competence.id FROM CompetenceProfileEntity co WHERE co.application.id=a.id)");
-                }
-                log.info(sqlCondition.toString());
-                Query query = em.createQuery(sqlCondition.toString());
-                sqlResultOfApplication =  query.getResultList();
-                if (sqlResultOfApplication.size() == 0) {return new ArrayList<>();}
-                if(resultListOfApplication.size() == 0){
-                    resultListOfApplication = sqlResultOfApplication;
-                }else {
-                    resultListOfApplication = getListOfIntersectionBetweenApplicationList(sqlResultOfApplication, resultListOfApplication);
-                }
+        return resultListOfApplication;
+    }
+
+    /**
+     *
+     * @param competenceFormList list of competences that is required of the application
+     * @return ollection of applications that match requirements.
+     * @throws RuntimeException if no application could be found on a search by parameters
+     */
+    private Collection<ApplicationEntity> filterApplicationsByCompetence(Collection<CompetenceForm> competenceFormList) throws RuntimeException {
+        Collection<ApplicationEntity> resultListOfApplication= new ArrayList<>();
+        Collection<ApplicationEntity> sqlResultOfApplication;
+        StringBuilder sqlCondition = new StringBuilder("SELECT a FROM ApplicationEntity a WHERE 1=1 ");
+        for(CompetenceForm cf : competenceFormList){
+            CompetenceEntity competenceEntity = competenceRepository.findByName(cf.getName());
+            if(competenceEntity== null){
+                throw new NotValidArgumentException("Not existing competence");
+            }else {
+                sqlCondition.append("AND " +competenceEntity.getId()+ " IN (SELECT co.competence.id FROM CompetenceProfileEntity co WHERE co.application.id=a.id)");
             }
-        }
-        if(param.getName() != null){
-            sqlResultOfApplication = applicationRepository.getApplicationsByPersonName(param.getName());
-            if (sqlResultOfApplication.size() == 0) {return new ArrayList<>();}
+            log.info(sqlCondition.toString());
+            Query query = em.createQuery(sqlCondition.toString());
+            sqlResultOfApplication =  query.getResultList();
+            if (sqlResultOfApplication.size() == 0) {throw new NoMatchException("No matches will be found");};
             if(resultListOfApplication.size() == 0){
                 resultListOfApplication = sqlResultOfApplication;
             }else {
@@ -184,6 +231,12 @@ public class MysqlApplicationDao implements ApplicationDao{
         return ase;
     }
 
+    /**
+     * Makes the intersection of two lists of application
+     * @param map1 first list of application
+     * @param map2 second list of application
+     * @return collection of application that intersect with each other.
+     */
     private Collection<ApplicationEntity> getListOfIntersectionBetweenApplicationList(Collection<ApplicationEntity> map1, Collection<ApplicationEntity> map2){
         Collection<ApplicationEntity> applicationListResult = new ArrayList<>();
         map1.forEach((k)->{
@@ -191,7 +244,6 @@ public class MysqlApplicationDao implements ApplicationDao{
                 applicationListResult.add(k);
             }
         });
-
         return applicationListResult;
     }
 }

@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = JobApplicationLauncher.class)
 @ActiveProfiles("test")
 @DataJpaTest
-public class MysqlApplicationDaoTest  {
+public class MysqlApplicationDaoJpa_Test {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     //private ApplicationDao applicationDao = new MysqlApplicationDao();
