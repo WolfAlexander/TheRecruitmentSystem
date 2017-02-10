@@ -253,4 +253,3 @@ Due to time constraint and resources limitation in this course project we implem
 [5] NewCircle Training (2016) Building Microservices with spring cloud. Available at: https://youtu.be/ZyK5QrKCbwM?t=17m39s (Accessed: 9 February 2017).
 
 [6] Syer, D. (2015) Spring and angular JS: A secure single Page Application. Available at: https://spring.io/blog/2015/01/12/spring-and-angular-js-a-secure-single-page-application (Accessed: 9 February 2017).
-![overall architecture](https://www.safaribooksonline.com/library/view/software-architecture-patterns/9781491971437/assets/sapr_0402.png)
