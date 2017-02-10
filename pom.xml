@@ -12,7 +12,9 @@
         <module>configservice</module>
         <module>discoveryservice</module>
         <module>edgeservice</module>
-        <module>test</module>
+        <module>registration-service</module>
+        <module>jobapplicationservice</module>
+
     </modules>
 
     <properties>
