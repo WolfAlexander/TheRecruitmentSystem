@@ -1,3 +1,2 @@
 maven-package:
-  script: "cd jobapplicationservice"
-  script: "mvn install -B"
+  script: "mvn package jobapplicationservic/."
