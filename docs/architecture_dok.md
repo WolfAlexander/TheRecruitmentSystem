@@ -197,6 +197,16 @@ To automate the process Maven Docker plugin is used to build Jars and build Dock
 Plugin also deploys image to given Docker machine. 
 
 ###### Instruction to build and run the system:
+
+The system can be deployed in two different ways. one more suitable for developers and one for the end user.
+
+#### Development
+
+##### Requirement 
+* Docker
+* Maven
+
+##### Instructions how to deploy
 1. Have docker installed on the machine
 2. Open terminal and go to shell_scripts directory
 3. 
@@ -208,10 +218,20 @@ Plugin also deploys image to given Docker machine.
 4. Run start-config-service.sh - it has to be started before other services
 5. Run start-other-services.sh
 
+#### Production
+
+##### Requirement 
+* Docker
+* git
+
+##### Instructions how to deploy
+
+
+
 ###### Tools, frameworks and libraries:
-- Spring Framework with Spring Boot, Spring Cloud, Spring Security and more Spring projects - main development framework
-- Maven - for dependency managing, test running, building docker images 
-- JUnit 4/5 - testing framework
+- [Spring](https://spring.io/)  Framework with [Spring boot](https://projects.spring.io/spring-boot/) , Spring Cloud, Spring Security and more Spring projects - main development framework
+- [Maven](https://maven.apache.org/) - for dependency managing, test running, building docker images 
+- [JUnit 4](http://junit.org/junit4/) / [JUnit 5](http://junit.org/junit5/) - testing framework
 - Spring Test and Mockito - testing framework
 - Netflix Eureka - discovery service so that services can find each other
 - Netflix Hystrix - implementation circuit breaker design patternr that handles situation when service is unavailable
@@ -226,15 +246,17 @@ Most important im this architecture is that services are independent. Developers
 public API. Services can be horizontally scaled easily. Sounds good, but when it comes to question of database and data consistency there is a problem.
 How can teams work independently when database is used by everyone? Solution is simple - every service has it's own database. Good, but if all services
  have their own databases, how can data be consistent? 
- <br/>
- <br/>
+ <br/><br/>
+ 
  There are several solution. One is to use event-driven method where a writing to database is
  an event and when that happens services will get a notification that it is time to update their data. 
- <br/>
- <br/>
+ <br/><br/>
+ 
 Due to time constraint and resources limitation in this course project we implemented different solution. We have only one database and different
  services has a limited access to database tables using database build-in authentication and authorisation.
- 
+ <br/><br/>
+  
+  Outdated docker start image Java:8 will be changed to openjdk image, "This image is officially deprecated in favor of the openjdk image, and will receive no further updates after 2016-12-31 (Dec 31, 2016). Please adjust your usage accordingly." [7]
 ### References
 [1] Richards, M. (2015) ‘Microservices Architecture Pattern, Pattern Description’, in Scherer, H. (ed.) Software Architecture Patterns Understanding Common Architecture Patterns and When to Use them. 1005 Gravenstein Highway North, Sebastopol, CA 95472.: O’Reilly Media, Inc, pp. 27.
 
@@ -247,4 +269,5 @@ Due to time constraint and resources limitation in this course project we implem
 [5] NewCircle Training (2016) Building Microservices with spring cloud. Available at: https://youtu.be/ZyK5QrKCbwM?t=17m39s (Accessed: 9 February 2017).
 
 [6] Syer, D. (2015) Spring and angular JS: A secure single Page Application. Available at: https://spring.io/blog/2015/01/12/spring-and-angular-js-a-secure-single-page-application (Accessed: 9 February 2017).
-![overall architecture](https://www.safaribooksonline.com/library/view/software-architecture-patterns/9781491971437/assets/sapr_0402.png)
+
+[7] [Java's official docker repository](https://hub.docker.com/_/java/)
