@@ -1,4 +1,3 @@
 maven-package:
   script:
-    - apt-get install maven -y
-    - mvn package jobapplicationservic/.
+    - ping google -c 3
