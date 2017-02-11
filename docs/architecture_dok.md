@@ -1,10 +1,12 @@
 # Architecture Documentation
 ## The Recruiting Application
 ### Team
-Adrian Gortzak <br/>
-Albin Friedner <br/>
-Alexander Nikalayeu nikal@kth.se
 
+Name | Email
+------------ | -------------
+**Adrian Gortzak** | gortzak@kth.se <br/>
+**Albin Friedner** | <br/>
+**Alexander Nikalayeu** | nikal@kth.se
 
 ### 1. Introduction
 In this document the architecture for the recruit system we have developed is explained. The document will describe
@@ -83,13 +85,16 @@ Registration service will perform registration of new users. This service has a 
 a form on the client side. The form input is validated by the service and persisted in a database. The service is also 
  going to assign the role 'Applicant' to each new user that registers. Later on Redis will be configured.
 
+The structure of the register services can be seen in picture 2.1
+![register-service_architecture](./images/RegistrationService_ClassPackageDiagram.png)
+2.1. Register service architecture
 
 ###### JobApplication Service
 Job application service will handle all interactions with the job applications. it has a RESTapi and is used to create new applications, updating application statuses by a recruiter after being looked over, retrieving a single application or a list of applications in a more page-like form, filtering applications by parameters and storing everything consistently. 
 
-The structure of the JobApplication services can be seen in picture 1
+The structure of the JobApplication services can be seen in picture 2.2
 ![job-application-service_architecture](./images/JobApplicationService.png)
-1. jobApplication service architecture
+2.2. JobApplication service architecture
 
 ### 3. Security View
 ##### Security issues considered
@@ -173,7 +178,7 @@ shared resources - for example password to DB which are of course decrypted
 3. <b>Registration and JobApplication Services</b> has several ways of communication - using RestAPI for read and Redis for write to
 make sure that no write request disappear if service is down and need time to get back up again.
 
-The structure of the micro-serves can be seen in picture 6.1 
+The structure of the micro-services can be seen in picture 6.1 
 
 
 ![micro-services-deployment_diagram](./images/micro-services-deployment_diagram.png)

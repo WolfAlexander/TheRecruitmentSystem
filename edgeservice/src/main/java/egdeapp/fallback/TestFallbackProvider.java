@@ -1,5 +1,7 @@
 package egdeapp.fallback;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.json.simple.JSONObject;
 import org.springframework.cloud.netflix.zuul.filters.route.ZuulFallbackProvider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,7 +16,7 @@ import java.io.InputStream;
 public class TestFallbackProvider implements ZuulFallbackProvider {
     @Override
     public String getRoute() {
-        return "testservice";
+        return "registration-service";
     }
 
     @Override
@@ -42,7 +44,11 @@ public class TestFallbackProvider implements ZuulFallbackProvider {
 
             @Override
             public InputStream getBody() throws IOException {
-                return new ByteArrayInputStream("Registration service is gone!".getBytes());
+                JSONObject response = new JSONObject();
+                response.put("status", getStatusCode());
+                response.put("message", "Registration service is gone!");
+
+                return new ByteArrayInputStream(response.toString().getBytes("utf-8"));
             }
 
             @Override

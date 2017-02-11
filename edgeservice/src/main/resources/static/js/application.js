@@ -31,7 +31,11 @@ angular.module("application", ['ngRoute', 'ngMessages', 'pascalprecht.translate'
 
     self.submitForm = function (registrationForm) {
         $rootScope.registration_unavailable_error = false;
+        $rootScope.registrationForm_pending_request = true;
 
+        /**
+         * Creating json request
+         */
         var params = JSON.stringify(
             { firstname : $scope.registration.firstname,
                 lastname : $scope.registration.lastname,
@@ -42,15 +46,23 @@ angular.module("application", ['ngRoute', 'ngMessages', 'pascalprecht.translate'
             }
         );
 
+        /**
+         * Sending request and receiving response
+         */
         $http({
             method: 'POST',
             url: '/api/registerservice/register',
             headers: {'Content-Type': 'application/json'},
             data: params
         }).then(function successCallback(response) {
+            $rootScope.registrationForm_pending_request = false;
             handlingRegistrationResponse($rootScope, registrationForm, response, $location);
         }, function errorCallback(response) {
-            if(response.status === 410)
+            $rootScope.registrationForm_pending_request = false;
+            /*TODO: fix this when proper JSON reponse in created*/
+            if(response.status === 400)
+                registrationForm["dateOfBirth"].$error.date = true;
+            else if(response.status === 410)
                 $rootScope.registration_unavailable_error = true;
         });
     }
