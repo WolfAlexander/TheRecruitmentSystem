@@ -1,10 +1,14 @@
 package registrationapp.domain;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import registrationapp.entity.Credential;
 import registrationapp.entity.Role;
 import registrationapp.entity.User;
+import registrationapp.persistance.CredentialsRepository;
 import registrationapp.persistance.RoleRepository;
 import registrationapp.persistance.UserRepository;
 
@@ -26,7 +30,10 @@ public class RegistrationManager
     UserRepository userRepository;
     @Autowired
     RoleRepository roleRepository;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Autowired
+    CredentialsRepository credentialsRepository;
     /**
      * Checks if a user, that tries to register, is already registered in the database.
      * (NOT IMPLEMENTED YET)
@@ -53,9 +60,10 @@ public class RegistrationManager
      */
     public void register(String firstName, String lastName, Date dateOfBirth, String email, String username, String password)
     {
+        logger.info(firstName+" "+lastName+" "+ email+ " "+username+" "+password);
         Role role = roleRepository.findOne(2L);
-        User user = new User(firstName, lastName, dateOfBirth, email, username, password);
-        role.addUser(user);
-        userRepository.save(user);
+        User user = userRepository.save( new User(firstName, lastName, dateOfBirth, email, role));
+        Credential credential = credentialsRepository.save(new Credential(user.getId(),username,password));
+
     }
 }

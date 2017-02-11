@@ -9,10 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import registrationapp.RegistrationServiceApplication;
 
-
+/*
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = RegistrationServiceApplication.class)
-@DataJpaTest
+@SpringBootTest(classes = RegistrationServiceApplication.class)*/
+//@DataJpaTest
 public class UserRepositoryTest{
 /*
     @Autowired
