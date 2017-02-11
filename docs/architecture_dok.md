@@ -8,6 +8,18 @@ Name | Email
 **Albin Friedner** | <br/>
 **Alexander Nikalayeu** | nikal@kth.se
 
+### Table of content
+1. [Introduction](#1.-Introduction)
+2. [Functionality View](#1.-Introduction)
+3. [Security View](#1.-Introduction)
+4. [Data View](#1.-Introduction)
+5. [Non-Functional View](#1.-Introduction)
+6. [Deployment View](#1.-Introduction)
+7. [Implementation View](#7.-Implementation View)
+
+
+
+
 ### 1. Introduction
 In this document the architecture for the recruit system we have developed is explained. The document will describe
 the features and properties as well as the decisions behind them. We also explain considerations we have made before 
@@ -209,10 +221,10 @@ The system can be deployed in two different ways. one more suitable for develope
 #### Development
 
 ##### Requirement 
-* Docker
-* Maven
+* [Docker](https://www.docker.com/)
+* [Maven](https://maven.apache.org/)
 
-##### Instructions how to deploy
+##### Instructions to deploy services
 1. Have docker installed on the machine
 2. Open terminal and go to shell_scripts directory
 3. 
@@ -227,10 +239,10 @@ The system can be deployed in two different ways. one more suitable for develope
 #### Production
 
 ##### Requirement 
-* Docker
-* git
+* [Docker](https://www.docker.com/)
+* [git](https://git-scm.com/)
 
-##### Instructions how to deploy
+##### Instructions to deploy services
 
 
 
@@ -238,13 +250,14 @@ The system can be deployed in two different ways. one more suitable for develope
 - [Spring](https://spring.io/)  Framework with [Spring boot](https://projects.spring.io/spring-boot/) , Spring Cloud, Spring Security and more Spring projects - main development framework
 - [Maven](https://maven.apache.org/) - for dependency managing, test running, building docker images 
 - [JUnit 4](http://junit.org/junit4/) / [JUnit 5](http://junit.org/junit5/) - testing framework
-- Spring Test and Mockito - testing framework
-- Netflix Eureka - discovery service so that services can find each other
-- Netflix Hystrix - implementation circuit breaker design patternr that handles situation when service is unavailable
-- Netflix Ribbon - client side load balancer that knows which servers are up and available
-- Redis - used as message broker between services to make sure that no messages dissapear due to down server
-- Docker - packeting and deployment tool
-- AngularJS - client side model
+- [Spring Test](https://docs.spring.io/spring/docs/current/spring-framework-reference/html/integration-testing.html) -  testing framework
+- [Mockito](http://site.mockito.org/) - framework for unit tests in Java
+- [Netflix Eureka](https://github.com/Netflix/eureka) - discovery service so that services can find each other
+- [Netflix Hystrix](https://github.com/Netflix/Hystrix) - implementation circuit breaker design patternr that handles situation when service is unavailable
+- [Netflix Ribbon](https://github.com/Netflix/Hystrix) - client side load balancer that knows which servers are up and available
+- [Redis](https://redis.io/) - used as message broker between services to make sure that no messages dissapear due to down server
+- [Docker](https://www.docker.com/) - packeting and deployment tool
+- [AngularJS](https://angularjs.org/) - client side model
 
 ### Problems
 ###### Data consistency in Microservices
@@ -270,10 +283,10 @@ Due to time constraint and resources limitation in this course project we implem
 
 [3] Richards, M. (2015) ‘Microservices Architecture Pattern, Pattern Topologies’, in Scherer, H. (ed.) Software Architecture Patterns Understanding Common Architecture Patterns and When to Use them. 1005 Gravenstein Highway North, Sebastopol, CA 95472.: O’Reilly Media, Inc, pp. 29–32.
 
-[4] Li, R., Oliver, K. and Rajagopalan, R. (2015) Baker street: Avoiding bottlenecks with a client-side load Balancer for Microservices. Available at: http://thenewstack.io/baker-street-avoiding-bottlenecks-with-a-client-side-load-balancer-for-microservices/ (Accessed: 9 February 2017).
+[4] [Li, R., Oliver, K. and Rajagopalan, R. (2015) Baker street: Avoiding bottlenecks with a client-side load Balancer for Microservices.](http://thenewstack.io/baker-street-avoiding-bottlenecks-with-a-client-side-load-balancer-for-microservices/) (Accessed: 9 February 2017).
 
-[5] NewCircle Training (2016) Building Microservices with spring cloud. Available at: https://youtu.be/ZyK5QrKCbwM?t=17m39s (Accessed: 9 February 2017).
+[5] [NewCircle Training (2016) Building Microservices with spring cloud.](https://youtu.be/ZyK5QrKCbwM?t=17m39s) (Accessed: 9 February 2017).
 
-[6] Syer, D. (2015) Spring and angular JS: A secure single Page Application. Available at: https://spring.io/blog/2015/01/12/spring-and-angular-js-a-secure-single-page-application (Accessed: 9 February 2017).
+[6] [Syer, D. (2015) Spring and angular JS: A secure single Page Application.](https://spring.io/blog/2015/01/12/spring-and-angular-js-a-secure-single-page-application) (Accessed: 9 February 2017).
 
 [7] [Java's official docker repository](https://hub.docker.com/_/java/)
