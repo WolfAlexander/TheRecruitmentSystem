@@ -9,16 +9,13 @@ Name | Email
 **Alexander Nikalayeu** | nikal@kth.se
 
 ### Table of content
-1. [Introduction](#1.-Introduction)
-2. [Functionality View](#1.-Introduction)
-3. [Security View](#1.-Introduction)
-4. [Data View](#1.-Introduction)
-5. [Non-Functional View](#1.-Introduction)
-6. [Deployment View](#1.-Introduction)
-7. [Implementation View](#7.-Implementation View)
-
-
-
+1. <b>Introduction</b>
+2. <b>Functionality View</b>
+3. <b>Security View</b>
+4. <b>Data View</b>
+5. <b>Non-Functional View</b>
+6. <b>Deployment View</b>
+7. <b>Implementation View</b>
 
 ### 1. Introduction
 In this document the architecture for the recruit system we have developed is explained. The document will describe
@@ -26,8 +23,11 @@ the features and properties as well as the decisions behind them. We also explai
 the decision of a solution. Non-functional requirements and possible unsolved issues is also described.
 
 ### 2. Functionality View
-What user can do at this stage? <br/>
-At this stage a user can register them selves. They can enter information in a web page and send it in to the system.
+
+[Requirments from product owner](project-task.pdf)
+
+![use_cases](./images/Use_cases.png)
+2.1 use cases
 
 ### 3. Design View
 ##### Architecture choice
@@ -131,8 +131,8 @@ Access to config files is restricted and only config service has credentials. Cr
  distributed between developers. In future, information in config-files can be encrypted.
 
 ### 4. Data View
-There are two data sources for this project. The first one, used at runtime, is a mysql server. It is accessible from anywhere on the internet by username, password and the non standard port. The second database is an embedded h2 server meant for testing so we don't change the real data during a test. Both databases have the same structure (see picture 3). In the application we make transactions to one or more specific
- parts of the database by repository (see picture 1). The data retrieved will be handled as entities, objects that represent the database and also has the connections that the database has. 
+There are two data sources for this project. The first one, used at runtime, is a mysql server. It is accessible from anywhere on the internet by username, password and the non standard port. The reson for this is that we want to work with the same test data. Because a bug it much more easy to replicate of we all working with the same program and data.   The second database is an embedded h2 server meant for testing so we don't change the real data during a test. Both databases have the same structure (see picture 4.3). In the application we make transactions to one or more specific
+ parts of the database by repository (see picture 4.1). The data retrieved will be handled as entities, objects that represent the database and also has the connections that the database has (see picture 4.2). 
 
 ```java
 @Transactional
@@ -140,10 +140,10 @@ public interface CompetenceProfileRepository extends CrudRepository<CompetencePr
 }
 ```
 4.1. repository
-<br/>
+<br/><br/><br/><br/>
 ![db architecture](./images/db.png)
 4.2. Database design
-<br/>
+<br/><br/><br/><br>
 ![or-mapping](./images/OR-mapping.png)
 4.3. OR-mapping
 
@@ -205,24 +205,27 @@ Explanation to the diagram:
 * <b>White components</b> - components inside a service
 
 ### 7. Implementation View
+
+###### Instruction to build and run the system:
+
+The system can be deployed in two different ways. one more suitable for developers and one for the end user. We decided to do this because the first one creates smaller containers but requires the user to install dependencies on their own system and also download the code manually. The end user should not be concern on how to install this requirements on their system or how to retrieve the source code and this build will take care of all dependencies inside the container and also download all the necessary code itself.
+
+#### Development
+
+##### Information
 ###### Running Environment
 To run the application all that is needed is Docker machine to run containers. All needed component already exists in 
-docker containers like Java 8.
+docker containers like openjdk 8.
 
 ###### Building, deployment and running
 Services are build by Maven and packaged as Jar-files. Jar-files are putted in Docker images. 
 To automate the process Maven Docker plugin is used to build Jars and build Docker images. Maven Docker
 Plugin also deploys image to given Docker machine. 
 
-###### Instruction to build and run the system:
-
-The system can be deployed in two different ways. one more suitable for developers and one for the end user.
-
-#### Development
-
 ##### Requirement 
 * [Docker](https://www.docker.com/)
 * [Maven](https://maven.apache.org/)
+* [git](https://git-scm.com/)
 
 ##### Instructions to deploy services
 1. Have docker installed on the machine
@@ -237,13 +240,17 @@ The system can be deployed in two different ways. one more suitable for develope
 5. Run start-other-services.sh
 
 #### Production
-
+##### Information
+###### Running Environment
+todo
+###### Building, deployment and running
+todo
 ##### Requirement 
 * [Docker](https://www.docker.com/)
-* [git](https://git-scm.com/)
+
 
 ##### Instructions to deploy services
-
+todo
 
 
 ###### Tools, frameworks and libraries:
