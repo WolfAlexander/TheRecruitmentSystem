@@ -1,0 +1,119 @@
+<!--User registration form container-->
+<section ng-controller="registration" class="container">
+    <h3 translate>registration.page.title</h3>
+
+    <!--Alert messages-->
+    <div class="alert alert-warning" ng-show="registration_unavailable_error" translate>
+        registration.alert.registrationUnavailableError
+    </div>
+
+    <!--Registration form-->
+    <form name = "registrationForm" role="form" ng-submit="registration.submitForm(registrationForm)">
+        <!--First name input field and error messages-->
+        <div class="form-group">
+            <label for="firstname" translate>registration.form.firstName</label>
+            <input type="text"
+                   class="form-control"
+                   id="firstname"
+                   name="firstname"
+                   ng-model="registration.firstname"
+                   minlength="2"
+                   required/>
+        </div>
+
+        <div ng-messages="registrationForm.firstname.$error" role="alert" ng-show="registrationForm.firstname.$dirty">
+            <div ng-message="required" translate>registration.form.fields.errorMsg.required</div>
+            <div ng-message="minlength" translate>registration.form.firstName.errorMsg.minlength</div>
+        </div>
+
+        <!--Last name input field and error messages-->
+        <div class="form-group">
+            <label for="lastname" translate>registration.form.lastName</label>
+            <input type="text"
+                   class="form-control"
+                   id="lastname"
+                   name="lastname"
+                   ng-model="registration.lastname"
+                   minlength="3"
+                   required/>
+
+            <div ng-messages="registrationForm.lastname.$error" role="alert" ng-show="registrationForm.lastname.$dirty">
+                <div ng-message="required" translate>registration.form.fields.errorMsg.required</div>
+                <div ng-message="minlength" translate>registration.form.lastName.errorMsg.minlength</div>
+            </div>
+        </div>
+
+        <!--Date of birth input field and error messages-->
+        <div class="form-group">
+            <label for="dateOfBirth" translate>registration.form.dateOfBirth</label>
+            <input type="text"
+                   class="form-control"
+                   id="dateOfBirth"
+                   name="dateOfBirth"
+                   ng-model="registration.dateOfBirth"
+                   placeholder="yyyy-MM-dd"
+                   min="1900-01-01"
+                   max="2100-12-31"
+                   required />
+
+            <div ng-messages="registrationForm.dateOfBirth.$error" role="alert" ng-show="registrationForm.dateOfBirth.$dirty">
+                <div ng-message="required" translate>registration.form.fields.errorMsg.required</div>
+                <div ng-message="date" translate>registration.form.dateOfBirth.errorMsg.patternError</div>
+            </div>
+        </div>
+
+        <!-- Email field and error messages-->
+        <div class="form-group">
+            <label for="email" translate>registration.form.email</label>
+            <input type="email"
+                   class="form-control"
+                   id="email"
+                   name="email"
+                   ng-model="registration.email"
+                   required/>
+
+            <div ng-messages="registrationForm.email.$error" role="alert" ng-show="registrationForm.email.$dirty">
+                <div ng-message="required" translate>registration.form.fields.errorMsg.required</div>
+                <div ng-message="email" translate>registration.form.email.errorMsg</div>
+            </div>
+        </div>
+
+        <!-- Username field and error messages-->
+        <div class="form-group">
+            <label for="username" translate>registration.form.username</label>
+            <input type="text"
+                   class="form-control"
+                   id="username"
+                   name="username"
+                   ng-model="registration.username"
+                   minlength="2"
+                   required/>
+
+            <div ng-messages="registrationForm.username.$error" role="alert" ng-show="registrationForm.username.$dirty">
+                <div ng-message="required" translate>registration.form.fields.errorMsg.required</div>
+                <div ng-message="minlength" translate>registration.form.username.errorMsg.minlength</div>
+            </div>
+        </div>
+
+            <!-- Password field and error messages-->
+            <div class="form-group">
+                <label for="password" translate>registration.form.password</label>
+                <input type="password"
+                       class="form-control"
+                       id="password"
+                       name="password"
+                       ng-model="registration.password"
+                       minlength="8"
+                       required/>
+
+                <div ng-messages="registrationForm.password.$error" role="alert" ng-show="registrationForm.password.$dirty">
+                    <div ng-message="required" translate>registration.form.fields.errorMsg.required</div>
+                    <div ng-message="minlength" translate>registration.form.password.errorMsg.minlength</div>
+                </div>
+        </div>
+
+        <!--Submit button-->
+        <button type="submit" ng-disabled = "registrationForm.$invalid" class="btn btn-primary" translate>registration.form.submitBttn</button>
+        <span ng-show="registrationForm_pending_request">Registering...</span>
+    </form>
+</section>

@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: config-jobApplicationApp.service
+  cloud:
+    config:
+      server:
+        git:
+          uri: ${config.git.uri}
+          username: ${config.git.user}
+          password: ${config.git.pass}
+server:
+  port: 9999

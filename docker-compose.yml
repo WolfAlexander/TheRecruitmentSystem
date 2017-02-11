@@ -1,0 +1,22 @@
+#This should be run after config-service is up
+
+version: '2'
+services:
+  discovery-service:
+    image: discovery-service:latest
+    ports:
+      - "9090:9090"
+
+  edge-service:
+    image: edge-service:latest
+    depends_on:
+      - discovery-service
+    ports:
+      - "8080:8080"
+
+  registration-service:
+      image: registration-service:latest
+      depends_on:
+        - discovery-service
+      ports:
+        - "8888:8888"
