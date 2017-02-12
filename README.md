@@ -20,9 +20,9 @@ todo
 5. Run start-other-services.sh
 
 #### Services
-Config service - host:9999
-Discovery service - host:9090
-Edge service - host 8080
+* Config service - host:9999
+* Discovery service - host:9090
+* Edge service - host 8080
 
 ## Running the tests
 todo
