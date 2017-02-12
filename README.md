@@ -1,12 +1,8 @@
 # The Recruitment System
-
 One Paragraph of project description goes here
 
 ## Getting Started
-
 todo
-
-### Prerequisites
 
 ## Deployment & Installing
 
@@ -26,20 +22,12 @@ Config service - host:9999
 Discovery service - host:9090
 Edge service - host 8080
 
-
-
 ## Running the tests
-
 todo
-
 
 ## Built With
-
 * [Maven](https://maven.apache.org/) - Dependency Management
 
-## Versioning
-
-todo
 
 ## Authors
 
