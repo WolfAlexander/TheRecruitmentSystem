@@ -1,4 +1,4 @@
 maven-package:
   script:
     - cd jobapplicationservice/
-    - mvn package  
+    - ls  
