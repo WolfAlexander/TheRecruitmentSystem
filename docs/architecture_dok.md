@@ -108,6 +108,10 @@ The structure of the JobApplication services can be seen in picture 2.2
 ![job-application-service_architecture](./images/JobApplicationService.png)
 2.2. JobApplication service architecture
 
+
+###### Logging
+(Logging, motivate what is logged, how it is logged and where the log is.)
+
 ### 3. Security View
 ##### Security issues considered
 - Authentication on each service and different access level/roles
@@ -131,6 +135,13 @@ Access to config files is restricted and only config service has credentials. Cr
  distributed between developers. In future, information in config-files can be encrypted.
 
 ### 4. Data View
+
+###### Transactions
+(Motivate when and how transactions begin and end.)
+todo
+
+
+###### Structure
 There are two data sources for this project. The first one, used at runtime, is a mysql server. It is accessible from anywhere on the internet by username, password and the non standard port. The reson for this is that we want to work with the same test data. Because a bug it much more easy to replicate of we all working with the same program and data.   The second database is an embedded h2 server meant for testing so we don't change the real data during a test. Both databases have the same structure (see picture 4.3). In the application we make transactions to one or more specific
  parts of the database by repository (see picture 4.1). The data retrieved will be handled as entities, objects that represent the database and also has the connections that the database has (see picture 4.2). 
 
