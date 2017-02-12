@@ -1,5 +1,7 @@
 # The Recruitment System
-One Paragraph of project description goes here
+[![build status](https://git.gortz.org/IV1201/TheRecruitmentSystem/badges/develop/build.svg)](https://git.gortz.org/IV1201/TheRecruitmentSystem/commits/develop)
+
+Project in IV1201 Architecture and design of global applications
 
 ## Getting Started
 todo
