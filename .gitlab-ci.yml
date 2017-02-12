@@ -1,4 +1,4 @@
 maven-package:
   script:
-    - sudo apt-get install maven -y
-    - mvn package  jobapplicationservice/
+    - cd jobapplicationservice/
+    - mvn package  
