@@ -1,32 +1,20 @@
 package registrationapp.entity;
 
-
 import lombok.Getter;
-import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * Entity class for users of the recruit system that is persisted in an external database.
- *
- * @author Albin Friedner
- */
-
 @Entity
 @Table(name = "person")
+@NoArgsConstructor
 @Getter
-@Setter
-public class User
-{
-
+public class PersonEntity {
 
     @Id
-    @Column(name = "person_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Integer id;
 
     @Column(name = "firstname")
     private String firstName;
@@ -34,16 +22,14 @@ public class User
     @Column(name = "lastname")
     private String lastName;
 
+    @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
     private String email;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "role_id")
-    private Role role;
-
-
-    protected User(){}
+    private RoleEntity role;
 
     /**
      * All argument constructor for the User class, creates a new user.
@@ -53,15 +39,16 @@ public class User
      * @param dateOfBirth   the social security number of the user
      * @param email the email of the user
      */
-    public User(String firstName, String lastName, Date dateOfBirth, String email, Role role)
-    {
+    public PersonEntity(String firstName, String lastName, Date dateOfBirth, String email, RoleEntity role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.email = email;
-        this.role=role;
-
+        this.role = role;
     }
+
+
+
 
 
     @Override

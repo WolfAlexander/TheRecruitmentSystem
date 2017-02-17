@@ -9,14 +9,14 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Getter
 @Table(name = "credential")
-public class Credential {
+public class CredentialEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @NotNull
-    private Long personId;
+    private Integer personId;
 
     @NotNull
     private String username;
@@ -24,7 +24,7 @@ public class Credential {
     @NotNull
     private String password;
 
-    public Credential(Long personId, String username, String password) {
+    public CredentialEntity(Integer personId, String username, String password) {
         this.personId = personId;
         this.username = username;
         this.password = password;

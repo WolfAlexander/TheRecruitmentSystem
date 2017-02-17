@@ -1,9 +1,8 @@
-package registrationapp.persistance;
+package registrationapp.dao.persistance;
 
 import org.springframework.data.repository.CrudRepository;
-import registrationapp.entity.User;
+import registrationapp.entity.CredentialEntity;
 
-import java.util.List;
 
 /**
  * This interface is a repository that extends the CrudRepository interface. Default CRUD
@@ -11,6 +10,6 @@ import java.util.List;
  *
  * @author Albin Friedner
  */
-public interface UserRepository extends CrudRepository<User, Long>{
 
+public interface CredentialsRepository extends CrudRepository<CredentialEntity, Integer> {
 }

@@ -1,8 +1,7 @@
-package registrationapp.persistance;
+package registrationapp.dao.persistance;
 
 import org.springframework.data.repository.CrudRepository;
-import registrationapp.entity.Credential;
-import registrationapp.entity.Role;
+import registrationapp.entity.RoleEntity;
 
 
 /**
@@ -12,5 +11,5 @@ import registrationapp.entity.Role;
  * @author Albin Friedner
  */
 
-public interface CredentialsRepository extends CrudRepository<Credential, Integer> {
+public interface RoleRepository extends CrudRepository<RoleEntity, Integer> {
 }
