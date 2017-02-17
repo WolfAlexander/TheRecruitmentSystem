@@ -3,13 +3,11 @@ package jobApplicationApp.dao;
 import jobApplicationApp.dao.repository.*;
 import jobApplicationApp.dao.repository.localized.LanguageRepository;
 import jobApplicationApp.dao.repository.localized.LocalizedCompetenceRepository;
-import jobApplicationApp.dao.repository.localized.LocalizedRoleRepository;
 import jobApplicationApp.dao.repository.localized.LocalizedStatusRepository;
 import jobApplicationApp.dto.form.*;
 import jobApplicationApp.entity.*;
 import jobApplicationApp.entity.localized.LanguageEntity;
 import jobApplicationApp.entity.localized.LocalizedCompetence;
-import jobApplicationApp.entity.localized.LocalizedRole;
 import jobApplicationApp.entity.localized.LocalizedStatus;
 import jobApplicationApp.exception.NoMatchException;
 import jobApplicationApp.exception.NotValidArgumentException;
@@ -30,12 +28,10 @@ public class MysqlApplicationDao implements ApplicationDao{
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     @Autowired private ApplicationRepository applicationRepository;
     @Autowired private ApplicationStatusRepository statusRepository;
-    @Autowired private PersonRepository personRepository;
     @Autowired private CompetenceProfileRepository competenceProfileRepository;
     @Autowired private AvailableRepository availableRepository;
     @Autowired private CompetenceRepository competenceRepository;
     @Autowired private LanguageRepository languageRepository;
-    @Autowired private LocalizedRoleRepository localizedRoleRepository;
     @Autowired private LocalizedStatusRepository localizedStatusRepository;
     @Autowired private LocalizedCompetenceRepository localizedCompetenceRepository;
 
@@ -58,19 +54,11 @@ public class MysqlApplicationDao implements ApplicationDao{
         ApplicationEntity applicationEntity = application;
         try {
             LanguageEntity lang = getLanguage(language);
-            applicationEntity = translateRole(applicationEntity, lang);
             applicationEntity = translateStatus(applicationEntity, lang);
             applicationEntity = translateCompetence(applicationEntity, lang);
         }catch (Exception e){
             e.printStackTrace();
         }
-        return applicationEntity;
-    }
-
-    private ApplicationEntity translateRole(ApplicationEntity application, LanguageEntity lang){
-        ApplicationEntity applicationEntity = application;
-        LocalizedRole localizedRole = localizedRoleRepository.getByLanguageIdAndRoleId(lang.getId(),application.getPerson().getRole().getId());
-        applicationEntity.getPerson().getRole().setName(localizedRole.getTranslation());
         return applicationEntity;
     }
 
@@ -119,10 +107,9 @@ public class MysqlApplicationDao implements ApplicationDao{
     public void insertApplication(ApplicationForm application) throws NotValidArgumentException {
         ApplicationStatusEntity status = statusRepository.findByName("PENDING");
         Date registrationDate = new Date();
-        PersonEntity person = personRepository.findOne(application.getPersonId());
         AvailabilityEntity availability = getAvailability(application.getAvailableForWork());
 
-        ApplicationEntity newApplication = new ApplicationEntity(person,registrationDate,status,availability);
+        ApplicationEntity newApplication = new ApplicationEntity(application.getPersonId(),registrationDate,status,availability);
         newApplication = applicationRepository.save(newApplication);
         saveCompetenceProfilesToApplication(application.getCompetenceProfile(), newApplication);
     }
