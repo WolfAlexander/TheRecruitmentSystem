@@ -32,11 +32,12 @@ public class JobApplicationService {
     /**
      * Get job application by id
      * @param id of application
+     * @param lang
      * @return application
      */
-    public ApplicationEntity getApplicationById(int id) throws NotValidArgumentException {
+    public ApplicationEntity getApplicationById(int id, String lang) throws NotValidArgumentException {
         validateId(id,"application id");
-        ApplicationEntity applicationEntity = applicationDao.getApplicationById(id);
+        ApplicationEntity applicationEntity = applicationDao.getApplicationById(id,lang);
         log.info("Application with id " + String.valueOf(id) + " was retrieved");
         return applicationEntity;
     }

@@ -36,6 +36,7 @@ public class ApplicationEntity {
     @OneToMany(mappedBy = "application")
     private Collection<CompetenceProfileEntity> competenceProfile;
 
+
     public ApplicationEntity(PersonEntity person, Date dateOfRegistration, ApplicationStatusEntity status, AvailabilityEntity availableForWork) {
         this.person = person;
         this.dateOfRegistration = dateOfRegistration;

@@ -1,8 +1,16 @@
 package jobApplicationApp.dao;
 
 import jobApplicationApp.dao.repository.*;
+import jobApplicationApp.dao.repository.localized.LanguageRepository;
+import jobApplicationApp.dao.repository.localized.LocalizedCompetenceRepository;
+import jobApplicationApp.dao.repository.localized.LocalizedRoleRepository;
+import jobApplicationApp.dao.repository.localized.LocalizedStatusRepository;
 import jobApplicationApp.dto.form.*;
 import jobApplicationApp.entity.*;
+import jobApplicationApp.entity.localized.LanguageEntity;
+import jobApplicationApp.entity.localized.LocalizedCompetence;
+import jobApplicationApp.entity.localized.LocalizedRole;
+import jobApplicationApp.entity.localized.LocalizedStatus;
 import jobApplicationApp.exception.NoMatchException;
 import jobApplicationApp.exception.NotValidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +34,65 @@ public class MysqlApplicationDao implements ApplicationDao{
     @Autowired private CompetenceProfileRepository competenceProfileRepository;
     @Autowired private AvailableRepository availableRepository;
     @Autowired private CompetenceRepository competenceRepository;
+    @Autowired private LanguageRepository languageRepository;
+    @Autowired private LocalizedRoleRepository localizedRoleRepository;
+    @Autowired private LocalizedStatusRepository localizedStatusRepository;
+    @Autowired private LocalizedCompetenceRepository localizedCompetenceRepository;
 
     @PersistenceContext
     private EntityManager em;
 
+    /**
+     * Get a application specified by id, in the wished language
+     * @param id of application
+     * @param language of application
+     * @return an application with the id and translated to the language
+     */
     @Override
-    public ApplicationEntity getApplicationById(int id) {
-        return applicationRepository.findOne(id);
+    public ApplicationEntity getApplicationById(int id,String language) {
+        ApplicationEntity application = applicationRepository.findOne(id);
+        return translateApplication(application, language);
+    }
+
+    private ApplicationEntity translateApplication(ApplicationEntity application, String language){
+        ApplicationEntity applicationEntity = application;
+        try {
+            LanguageEntity lang = getLanguage(language);
+            applicationEntity = translateRole(applicationEntity, lang);
+            applicationEntity = translateStatus(applicationEntity, lang);
+            applicationEntity = translateCompetence(applicationEntity, lang);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return applicationEntity;
+    }
+
+    private ApplicationEntity translateRole(ApplicationEntity application, LanguageEntity lang){
+        ApplicationEntity applicationEntity = application;
+        LocalizedRole localizedRole = localizedRoleRepository.getByLanguageIdAndRoleId(lang.getId(),application.getPerson().getRole().getId());
+        applicationEntity.getPerson().getRole().setName(localizedRole.getTranslation());
+        return applicationEntity;
+    }
+
+    private ApplicationEntity translateStatus(ApplicationEntity application, LanguageEntity lang) {
+        ApplicationEntity applicationEntity = application;
+        LocalizedStatus localizedStatus = localizedStatusRepository.getByLanguageIdAndStatusId(lang.getId(),application.getStatus().getId());
+        applicationEntity.getStatus().setName(localizedStatus.getTranslation());
+        return applicationEntity;
+    }
+
+    private ApplicationEntity translateCompetence(ApplicationEntity application, LanguageEntity lang){
+        ApplicationEntity applicationEntity = application;
+        for(CompetenceProfileEntity c : application.getCompetenceProfile()){
+            LocalizedCompetence localizedCompetence = localizedCompetenceRepository.getByLanguageIdAndCompetenceId(lang.getId(),c.getCompetence().getId());
+            c.getCompetence().setName(localizedCompetence.getTranslation());
+        }
+        //LocalizedCompetence localizedCompetence = localizedCompetenceRepository.getByLanguageIdAndCompetenceId(lang.getId(),)
+        return applicationEntity;
+    }
+
+    private LanguageEntity getLanguage(String lang){
+        return languageRepository.findByName(lang);
     }
 
     /**
@@ -43,11 +103,11 @@ public class MysqlApplicationDao implements ApplicationDao{
      */
     @Override
     public void changeApplicationStatus(int applicationId, ApplicationStatusForm status) throws NotValidArgumentException {
-        ApplicationEntity a = getApplicationById(applicationId);
+      /*  ApplicationEntity a = getApplicationById(applicationId);
         ApplicationStatusEntity newStatus = statusRepository.findByName(status.getName());
         if(newStatus == null) throw new NotValidArgumentException("Non existing status type");
         a.changeStatus(newStatus);
-        applicationRepository.save(a);
+        applicationRepository.save(a); */
     }
 
     /**

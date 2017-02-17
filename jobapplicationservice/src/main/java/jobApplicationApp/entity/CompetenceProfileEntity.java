@@ -1,6 +1,8 @@
 package jobApplicationApp.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -8,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "competence_profile")
 @NoArgsConstructor
+@Getter
 public class CompetenceProfileEntity {
 
     @Id
@@ -15,6 +18,7 @@ public class CompetenceProfileEntity {
     private Integer id;
 
     @ManyToOne
+    @JsonIgnore
     private ApplicationEntity application;
 
     @OneToOne
@@ -29,20 +33,4 @@ public class CompetenceProfileEntity {
         this.competence = competence;
         this.years_of_experience = yearsOfExperience;
     }
-
-    /**
-     * Get competence
-     * @return competence
-     */
-    public CompetenceEntity getCompetence(){
-       return competence;
-    }
-
-    /**
-     * Get years of experience
-     * @return years of experience
-     */
-    public int getYearsOfExperience(){
-       return years_of_experience;
-   }
 }

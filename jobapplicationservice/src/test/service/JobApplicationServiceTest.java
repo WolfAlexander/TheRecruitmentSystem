@@ -35,6 +35,7 @@ import static org.mockito.BDDMockito.given;
 public class JobApplicationServiceTest {
 
     private JobApplicationFormGenerater jobApplicationFormGenerater = new JobApplicationFormGenerater();
+    private JobApplicationEntityGenerater jobApplicationEntityGenerater = new JobApplicationEntityGenerater();
 
     @MockBean
     private MysqlApplicationDao mysqlApplicationDao;
@@ -68,7 +69,7 @@ public class JobApplicationServiceTest {
 
     @Test
     public void getApplicationById() {
-        ApplicationEntity  applicationEntity  = generateFakeApplication();
+        ApplicationEntity  applicationEntity  = jobApplicationEntityGenerater.generateApplicationEntity();
 
         given(this.mysqlApplicationDao.getApplicationById(1)).willReturn(applicationEntity);
         ApplicationEntity returnApplication = jobApplicationService.getApplicationById(1);
@@ -76,13 +77,13 @@ public class JobApplicationServiceTest {
         assertEquals(returnApplication.getPerson().getFirstname(),"Henrik");
         assertEquals(returnApplication.getPerson().getLastname(),"Gustavsson");
         assertEquals(returnApplication.getPerson().getEmail(),"henrik.gustavsson@hotmail.com");
-        assertEquals(returnApplication.getPerson().getRole().getName(),"Recruiter");
+     //   assertEquals(returnApplication.getPerson().getRole().getTranslation(),"Recruiter");
         assertEquals(returnApplication.getStatus().getName(), "ACCEPTED");
     }
 
     @Test
     public void getApplicationByBadId() {
-        ApplicationEntity  applicationEntity  = generateFakeApplication();
+        ApplicationEntity  applicationEntity  = jobApplicationEntityGenerater.generateApplicationEntity();
         given(this.mysqlApplicationDao.getApplicationById(-1)).willReturn(applicationEntity);
         try{
             ApplicationEntity returnApplication = jobApplicationService.getApplicationById(-2);
@@ -90,22 +91,6 @@ public class JobApplicationServiceTest {
         }catch (NotValidArgumentException e){}
     }
 
-    private ApplicationEntity generateFakeApplication(){
-        Date dateOfBirth = null;
-        Date registrationDate = null;
-        try {
-            dateOfBirth = new SimpleDateFormat("yyyy-MM-dd").parse("1995-02-14");
-            registrationDate = new SimpleDateFormat("yyyy-MM-dd").parse("2016-02-17");
-        } catch (ParseException e) {
-            fail("Could not create dateOfBirth from string");
-        }
-
-       return  new ApplicationEntity(new PersonEntity("Henrik","Gustavsson",dateOfBirth,"henrik.gustavsson@hotmail.com",new RoleEntity("Recruiter")),
-                registrationDate,
-                new ApplicationStatusEntity("ACCEPTED"),
-                new AvailabilityEntity());
-
-    }
 
     @Test
     public void getNoneExistingApplicationById() {

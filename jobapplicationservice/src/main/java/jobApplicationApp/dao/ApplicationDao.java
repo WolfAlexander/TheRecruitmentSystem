@@ -12,7 +12,7 @@ import jobApplicationApp.exception.NotValidArgumentException;
 import java.util.Collection;
 
 public interface ApplicationDao {
-    ApplicationEntity getApplicationById(int id);
+    ApplicationEntity getApplicationById(int id, String language);
     void changeApplicationStatus(int applicationId, ApplicationStatusForm status) throws NotValidArgumentException;
     void insertApplication(ApplicationForm application) throws NotValidArgumentException;
     Collection<ApplicationEntity> getXApplicationsFrom(int startId, int numberOfApplication);

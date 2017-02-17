@@ -1,5 +1,7 @@
 package jobApplicationApp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -8,9 +10,11 @@ import javax.validation.constraints.NotNull;
 @Entity
 @NoArgsConstructor
 @Table(name = "status")
+@Getter
 public class ApplicationStatusEntity {
 
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
@@ -21,11 +25,9 @@ public class ApplicationStatusEntity {
         this.name = name;
     }
 
-    /**
-     * Get the name of the status
-     * @return name of status
-     */
-    public String getName(){
-        return name;
+
+    public void setName(String name) {
+        this.name = name;
     }
+
 }

@@ -3,6 +3,8 @@ package utils;
 import jobApplicationApp.entity.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 public class JobApplicationEntityGenerater {
@@ -48,6 +50,7 @@ public class JobApplicationEntityGenerater {
     }
 
     public  RoleEntity generateRoleEntity(){
+        //return new LocalizedRole(new RoleEntity("Recruiter"),new LanguageEntity("sv"),"Recruiter");
         return new RoleEntity("Recruiter");
     }
 }

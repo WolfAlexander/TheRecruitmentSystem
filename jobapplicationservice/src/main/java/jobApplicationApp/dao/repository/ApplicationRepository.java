@@ -26,4 +26,7 @@ public interface ApplicationRepository extends CrudRepository<ApplicationEntity,
 
     @Query(value = "SELECT application.*  from application, availability WHERE application.availability_id=availability.id AND to_date >= :toDate AND from_date < :toDate", nativeQuery = true)
     Collection<ApplicationEntity> getApplicationsThatCanWorkTo(@Param("toDate")Date toDate);
+
+
+  //  Collection<ApplicationEntity> findApplicationByIdAndLanguageId(Integer id, String Language)
 }
