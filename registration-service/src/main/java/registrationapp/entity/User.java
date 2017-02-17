@@ -3,6 +3,9 @@ package registrationapp.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -18,21 +21,26 @@ import java.util.Date;
 @Setter
 public class User
 {
+
+
     @Id
     @Column(name = "person_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(name = "firstname")
     private String firstName;
+
     @Column(name = "lastname")
     private String lastName;
+
     private Date dateOfBirth;
+
     private String email;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
-    private String username;
-    private String password;
 
 
     protected User(){}
@@ -44,18 +52,15 @@ public class User
      * @param lastName  the last name of the user
      * @param dateOfBirth   the social security number of the user
      * @param email the email of the user
-     * @param username the username that the user choose
-     * @param password the password that the user choose
      */
-    public User(String firstName, String lastName, Date dateOfBirth, String email,
-                String username, String password)
+    public User(String firstName, String lastName, Date dateOfBirth, String email, Role role)
     {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.email = email;
-        this.username = username;
-        this.password = password;
+        this.role=role;
+
     }
 
 

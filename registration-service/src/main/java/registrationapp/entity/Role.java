@@ -1,5 +1,7 @@
 package registrationapp.entity;
 
+import lombok.Getter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,15 +17,15 @@ import java.util.List;
  */
 
 @Entity
+@Getter
 public class Role
 {
     @Id
-    @Column(name = "role_id")
+    @Column(name = "id")
     private Long roleId;
     @Column(name = "name")
     private String roleName;
-    @OneToMany(mappedBy = "role")
-    private List<User> users;
+
 
     protected Role(){}
 
@@ -31,40 +33,6 @@ public class Role
     {
         this.roleId = roleId;
         this.roleName = roleName;
-        users = new ArrayList<>();
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-
-    public void addUser(User user)
-    {
-        if (!getUsers().contains(user))
-        {
-            getUsers().add(user);
-            if (user.getRole() != null)
-            {
-                user.getRole().getUsers().remove(user);
-            }
-            user.setRole(this);
-        }
-    }
-
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public List<User> getUsers() {
-        return users;
     }
 
     @Override
