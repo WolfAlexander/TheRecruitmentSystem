@@ -32,11 +32,12 @@ public class JobApplicationService {
     /**
      * Get job application by id
      * @param id of application
+     * @param lang
      * @return application
      */
-    public ApplicationEntity getApplicationById(int id) throws NotValidArgumentException {
+    public ApplicationEntity getApplicationById(int id, String lang) throws NotValidArgumentException {
         validateId(id,"application id");
-        ApplicationEntity applicationEntity = applicationDao.getApplicationById(id);
+        ApplicationEntity applicationEntity = applicationDao.getApplicationById(id,lang);
         log.info("Application with id " + String.valueOf(id) + " was retrieved");
         return applicationEntity;
     }
@@ -66,13 +67,14 @@ public class JobApplicationService {
      * Get a page with defined size of applications and also which page to retrieve
      * @param pageSize of the retrieved page
      * @param pageNmr of page to be retrieved
+     * @param lang
      * @return a collection of applications
      * @throws NotValidArgumentException
      */
-    public Collection<ApplicationEntity> getApplicationsPage(int pageSize ,int pageNmr) throws NotValidArgumentException {
+    public Collection<ApplicationEntity> getApplicationsPage(int pageSize, int pageNmr, String lang) throws NotValidArgumentException {
         validateId(pageNmr,"page number");
         validateId(pageSize,"page size");
-        Collection<ApplicationEntity>  applications = applicationDao.getXApplicationsFrom(pageNmr*pageSize,pageSize);
+        Collection<ApplicationEntity>  applications = applicationDao.getXApplicationsFrom(pageNmr*pageSize,pageSize,lang);
         log.info("applications page " + pageNmr + " with size " + pageSize + " was retrieved");
         return applications;
     }
@@ -80,10 +82,11 @@ public class JobApplicationService {
     /**
      *Get application by parameter object to filter applications
      * @param param contains all parameters
+     * @param lang
      * @return a collection of applications
      */
-    public Collection<ApplicationEntity> getApplicationsByParam(ApplicationParamForm param) {
-        Collection<ApplicationEntity> applicationsByParam = applicationDao.getApplicationByParam(param);
+    public Collection<ApplicationEntity> getApplicationsByParam(ApplicationParamForm param, String lang) {
+        Collection<ApplicationEntity> applicationsByParam = applicationDao.getApplicationByParam(param, lang);
         log.info("Search for application resulted in " + applicationsByParam.size() + " applications");
         return applicationsByParam;
     }
@@ -104,16 +107,18 @@ public class JobApplicationService {
     /**
      * Get all valid competences allowed on an application
      * @return collection of competences
+     * @param lang
      */
-    public Collection<CompetenceEntity> getAllValidCompetences() {
-        return applicationDao.getAllValidCompetences();
+    public Collection<CompetenceEntity> getAllValidCompetences(String lang) {
+        return applicationDao.getAllValidCompetences(lang);
     }
 
     /**
      * Get all valid application status allowed on an application
      * @return collection of application status
+     * @param lang
      */
-    public Collection<ApplicationStatusEntity> getAllValidStatus() {
-        return applicationDao.getAllValidStatus();
+    public Collection<ApplicationStatusEntity> getAllValidStatus(String lang) {
+        return applicationDao.getAllValidStatus(lang);
     }
 }

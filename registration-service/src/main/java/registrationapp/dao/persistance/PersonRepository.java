@@ -1,8 +1,9 @@
-package registrationapp.persistance;
+package registrationapp.dao.persistance;
 
 import org.springframework.data.repository.CrudRepository;
-import registrationapp.entity.Role;
+import registrationapp.entity.PersonEntity;
 
+import java.util.Collection;
 
 /**
  * This interface is a repository that extends the CrudRepository interface. Default CRUD
@@ -10,6 +11,7 @@ import registrationapp.entity.Role;
  *
  * @author Albin Friedner
  */
+public interface PersonRepository extends CrudRepository<PersonEntity, Integer>{
+    Collection <PersonEntity> findByFirstName(String firstName);
 
-public interface RoleRepository extends CrudRepository<Role, Long> {
 }

@@ -5,11 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import registrationapp.domain.RegistrationManager;
+import registrationapp.domain.UserManager;
+import registrationapp.entity.PersonEntity;
 import registrationapp.httpResponse.RegistrationResponse;
 import registrationapp.inputForm.RegistrationForm;
 
 import javax.validation.Valid;
+import java.util.Collection;
 
 /**
  * REST API that is used to redirect HTTP requests to domain that handles logic. This REST API
@@ -19,11 +21,12 @@ import javax.validation.Valid;
  */
 
 @RestController
-@RequestMapping("/register")
+@RequestMapping("/")
 public class RegistrationController
 {
+
     @Autowired
-    RegistrationManager registrationManager;
+    UserManager userManager;
 
     /**
      * Receives a HTTP Post request from a registration form. Redirects
@@ -33,18 +36,14 @@ public class RegistrationController
      * @param bindingResult binds the results of the validation and checks for errors
      * @return a response with a HTTP status and a response message
      */
-    @PostMapping
+    @PostMapping(value = "/register")
     public RegistrationResponse register(@Valid @RequestBody RegistrationForm registrationForm, BindingResult bindingResult)
     {
         if(bindingResult.hasErrors()) {
             return new RegistrationResponse(HttpStatus.BAD_REQUEST, bindingResult.getFieldErrors());
         }else{
             try{
-
-
-                registrationManager.register(registrationForm.getFirstname(), registrationForm.getLastname(), registrationForm.getDateOfBirth()
-                        , registrationForm.getEmail(), registrationForm.getUsername(), registrationForm.getPassword());
-
+                userManager.register(registrationForm);
                 return new RegistrationResponse(HttpStatus.CREATED);
             }catch (RuntimeException ex){
                 //handle
@@ -52,4 +51,20 @@ public class RegistrationController
             }
         }
     }
+
+    @GetMapping(value = "/{lang}/get/by/{id}")
+    public PersonEntity getPersonById(@PathVariable(value = "id") int id, @PathVariable(value = "lang") String lang){
+        return userManager.getUserById(id,lang);
+    }
+
+    @GetMapping(value = "{lang}/validate/{id}")
+    public Boolean validateUserId(@PathVariable(value = "id") int id, @PathVariable(value = "lang") String lang){
+        return userManager.validate(id);
+    }
+
+    @GetMapping(value = "{lang}/get/users/by/name/{name}")
+    public Collection<Integer> getUserIdsByName(@PathVariable(value = "lang") String lang, @PathVariable(value = "name") String name){
+        return userManager.getUserIdsByName(name);
+    }
+
 }

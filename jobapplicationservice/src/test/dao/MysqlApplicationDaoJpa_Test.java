@@ -15,6 +15,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import utils.JobApplicationEntityGenerater;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,14 +34,12 @@ public class MysqlApplicationDaoJpa_Test {
     //private ApplicationDao applicationDao = new MysqlApplicationDao();
     @Autowired
     private TestEntityManager entityManager;
-
+    JobApplicationEntityGenerater jobApplicationEntityGenerater = new JobApplicationEntityGenerater();
 
     @Autowired private ApplicationRepository applicationRepository;
     @Autowired private ApplicationStatusRepository statusRepository;
-    @Autowired private PersonRepository personRepository;
     @Autowired private CompetenceProfileRepository competenceProfileRepository;
     @Autowired private AvailableRepository availableRepository;
-    @Autowired private RoleRepository roleRepository;
 
 
     private int applicationId;
@@ -54,16 +54,11 @@ public class MysqlApplicationDaoJpa_Test {
         } catch (ParseException e) {
             fail("Could not create dateOfBirth from string");
         }
-        entityManager.persist(new RoleEntity("Recruiter"));
         entityManager.persist(new ApplicationStatusEntity("PENDING"));
 
 
         //Create Application
-        ApplicationEntity application = this.entityManager.persist(
-                new ApplicationEntity(new PersonEntity("Henrik","Gustavsson",dateOfBirth,"henrik.gustavsson@hotmail.com",roleRepository.findByName("Recruiter")),
-                        new Date(),
-                        statusRepository.findByName("PENDING"),
-                        new AvailabilityEntity()));
+        ApplicationEntity application = this.entityManager.persist(jobApplicationEntityGenerater.generateApplicationEntity());
 
         this.applicationId=application.getId();
     }
@@ -72,10 +67,8 @@ public class MysqlApplicationDaoJpa_Test {
     public void contextLoads(){
         assertThat(applicationRepository).isNotNull();
         assertThat(statusRepository).isNotNull();
-        assertThat(personRepository).isNotNull();
         assertThat(competenceProfileRepository).isNotNull();
         assertThat(availableRepository).isNotNull();
-        assertThat(roleRepository).isNotNull();
     }
 
     @Test
@@ -85,36 +78,6 @@ public class MysqlApplicationDaoJpa_Test {
         //todo Availability
         //todo Competenceprofile
 
-    }
-
-    @Test
-    public void getPersonInformationFirstName(){
-        ApplicationEntity requestedApplication = applicationRepository.findOne(applicationId);
-        assertThat(requestedApplication.getPerson().getFirstname()).isEqualTo("Henrik");
-    }
-
-    @Test
-    public void getPersonInformationLastName(){
-        ApplicationEntity requestedApplication = applicationRepository.findOne(applicationId);
-        assertThat(requestedApplication.getPerson().getLastname()).isEqualTo("Gustavsson");
-    }
-
-    @Test
-    public void getPersonInformationEmail(){
-        ApplicationEntity requestedApplication = applicationRepository.findOne(applicationId);
-        assertThat(requestedApplication.getPerson().getDateOfBirth()).isEqualTo(dateOfBirth);
-    }
-
-    @Test
-    public void getPersonInformationDateOfBirth() {
-        ApplicationEntity requestedApplication = applicationRepository.findOne(applicationId);
-        assertThat(requestedApplication.getPerson().getEmail()).isEqualTo("henrik.gustavsson@hotmail.com");
-    }
-
-    @Test
-    public void getPersonInformationRole() {
-        ApplicationEntity requestedApplication = applicationRepository.findOne(applicationId);
-        assertThat(requestedApplication.getPerson().getRole().getName()).isEqualTo("Recruiter");
     }
 
     @Test
@@ -136,10 +99,7 @@ public class MysqlApplicationDaoJpa_Test {
 
     @Test
     public void insertApplication() {
-        ApplicationEntity a = new ApplicationEntity(new PersonEntity("Fredrik","Gustavsson",dateOfBirth,"fredrik.gustavsson@hotmail.com",new RoleEntity("Recruiter")),
-                new Date(),
-                new ApplicationStatusEntity("Pending"),
-                new AvailabilityEntity());
+        ApplicationEntity a = jobApplicationEntityGenerater.generateApplicationEntity();
         ApplicationEntity newApplication = applicationRepository.save(a);
         assertThat(applicationRepository.findOne(newApplication.getId())).isNotNull();
         applicationRepository.delete(a);

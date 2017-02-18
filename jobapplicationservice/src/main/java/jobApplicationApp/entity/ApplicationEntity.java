@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
 
@@ -18,9 +19,8 @@ public class ApplicationEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @OneToOne
-    @JoinColumn(name = "person_id")
-    private PersonEntity person;
+    @NotNull
+    private int personId;
 
     @Column(name = "date_of_registration")
     private Date dateOfRegistration;
@@ -36,12 +36,15 @@ public class ApplicationEntity {
     @OneToMany(mappedBy = "application")
     private Collection<CompetenceProfileEntity> competenceProfile;
 
-    public ApplicationEntity(PersonEntity person, Date dateOfRegistration, ApplicationStatusEntity status, AvailabilityEntity availableForWork) {
-        this.person = person;
+
+    public ApplicationEntity(int personId, Date dateOfRegistration, ApplicationStatusEntity status, AvailabilityEntity availableForWork) {
+        this.personId = personId;
         this.dateOfRegistration = dateOfRegistration;
         this.status = status;
         this.availableForWork = availableForWork;
     }
+
+
 
     /**
      * Set application status

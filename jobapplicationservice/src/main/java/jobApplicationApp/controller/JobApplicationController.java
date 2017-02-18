@@ -17,7 +17,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping("/jobapplication")
+@RequestMapping("/")
 public class JobApplicationController {
 
     @Autowired
@@ -28,10 +28,10 @@ public class JobApplicationController {
      * @param id of the application
      * @return an application and a http status
      */
-    @GetMapping(value = "/{id}")
-    public ResponseEntity getApplicationById(@PathVariable(value = "id") int id){
+    @GetMapping(value = "/{lang}/by/id/{id}")
+    public ResponseEntity getApplicationById(@PathVariable(value = "id") int id,@PathVariable(value = "lang") String lang){
         try{
-            return new ResponseEntity<>(jobApplicationService.getApplicationById(id),HttpStatus.OK);
+            return new ResponseEntity<>(jobApplicationService.getApplicationById(id,lang),HttpStatus.OK);
         }catch (Exception e){
            return new ResponseEntity<>(new RequestResponse(e.getMessage()),HttpStatus.BAD_REQUEST);
         }
@@ -43,15 +43,15 @@ public class JobApplicationController {
      * @param bindingResult handles validation of input from user
      * @return collection of application and a http status
      */
-    @PostMapping(value = "/byparam",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getApplicationsByParam(@Valid @RequestBody ApplicationParamForm param, BindingResult bindingResult){
+    @PostMapping(value = "/{lang}/by/param",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getApplicationsByParam(@Valid @RequestBody ApplicationParamForm param, @PathVariable(value = "lang") String lang, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             ArrayList<String> errorMessages = new ArrayList<>();
             bindingResult.getAllErrors().forEach((e)->{errorMessages.add(e.getDefaultMessage());});
             return new ResponseEntity<>(new RequestListResponse(errorMessages), HttpStatus.BAD_REQUEST);
         }else {
             try {
-                return new ResponseEntity<>(jobApplicationService.getApplicationsByParam(param),HttpStatus.OK);
+                return new ResponseEntity<>(jobApplicationService.getApplicationsByParam(param,lang),HttpStatus.OK);
             } catch (Exception e) {
                 return new ResponseEntity<>(new RequestResponse(e.getMessage()),HttpStatus.BAD_REQUEST);
             }
@@ -64,10 +64,10 @@ public class JobApplicationController {
      * @param pageSize of a page
      * @return collection of application and a http status
      */
-    @GetMapping(value = "/page/{pageSize}/{pageNmr}")
-    public ResponseEntity getApplicationsPage(@PathVariable(value = "pageNmr") int pageNmr, @PathVariable(value = "pageSize") int pageSize){
+    @GetMapping(value = "/{lang}/page/{pageSize}/{pageNmr}")
+    public ResponseEntity getApplicationsPage(@PathVariable(value = "pageNmr") int pageNmr,@PathVariable(value = "lang") String lang, @PathVariable(value = "pageSize") int pageSize){
         try{
-            return new ResponseEntity<>(jobApplicationService.getApplicationsPage(pageSize, pageNmr),HttpStatus.OK);
+            return new ResponseEntity<>(jobApplicationService.getApplicationsPage(pageSize, pageNmr,lang),HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(new RequestResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
@@ -79,8 +79,8 @@ public class JobApplicationController {
      * @param bindingResult  handles validation of input from user
      * @return a message and http status describing if the application was accepted
      */
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity registerJobApplication(@Valid @RequestBody ApplicationForm application, BindingResult bindingResult) {
+    @PostMapping(value = "/{lang}/",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity registerJobApplication(@Valid @RequestBody ApplicationForm application,@PathVariable(value = "lang") String lang, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ArrayList<String> errorMessages = new ArrayList<>();
             bindingResult.getAllErrors().forEach((e) -> {
@@ -104,8 +104,8 @@ public class JobApplicationController {
      * @param bindingResult handles validation of input from user
      * @return a message and http status describing if the application was accepted
      */
-    @PutMapping(value = "/change/status/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity changeStatusOnApplicationById(@PathVariable(value = "id") int id,@Valid @RequestBody ApplicationStatusForm newStatus, BindingResult bindingResult) {
+    @PutMapping(value = "/{lang}/change/status/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity changeStatusOnApplicationById(@PathVariable(value = "id") int id,@Valid @RequestBody ApplicationStatusForm newStatus,@PathVariable(value = "lang") String lang, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ArrayList<String> errorMessages = new ArrayList<>();
             bindingResult.getAllErrors().forEach((e) -> {
@@ -126,10 +126,10 @@ public class JobApplicationController {
      * Get all statuses allowed on an application
      * @return collection of application statuses and a http status
      */
-    @GetMapping(value = "/getAllValidStatus")
-    public ResponseEntity getAllValidStatus(){
+    @GetMapping(value = "/{lang}/getAllValidStatus")
+    public ResponseEntity getAllValidStatus(@PathVariable(value = "lang") String lang){
         try {
-            return new ResponseEntity<>(jobApplicationService.getAllValidStatus(),HttpStatus.OK);
+            return new ResponseEntity<>(jobApplicationService.getAllValidStatus(lang),HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(new RequestResponse(e.getMessage()),HttpStatus.SERVICE_UNAVAILABLE);
         }
@@ -139,10 +139,10 @@ public class JobApplicationController {
      * Get all competences allowed on an application
      * @return collection of competences and a http status
      */
-    @GetMapping(value = "/getAllValidCompetences")
-    public ResponseEntity getAllValidCompetences(){
+    @GetMapping(value = "/{lang}/getAllValidCompetences")
+    public ResponseEntity getAllValidCompetences(@PathVariable(value = "lang") String lang){
         try {
-            return new ResponseEntity<>(jobApplicationService.getAllValidCompetences(),HttpStatus.OK);
+            return new ResponseEntity<>(jobApplicationService.getAllValidCompetences(lang),HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(new RequestResponse(e.getMessage()),HttpStatus.SERVICE_UNAVAILABLE);
         }

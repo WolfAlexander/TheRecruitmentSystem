@@ -1,5 +1,6 @@
 package jobApplicationApp.entity;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.Date;
 @Entity
 @Table(name="availability")
 @NoArgsConstructor
+@Getter
 public class AvailabilityEntity {
 
     @Id
@@ -23,21 +25,5 @@ public class AvailabilityEntity {
     public AvailabilityEntity(Date fromDate, Date toDate) {
         this.fromDate = fromDate;
         this.toDate = toDate;
-    }
-
-    /**
-     * Get from date of period
-     * @return fromDate of period
-     */
-    public Date getFromDate(){
-        return fromDate;
-    }
-
-    /**
-     * Get to date of period
-     * @return toDate of period
-     */
-    public Date getToDate(){
-        return toDate;
     }
 }
