@@ -17,6 +17,8 @@ import registrationapp.entity.localized.LanguageEntity;
 import registrationapp.entity.localized.LocalizedRoleEntity;
 import registrationapp.inputForm.RegistrationForm;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 @Repository
@@ -53,6 +55,15 @@ public class MysqlUserServiceDao implements UserServiceDao {
     public PersonEntity getUserByIdAndLanguage(int id,String lang) {
         PersonEntity personEntity = userRepository.findOne(id);
         return translateRole(personEntity,getLanguage(lang));
+    }
+
+    @Override
+    public Collection<Integer> getUserIdsByName(String name) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (PersonEntity p:userRepository.findByFirstName(name)) {
+            list.add(p.getId());
+        }userRepository.findByFirstName(name);
+        return list;
     }
 
     private LanguageEntity getLanguage(String lang){

@@ -9,7 +9,7 @@ import registrationapp.dao.UserServiceDao;
 import registrationapp.entity.PersonEntity;
 import registrationapp.inputForm.RegistrationForm;
 
-import java.util.Date;
+import java.util.Collection;
 
 @Service
 public class UserManager {
@@ -34,5 +34,9 @@ public class UserManager {
 
     public Boolean validate(int id) {
         return userServiceDao.validate(id);
+    }
+
+    public Collection<Integer> getUserIdsByName(String name) {
+        return userServiceDao.getUserIdsByName(name);
     }
 }

@@ -38,10 +38,8 @@ public class MysqlApplicationDaoJpa_Test {
 
     @Autowired private ApplicationRepository applicationRepository;
     @Autowired private ApplicationStatusRepository statusRepository;
-    @Autowired private PersonRepository personRepository;
     @Autowired private CompetenceProfileRepository competenceProfileRepository;
     @Autowired private AvailableRepository availableRepository;
-    @Autowired private RoleRepository roleRepository;
 
 
     private int applicationId;
@@ -56,7 +54,6 @@ public class MysqlApplicationDaoJpa_Test {
         } catch (ParseException e) {
             fail("Could not create dateOfBirth from string");
         }
-        entityManager.persist(new RoleEntity("Recruiter"));
         entityManager.persist(new ApplicationStatusEntity("PENDING"));
 
 
@@ -70,10 +67,8 @@ public class MysqlApplicationDaoJpa_Test {
     public void contextLoads(){
         assertThat(applicationRepository).isNotNull();
         assertThat(statusRepository).isNotNull();
-        assertThat(personRepository).isNotNull();
         assertThat(competenceProfileRepository).isNotNull();
         assertThat(availableRepository).isNotNull();
-        assertThat(roleRepository).isNotNull();
     }
 
     @Test
@@ -83,36 +78,6 @@ public class MysqlApplicationDaoJpa_Test {
         //todo Availability
         //todo Competenceprofile
 
-    }
-
-    @Test
-    public void getPersonInformationFirstName(){
-        ApplicationEntity requestedApplication = applicationRepository.findOne(applicationId);
-        assertThat(requestedApplication.getPerson().getFirstname()).isEqualTo("Henrik");
-    }
-
-    @Test
-    public void getPersonInformationLastName(){
-        ApplicationEntity requestedApplication = applicationRepository.findOne(applicationId);
-        assertThat(requestedApplication.getPerson().getLastname()).isEqualTo("Gustavsson");
-    }
-
-    @Test
-    public void getPersonInformationEmail(){
-        ApplicationEntity requestedApplication = applicationRepository.findOne(applicationId);
-        assertThat(requestedApplication.getPerson().getDateOfBirth()).isEqualTo(dateOfBirth);
-    }
-
-    @Test
-    public void getPersonInformationDateOfBirth() {
-        ApplicationEntity requestedApplication = applicationRepository.findOne(applicationId);
-        assertThat(requestedApplication.getPerson().getEmail()).isEqualTo("henrik.gustavsson@hotmail.com");
-    }
-
-    @Test
-    public void getPersonInformationRole() {
-        ApplicationEntity requestedApplication = applicationRepository.findOne(applicationId);
-       // assertThat(requestedApplication.getPerson().getRole().getTranslation()).isEqualTo("Recruiter");
     }
 
     @Test

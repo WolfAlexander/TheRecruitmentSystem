@@ -15,8 +15,8 @@ public interface ApplicationDao {
     ApplicationEntity getApplicationById(int id, String language);
     void changeApplicationStatus(int applicationId, ApplicationStatusForm status) throws NotValidArgumentException;
     void insertApplication(ApplicationForm application) throws NotValidArgumentException;
-    Collection<ApplicationEntity> getXApplicationsFrom(int startId, int numberOfApplication);
-    Collection<ApplicationEntity> getApplicationByParam(ApplicationParamForm param);
-    Collection<CompetenceEntity> getAllValidCompetences();
-    Collection <ApplicationStatusEntity> getAllValidStatus();
+    Collection<ApplicationEntity> getXApplicationsFrom(int startId, int numberOfApplication, String lang);
+    Collection<ApplicationEntity> getApplicationByParam(ApplicationParamForm param, String lang);
+    Collection<CompetenceEntity> getAllValidCompetences(String lang);
+    Collection <ApplicationStatusEntity> getAllValidStatus(String lang);
 }

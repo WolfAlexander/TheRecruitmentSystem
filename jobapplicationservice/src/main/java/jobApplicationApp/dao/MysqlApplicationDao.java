@@ -54,29 +54,25 @@ public class MysqlApplicationDao implements ApplicationDao{
         ApplicationEntity applicationEntity = application;
         try {
             LanguageEntity lang = getLanguage(language);
-            applicationEntity = translateStatus(applicationEntity, lang);
-            applicationEntity = translateCompetence(applicationEntity, lang);
+            application.getStatus().setName(translateStatus(applicationEntity.getStatus(), lang));
+
+            for(CompetenceProfileEntity c : application.getCompetenceProfile()){
+                application.getStatus().setName(translateCompetence(c.getCompetence(),lang));
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
         return applicationEntity;
     }
 
-    private ApplicationEntity translateStatus(ApplicationEntity application, LanguageEntity lang) {
-        ApplicationEntity applicationEntity = application;
-        LocalizedStatus localizedStatus = localizedStatusRepository.getByLanguageIdAndStatusId(lang.getId(),application.getStatus().getId());
-        applicationEntity.getStatus().setName(localizedStatus.getTranslation());
-        return applicationEntity;
+    private String translateStatus(ApplicationStatusEntity StatusEntity, LanguageEntity lang) {
+        LocalizedStatus localizedStatus = localizedStatusRepository.getByLanguageIdAndStatusId(lang.getId(),StatusEntity.getId());
+        return localizedStatus.getTranslation();
     }
 
-    private ApplicationEntity translateCompetence(ApplicationEntity application, LanguageEntity lang){
-        ApplicationEntity applicationEntity = application;
-        for(CompetenceProfileEntity c : application.getCompetenceProfile()){
-            LocalizedCompetence localizedCompetence = localizedCompetenceRepository.getByLanguageIdAndCompetenceId(lang.getId(),c.getCompetence().getId());
-            c.getCompetence().setName(localizedCompetence.getTranslation());
-        }
-        //LocalizedCompetence localizedCompetence = localizedCompetenceRepository.getByLanguageIdAndCompetenceId(lang.getId(),)
-        return applicationEntity;
+    private String translateCompetence(CompetenceEntity competenceProfile, LanguageEntity lang){
+        LocalizedCompetence localizedCompetence = localizedCompetenceRepository.getByLanguageIdAndCompetenceId(lang.getId(),competenceProfile.getId());
+        return localizedCompetence.getTranslation();
     }
 
     private LanguageEntity getLanguage(String lang){
@@ -91,11 +87,11 @@ public class MysqlApplicationDao implements ApplicationDao{
      */
     @Override
     public void changeApplicationStatus(int applicationId, ApplicationStatusForm status) throws NotValidArgumentException {
-      /*  ApplicationEntity a = getApplicationById(applicationId);
+        ApplicationEntity a = getApplicationById(applicationId,"en");
         ApplicationStatusEntity newStatus = statusRepository.findByName(status.getName());
         if(newStatus == null) throw new NotValidArgumentException("Non existing status type");
         a.changeStatus(newStatus);
-        applicationRepository.save(a); */
+        applicationRepository.save(a);
     }
 
     /**
@@ -154,20 +150,22 @@ public class MysqlApplicationDao implements ApplicationDao{
      * Get a specified number of application from a specified application defined by id from database
      * @param startId is the start point of the list of application
      * @param numberOfApplication to retrieve
+     * @param lang
      * @return collection of applications
      */
     @Override
-    public Collection<ApplicationEntity> getXApplicationsFrom(int startId, int numberOfApplication) {
+    public Collection<ApplicationEntity> getXApplicationsFrom(int startId, int numberOfApplication, String lang) {
         return applicationRepository.getXApplicationsFrom(startId,numberOfApplication);
     }
 
     /**
      * Get applications by parameters
      * @param param to filter with
+     * @param lang
      * @return a collection of applications
      */
     @Override
-    public Collection<ApplicationEntity> getApplicationByParam(ApplicationParamForm param) {
+    public Collection<ApplicationEntity> getApplicationByParam(ApplicationParamForm param, String lang) {
         Collection<ApplicationEntity> resultListOfApplication= new ArrayList<>();
         Collection<ApplicationEntity> newResultOfApplicationFilter;
         try {
@@ -259,20 +257,25 @@ public class MysqlApplicationDao implements ApplicationDao{
     /**
      * Get all valid competences allowed on applications form database
      * @return collection of competences
+     * @param lang
      */
     @Override
-    public Collection<CompetenceEntity> getAllValidCompetences() {
+    public Collection<CompetenceEntity> getAllValidCompetences(String lang) {
         Collection<CompetenceEntity> ce = new ArrayList<>();
-        competenceRepository.findAll().forEach((c)->ce.add(c));
+        competenceRepository.findAll().forEach((c)-> {
+            translateCompetence(c, getLanguage(lang));
+            ce.add(c);
+        });
         return ce;
     }
 
     /**
      * Get allowed application statuses on applications from database
      * @return collection of application status
+     * @param lang
      */
     @Override
-    public Collection<ApplicationStatusEntity> getAllValidStatus() {
+    public Collection<ApplicationStatusEntity> getAllValidStatus(String lang) {
         Collection<ApplicationStatusEntity> ase = new ArrayList<>();
         statusRepository.findAll().forEach((c)->ase.add(c));
         return ase;

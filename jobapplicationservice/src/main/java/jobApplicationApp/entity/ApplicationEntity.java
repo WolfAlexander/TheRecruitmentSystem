@@ -44,6 +44,8 @@ public class ApplicationEntity {
         this.availableForWork = availableForWork;
     }
 
+
+
     /**
      * Set application status
      *

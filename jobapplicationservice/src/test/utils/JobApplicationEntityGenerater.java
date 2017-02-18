@@ -17,7 +17,7 @@ public class JobApplicationEntityGenerater {
             throw new RuntimeException("can't create date");
         }
 
-        return  new ApplicationEntity(generatePersonEntity(),
+        return  new ApplicationEntity(4,
                         registrationDate,
                         generateApplicationStatusEntity(),
                         generateAvailabilityEntity());
@@ -25,16 +25,6 @@ public class JobApplicationEntityGenerater {
 
     public ApplicationStatusEntity generateApplicationStatusEntity(){
         return new ApplicationStatusEntity("PENDING");
-    }
-
-    public PersonEntity generatePersonEntity(){
-        Date dateOfBirth;
-        try {
-            dateOfBirth = new SimpleDateFormat("yyyy-MM-dd").parse("1995-02-14");
-        } catch (ParseException e) {
-            throw new RuntimeException("can't create person entity");
-        }
-        return new PersonEntity("Henrik","Gustavsson",dateOfBirth,"henrik.gustavsson@hotmail.com",generateRoleEntity());
     }
 
     public AvailabilityEntity generateAvailabilityEntity(){
@@ -49,8 +39,4 @@ public class JobApplicationEntityGenerater {
         return  new AvailabilityEntity(fromDate,toDate);
     }
 
-    public  RoleEntity generateRoleEntity(){
-        //return new LocalizedRole(new RoleEntity("Recruiter"),new LanguageEntity("sv"),"Recruiter");
-        return new RoleEntity("Recruiter");
-    }
 }

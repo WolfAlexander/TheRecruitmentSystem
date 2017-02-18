@@ -8,7 +8,6 @@ import jobApplicationApp.dto.form.ApplicationParamForm;
 import jobApplicationApp.dto.form.ApplicationStatusForm;
 import jobApplicationApp.entity.ApplicationEntity;
 import jobApplicationApp.entity.ApplicationStatusEntity;
-import jobApplicationApp.entity.PersonEntity;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,9 +32,6 @@ public class MysqlApplicationDao_mockTets {
     private JobApplicationFormGenerater jobApplicationFormGenerater = new JobApplicationFormGenerater();
     @MockBean
     private ApplicationStatusRepository statusRepository;
-
-    @MockBean
-    private PersonRepository personRepository;
 
     @MockBean
     private ApplicationRepository applicationRepository;
@@ -81,20 +77,18 @@ public class MysqlApplicationDao_mockTets {
 
     @Test
     public void getApplicationByNameParam(){
-        assertThat(mysqlApplicationDao.getApplicationByParam(new ApplicationParamForm("henrik",null,null)).size()).isEqualTo(0);
+        assertThat(mysqlApplicationDao.getApplicationByParam(new ApplicationParamForm("henrik",null,null), "en").size()).isEqualTo(0);
     }
 
     @Test
     public void getApplicationByAvailability(){
-        assertThat(mysqlApplicationDao.getApplicationByParam(new ApplicationParamForm(null,jobApplicationFormGenerater.getAvailabilityForm(),null)).size()).isEqualTo(0);
+        assertThat(mysqlApplicationDao.getApplicationByParam(new ApplicationParamForm(null,jobApplicationFormGenerater.getAvailabilityForm(),null), "en").size()).isEqualTo(0);
     }
 
     @Test
     public void insertApplicationTest(){
 
         ApplicationForm applicationForm = jobApplicationFormGenerater.generateApplicationForm();
-
-        given(personRepository.findOne(applicationForm.getPersonId())).willReturn(jobApplicationEntityGenerater.generatePersonEntity());
         given(availableRepository.findByFromDateAndToDate(applicationForm.getAvailableForWork().getFromDate(),applicationForm.getAvailableForWork().getToDate())).willReturn(jobApplicationEntityGenerater.generateAvailabilityEntity());
         given(applicationRepository.save(jobApplicationEntityGenerater.generateApplicationEntity())).willReturn(null);
 

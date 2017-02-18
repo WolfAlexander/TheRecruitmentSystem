@@ -11,6 +11,7 @@ import registrationapp.httpResponse.RegistrationResponse;
 import registrationapp.inputForm.RegistrationForm;
 
 import javax.validation.Valid;
+import java.util.Collection;
 
 /**
  * REST API that is used to redirect HTTP requests to domain that handles logic. This REST API
@@ -61,5 +62,9 @@ public class RegistrationController
         return userManager.validate(id);
     }
 
+    @GetMapping(value = "{lang}/get/users/by/name/{name}")
+    public Collection<Integer> getUserIdsByName(@PathVariable(value = "lang") String lang, @PathVariable(value = "name") String name){
+        return userManager.getUserIdsByName(name);
+    }
 
 }

@@ -2,7 +2,6 @@ package service;
 
 import jobApplicationApp.JobApplicationLauncher;
 import jobApplicationApp.dao.MysqlApplicationDao;
-import jobApplicationApp.dto.form.ApplicationForm;
 import jobApplicationApp.dto.form.ApplicationParamForm;
 import jobApplicationApp.dto.form.ApplicationStatusForm;
 import jobApplicationApp.entity.*;
@@ -18,11 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import utils.JobApplicationEntityGenerater;
 import utils.JobApplicationFormGenerater;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.fail;
@@ -48,8 +44,8 @@ public class JobApplicationServiceTest {
         Collection<CompetenceEntity> collection = new ArrayList<>();
         collection.add(new CompetenceEntity("super skills"));
         collection.add(new CompetenceEntity("bad skills"));
-        given(this.mysqlApplicationDao.getAllValidCompetences()).willReturn(collection);
-        Collection<CompetenceEntity> returnList = jobApplicationService.getAllValidCompetences();
+        given(this.mysqlApplicationDao.getAllValidCompetences("en")).willReturn(collection);
+        Collection<CompetenceEntity> returnList = jobApplicationService.getAllValidCompetences("en");
         collection.forEach((v)->{
             assertThat(returnList).contains(v);
         });
@@ -60,8 +56,8 @@ public class JobApplicationServiceTest {
         Collection<ApplicationStatusEntity> collection = new ArrayList<>();
         collection.add(new ApplicationStatusEntity("PENDING"));
         collection.add(new ApplicationStatusEntity("ACCEPTED"));
-        given(this.mysqlApplicationDao.getAllValidStatus()).willReturn(collection);
-        Collection<ApplicationStatusEntity> returnList = jobApplicationService.getAllValidStatus();
+        given(this.mysqlApplicationDao.getAllValidStatus("en")).willReturn(collection);
+        Collection<ApplicationStatusEntity> returnList = jobApplicationService.getAllValidStatus("en");
         collection.forEach((v)->{
             assertThat(returnList).contains(v);
         });
@@ -71,22 +67,17 @@ public class JobApplicationServiceTest {
     public void getApplicationById() {
         ApplicationEntity  applicationEntity  = jobApplicationEntityGenerater.generateApplicationEntity();
 
-        given(this.mysqlApplicationDao.getApplicationById(1)).willReturn(applicationEntity);
-        ApplicationEntity returnApplication = jobApplicationService.getApplicationById(1);
-
-        assertEquals(returnApplication.getPerson().getFirstname(),"Henrik");
-        assertEquals(returnApplication.getPerson().getLastname(),"Gustavsson");
-        assertEquals(returnApplication.getPerson().getEmail(),"henrik.gustavsson@hotmail.com");
-     //   assertEquals(returnApplication.getPerson().getRole().getTranslation(),"Recruiter");
-        assertEquals(returnApplication.getStatus().getName(), "ACCEPTED");
+        given(this.mysqlApplicationDao.getApplicationById(1,"en")).willReturn(applicationEntity);
+        ApplicationEntity returnApplication = jobApplicationService.getApplicationById(1,"en");
+        assertEquals(returnApplication.getStatus().getName(), "PENDING");
     }
 
     @Test
     public void getApplicationByBadId() {
         ApplicationEntity  applicationEntity  = jobApplicationEntityGenerater.generateApplicationEntity();
-        given(this.mysqlApplicationDao.getApplicationById(-1)).willReturn(applicationEntity);
+        given(this.mysqlApplicationDao.getApplicationById(-1,"en")).willReturn(applicationEntity);
         try{
-            ApplicationEntity returnApplication = jobApplicationService.getApplicationById(-2);
+            ApplicationEntity returnApplication = jobApplicationService.getApplicationById(-2,"en");
             fail("Not allowed id was accepted");
         }catch (NotValidArgumentException e){}
     }
@@ -94,9 +85,8 @@ public class JobApplicationServiceTest {
 
     @Test
     public void getNoneExistingApplicationById() {
-        given(this.mysqlApplicationDao.getApplicationById(1)).willReturn(new ApplicationEntity());
-        ApplicationEntity returnApplication = jobApplicationService.getApplicationById(1);
-        assertThat(returnApplication.getPerson()).isEqualTo(null);
+        given(this.mysqlApplicationDao.getApplicationById(1,"en")).willReturn(new ApplicationEntity());
+        ApplicationEntity returnApplication = jobApplicationService.getApplicationById(1,"en");
         assertThat(returnApplication.getAvailableForWork()).isEqualTo(null);
         assertThat(returnApplication.getCompetenceProfile()).isEqualTo(null);
         assertThat(returnApplication.getDateOfRegistration()).isEqualTo(null);
@@ -110,8 +100,8 @@ public class JobApplicationServiceTest {
         collection.add(new ApplicationEntity());//2
         collection.add(new ApplicationEntity());//3
         collection.add(new ApplicationEntity());//4
-        given(this.mysqlApplicationDao.getApplicationByParam(applicationParamForm)).willReturn(collection);
-        Collection<ApplicationEntity> returnApplicationEntities = jobApplicationService.getApplicationsByParam(applicationParamForm);
+        given(this.mysqlApplicationDao.getApplicationByParam(applicationParamForm, "en")).willReturn(collection);
+        Collection<ApplicationEntity> returnApplicationEntities = jobApplicationService.getApplicationsByParam(applicationParamForm, "en");
         assertEquals(returnApplicationEntities.size(),4);
     }
 
@@ -121,8 +111,8 @@ public class JobApplicationServiceTest {
         for(int i=0; i < 10; i++) {
             collection.add(new ApplicationEntity());
         }
-        given(this.mysqlApplicationDao.getXApplicationsFrom(0,10)).willReturn(collection);
-        Collection<ApplicationEntity> returnApplicationEntities  = jobApplicationService.getApplicationsPage(10,0);
+        given(this.mysqlApplicationDao.getXApplicationsFrom(0,10, "en")).willReturn(collection);
+        Collection<ApplicationEntity> returnApplicationEntities  = jobApplicationService.getApplicationsPage(10,0, "en");
         assertEquals(returnApplicationEntities.size(),10);
     }
 
@@ -132,9 +122,9 @@ public class JobApplicationServiceTest {
         for(int i=0; i < 10; i++) {
             collection.add(new ApplicationEntity());
         }
-        given(this.mysqlApplicationDao.getXApplicationsFrom(0,-5)).willReturn(collection);
+        given(this.mysqlApplicationDao.getXApplicationsFrom(0,-5, "en")).willReturn(collection);
         try {
-            Collection<ApplicationEntity> returnApplicationEntities  = jobApplicationService.getApplicationsPage(-5,0);
+            Collection<ApplicationEntity> returnApplicationEntities  = jobApplicationService.getApplicationsPage(-5,0, "en");
             fail("Not valid page size was accepted");
         }catch (NotValidArgumentException e){
         }
@@ -146,9 +136,9 @@ public class JobApplicationServiceTest {
         for(int i=0; i < 10; i++) {
             collection.add(new ApplicationEntity());
         }
-        given(this.mysqlApplicationDao.getXApplicationsFrom(-5,10)).willReturn(collection);
+        given(this.mysqlApplicationDao.getXApplicationsFrom(-5,10, "en")).willReturn(collection);
         try {
-            Collection<ApplicationEntity> returnApplicationEntities  = jobApplicationService.getApplicationsPage(10,-5);
+            Collection<ApplicationEntity> returnApplicationEntities  = jobApplicationService.getApplicationsPage(10,-5, "en");
             fail("Not valid page size was accepted");
         }catch (NotValidArgumentException e){
         }
