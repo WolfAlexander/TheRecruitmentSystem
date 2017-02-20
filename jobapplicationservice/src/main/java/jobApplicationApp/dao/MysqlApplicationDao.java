@@ -46,70 +46,53 @@ public class MysqlApplicationDao implements ApplicationDao{
      */
     @Override
     public ApplicationEntity getApplicationById(int id,String language) {
+
         ApplicationEntity application = applicationRepository.findOne(id);
+        if(application == null){
+            log.info("asked for application with id "+ id +" id didn't exist");
+            throw new NoMatchException("no application with that id");
+        }
         return translateApplication(application, language);
     }
 
-    private ApplicationEntity translateApplication(ApplicationEntity application, String language){
-        ApplicationEntity applicationEntity = application;
 
-            LanguageEntity lang = getLanguage(language);
-            application.getStatus().setName(translateStatus(applicationEntity.getStatus(), lang));
-
-            for(CompetenceProfileEntity c : application.getCompetenceProfile()){
-                c.getCompetence().setName(translateCompetence(c.getCompetence(),lang));
-            }
-
-        return applicationEntity;
-    }
-
-    private String translateStatus(ApplicationStatusEntity StatusEntity, LanguageEntity lang) {
-        LocalizedStatus localizedStatus = localizedStatusRepository.getByLanguageIdAndStatusId(lang.getId(),StatusEntity.getId());
-        return localizedStatus.getTranslation();
-    }
-
-    private String translateCompetence(CompetenceEntity competenceProfile, LanguageEntity lang){
-        LocalizedCompetence localizedCompetence = localizedCompetenceRepository.getByLanguageIdAndCompetenceId(lang.getId(),competenceProfile.getId());
-        return localizedCompetence.getTranslation();
-    }
-
-    private LanguageEntity getLanguage(String lang){
-        LanguageEntity l = languageRepository.findByName(lang);
-        if(l == null){
-            throw new NotValidArgumentException("Not a supported language");
-        }
-        return l;
-    }
 
     /**
      * Changes the application status in database by od
      * @param applicationId of application to change status on
      * @param status to change application to
+     * @param language of status
      * @throws NotValidArgumentException
      */
     @Override
-    public void changeApplicationStatus(int applicationId, ApplicationStatusForm status) throws NotValidArgumentException {
-        ApplicationEntity a = getApplicationById(applicationId,"en");
-        ApplicationStatusEntity newStatus = statusRepository.findByName(status.getName());
-        if(newStatus == null) throw new NotValidArgumentException("Non existing status type");
-        a.changeStatus(newStatus);
-        applicationRepository.save(a);
+    public void changeApplicationStatus(int applicationId, ApplicationStatusForm status, String language) throws NotValidArgumentException {
+        ApplicationEntity application = getApplicationById(applicationId,language);
+        LocalizedStatus localizedStatus = localizedStatusRepository.getByLanguageIdAndTranslation(getLanguage(language).getId(),status.getName());
+        if(localizedStatus == null){
+            log.error("invalid status type [" + status.getName() + "]");
+            throw new NotValidArgumentException("Non existing status type");
+        }
+        ApplicationStatusEntity newStatus = statusRepository.findOne(localizedStatus.getStatusId());
+        application.changeStatus(newStatus);
+        applicationRepository.save(application);
     }
 
     /**
      * Insert new application to database
      * @param application to be inserted into database
+     * @param language of application parameters
      * @throws NotValidArgumentException
      */
     @Override
-    public void insertApplication(ApplicationForm application) throws NotValidArgumentException {
+    public void insertApplication(ApplicationForm application, String language) throws NotValidArgumentException {
         ApplicationStatusEntity status = statusRepository.findByName("PENDING");
         Date registrationDate = new Date();
         AvailabilityEntity availability = getAvailability(application.getAvailableForWork());
 
         ApplicationEntity newApplication = new ApplicationEntity(application.getPersonId(),registrationDate,status,availability);
         newApplication = applicationRepository.save(newApplication);
-        saveCompetenceProfilesToApplication(application.getCompetenceProfile(), newApplication);
+
+        saveCompetenceProfilesToApplication(application.getCompetenceProfile(), newApplication, language);
     }
 
     /**
@@ -133,15 +116,17 @@ public class MysqlApplicationDao implements ApplicationDao{
      * Save competence profiles to application
      * @param competenceLists of competences to be added to the application
      * @param newApplication to attached the competences to
+     * @param language
      */
-    private void saveCompetenceProfilesToApplication(Collection<CompetenceForm> competenceLists, ApplicationEntity newApplication){
+    private void saveCompetenceProfilesToApplication(Collection<CompetenceForm> competenceLists, ApplicationEntity newApplication, String language){
         ArrayList<CompetenceProfileEntity> competenceProfileEntities = new ArrayList<>();
         for (CompetenceForm competenceProfileEntity : competenceLists) {
-            CompetenceEntity competence = competenceRepository.findByName(competenceProfileEntity.getName());
-            if(competence == null){
+
+            LocalizedCompetence lc = localizedCompetenceRepository.getByLanguageIdAndTranslation(getLanguage(language).getId(),competenceProfileEntity.getName());
+            if(lc == null){
                 throw new NotValidArgumentException("Not valid name on competence");
             }
-            log.info("years of experience" +  competenceProfileEntity.getYearsOfExperience());
+            CompetenceEntity competence = competenceRepository.findOne(lc.getCompetenceId());
             CompetenceProfileEntity c = new CompetenceProfileEntity(newApplication,competence, competenceProfileEntity.getYearsOfExperience());
             competenceProfileEntities.add(c);
         }
@@ -152,22 +137,26 @@ public class MysqlApplicationDao implements ApplicationDao{
      * Get a specified number of application from a specified application defined by id from database
      * @param startId is the start point of the list of application
      * @param numberOfApplication to retrieve
-     * @param lang
+     * @param language of applications
      * @return collection of applications
      */
     @Override
-    public Collection<ApplicationEntity> getXApplicationsFrom(int startId, int numberOfApplication, String lang) {
-        return applicationRepository.getXApplicationsFrom(startId,numberOfApplication);
+    public Collection<ApplicationEntity> getXApplicationsFrom(int startId, int numberOfApplication, String language) {
+        Collection<ApplicationEntity> listOfApplications = applicationRepository.getXApplicationsFrom(startId,numberOfApplication);
+        listOfApplications.forEach((application)->{
+            application = translateApplication(application,language);
+        });
+        return listOfApplications;
     }
 
     /**
      * Get applications by parameters
      * @param param to filter with
-     * @param lang
+     * @param language of applications
      * @return a collection of applications
      */
     @Override
-    public Collection<ApplicationEntity> getApplicationByParam(ApplicationParamForm param, String lang) {
+    public Collection<ApplicationEntity> getApplicationByParam(ApplicationParamForm param, String language) {
         Collection<ApplicationEntity> resultListOfApplication= new ArrayList<>();
         Collection<ApplicationEntity> newResultOfApplicationFilter;
         try {
@@ -183,7 +172,8 @@ public class MysqlApplicationDao implements ApplicationDao{
                 }
             }
             if (param.getName() != null) {
-                newResultOfApplicationFilter = applicationRepository.getApplicationsByPersonName(param.getName());
+                //todo check by id
+             /**   newResultOfApplicationFilter = applicationRepository.getApplicationsByPersonName(param.getName());
                 if (newResultOfApplicationFilter.size() == 0) {
                     throw new NoMatchException("No matches will be found");
                 }
@@ -191,15 +181,15 @@ public class MysqlApplicationDao implements ApplicationDao{
                     resultListOfApplication = newResultOfApplicationFilter;
                 } else {
                     resultListOfApplication = getListOfIntersectionBetweenApplicationList(newResultOfApplicationFilter, resultListOfApplication);
-                }
+                }*/
             }
         }catch (NotValidArgumentException e){
             throw e;
         }catch (NoMatchException e){
             return new ArrayList<>();
         }
-        resultListOfApplication.forEach((a)->{
-            a = translateApplication(a,lang);
+        resultListOfApplication.forEach((application)->{
+            application = translateApplication(application,language);
         });
         return resultListOfApplication;
     }
@@ -261,14 +251,14 @@ public class MysqlApplicationDao implements ApplicationDao{
 
     /**
      * Get all valid competences allowed on applications form database
+     * @param language of competences
      * @return collection of competences
-     * @param lang
      */
     @Override
-    public Collection<CompetenceEntity> getAllValidCompetences(String lang) {
+    public Collection<CompetenceEntity> getAllValidCompetences(String language) {
         Collection<CompetenceEntity> ce = new ArrayList<>();
         competenceRepository.findAll().forEach((c)-> {
-            c.setName(translateCompetence(c, getLanguage(lang)));
+            c.setName(translateCompetence(c, getLanguage(language)));
             ce.add(c);
         });
         return ce;
@@ -277,13 +267,13 @@ public class MysqlApplicationDao implements ApplicationDao{
     /**
      * Get allowed application statuses on applications from database
      * @return collection of application status
-     * @param lang
+     * @param language of statuses
      */
     @Override
-    public Collection<ApplicationStatusEntity> getAllValidStatus(String lang) {
+    public Collection<ApplicationStatusEntity> getAllValidStatus(String language) {
         Collection<ApplicationStatusEntity> ase = new ArrayList<>();
         statusRepository.findAll().forEach((c)->{
-            c.setName(translateStatus(c, getLanguage(lang)));
+            c.setName(translateStatus(c, getLanguage(language)));
             ase.add(c);
         });
         return ase;
@@ -303,6 +293,38 @@ public class MysqlApplicationDao implements ApplicationDao{
             }
         });
         return applicationListResult;
+    }
+
+
+    private ApplicationEntity translateApplication(ApplicationEntity application, String language){
+        ApplicationEntity applicationEntity = application;
+
+        LanguageEntity lang = getLanguage(language);
+        application.getStatus().setName(translateStatus(applicationEntity.getStatus(), lang));
+
+        for(CompetenceProfileEntity c : application.getCompetenceProfile()){
+            c.getCompetence().setName(translateCompetence(c.getCompetence(),lang));
+        }
+
+        return applicationEntity;
+    }
+
+    private String translateStatus(ApplicationStatusEntity StatusEntity, LanguageEntity lang) {
+        LocalizedStatus localizedStatus = localizedStatusRepository.getByLanguageIdAndStatusId(lang.getId(),StatusEntity.getId());
+        return localizedStatus.getTranslation();
+    }
+
+    private String translateCompetence(CompetenceEntity competenceProfile, LanguageEntity lang){
+        LocalizedCompetence localizedCompetence = localizedCompetenceRepository.getByLanguageIdAndCompetenceId(lang.getId(),competenceProfile.getId());
+        return localizedCompetence.getTranslation();
+    }
+
+    private LanguageEntity getLanguage(String lang){
+        LanguageEntity l = languageRepository.findByName(lang);
+        if(l == null){
+            throw new NotValidArgumentException("Not a supported language");
+        }
+        return l;
     }
 }
 

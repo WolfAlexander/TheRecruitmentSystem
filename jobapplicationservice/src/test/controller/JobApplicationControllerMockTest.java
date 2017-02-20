@@ -54,7 +54,7 @@ public class JobApplicationControllerMockTest {
     public void ChangeStatusErrorErrorResponse(){
         ApplicationStatusForm applicationStatusForm = new ApplicationStatusForm("jek");
 
-        doThrow(new NotValidArgumentException("oh no")).when(jobApplicationService).changeStatusOnApplicationById(1,applicationStatusForm);
+        doThrow(new NotValidArgumentException("oh no")).when(jobApplicationService).changeStatusOnApplicationById(1,applicationStatusForm, language);
         ResponseEntity responseEntity = jobApplicationController.changeStatusOnApplicationById(1,applicationStatusForm,"en",new BindException(ApplicationParamForm.class,""));
         assertEquals(HttpStatus.BAD_REQUEST,responseEntity.getStatusCode());
     }
@@ -77,7 +77,7 @@ public class JobApplicationControllerMockTest {
     @Test
     public void insertNewApplicationErrorResponse(){
         ApplicationForm applicationForm = jobApplicationFormGenerater.generateApplicationForm();
-        doThrow(new NotValidArgumentException("oh no")).when(jobApplicationService).registerJobApplication(applicationForm);
+        doThrow(new NotValidArgumentException("oh no")).when(jobApplicationService).registerJobApplication(applicationForm, lang);
         ResponseEntity responseEntity = jobApplicationController.registerJobApplication(applicationForm,"en",new BindException(ApplicationParamForm.class,""));
         assertEquals(HttpStatus.BAD_REQUEST,responseEntity.getStatusCode());
     }

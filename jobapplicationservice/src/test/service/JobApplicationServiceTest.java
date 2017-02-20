@@ -148,7 +148,7 @@ public class JobApplicationServiceTest {
     public void changeStatusOnApplicationByIdTest(){
         ApplicationStatusForm applicationStatusForm = jobApplicationFormGenerater.getApplicationStatusForm();
         try {
-            jobApplicationService.changeStatusOnApplicationById(5, applicationStatusForm);
+            jobApplicationService.changeStatusOnApplicationById(5, applicationStatusForm, language);
         }catch (Exception e){
             fail("could not change on fake application");
         }
@@ -157,7 +157,7 @@ public class JobApplicationServiceTest {
     @Test
     public void registerJobApplicationTest(){
         try {
-            jobApplicationService.registerJobApplication(jobApplicationFormGenerater.generateApplicationForm());
+            jobApplicationService.registerJobApplication(jobApplicationFormGenerater.generateApplicationForm(), lang);
         }catch (Exception e){
             fail("could not register new application from service");
         }

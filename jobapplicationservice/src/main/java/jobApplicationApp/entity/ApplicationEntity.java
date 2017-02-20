@@ -9,30 +9,63 @@ import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
 
+/**
+ * Application entity
+ */
 @Entity
 @Getter
 @NoArgsConstructor
 @Table(name = "application")
 public class ApplicationEntity {
 
+
+    /**
+     * Id of the application
+     *@return  id of application
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+
+    /**
+     * The id of the person that creater of the application
+     * @return the persons id
+     */
     @NotNull
     private int personId;
 
+    /**
+     * The date the application was registerd
+     * @return date of registration
+     */
     @Column(name = "date_of_registration")
     private Date dateOfRegistration;
 
+
+    /**
+     * The current status of the application
+     * @return status of application
+     */
     @OneToOne
     @JoinColumn(name = "status_id")
     private ApplicationStatusEntity status;
 
+
+    /**
+     * Period the user is available for work
+     * @return availability period
+     */
     @OneToOne
     @JoinColumn(name = "availability_id")
     private AvailabilityEntity availableForWork;
 
+
+    /**
+     * List of competences the user have provided
+     *
+     * @return competences of user
+     */
     @OneToMany(mappedBy = "application")
     private Collection<CompetenceProfileEntity> competenceProfile;
 

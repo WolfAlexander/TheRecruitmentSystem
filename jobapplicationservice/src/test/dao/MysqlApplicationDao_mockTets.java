@@ -56,7 +56,7 @@ public class MysqlApplicationDao_mockTets {
             given(statusRepository.findByName("PENDING")).willReturn(as);
             ApplicationEntity applicationEntity = jobApplicationEntityGenerater.generateApplicationEntity();
             given(applicationRepository.findOne(3)).willReturn(applicationEntity);
-            mysqlApplicationDao.changeApplicationStatus(3,applicationStatusForm);
+            mysqlApplicationDao.changeApplicationStatus(3,applicationStatusForm, language);
         }catch (Exception e){
             fail();
         }
@@ -69,7 +69,7 @@ public class MysqlApplicationDao_mockTets {
             given(statusRepository.findByName("PENDING")).willReturn(new ApplicationStatusEntity("PENDING"));
             ApplicationForm applicationForm = jobApplicationFormGenerater.generateApplicationForm();
             given(availableRepository.findByFromDateAndToDate(applicationForm.getAvailableForWork().getFromDate(),applicationForm.getAvailableForWork().getToDate())).willReturn(null);
-            mysqlApplicationDao.insertApplication(applicationForm);
+            mysqlApplicationDao.insertApplication(applicationForm, lang);
         }catch (Exception e){
             fail("could'nt create a new application");
         }
@@ -96,7 +96,7 @@ public class MysqlApplicationDao_mockTets {
      //   competenceProfileRepository.save(c));
 
         try {
-            mysqlApplicationDao.insertApplication(jobApplicationFormGenerater.generateApplicationForm());
+            mysqlApplicationDao.insertApplication(jobApplicationFormGenerater.generateApplicationForm(), lang);
             fail("Could not insert the new application");
         }catch (Exception e){}
 

@@ -1,14 +1,18 @@
 package jobApplicationApp.dto.form;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/**
+ * Form for the users role on the system
+ */
+@AllArgsConstructor
+@Getter
 public class RoleForm {
-
+    /**
+     * Name of the role
+     *
+     * @return role name
+     */
     private String name;
-
-    public RoleForm(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
 }

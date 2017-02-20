@@ -2,35 +2,55 @@ package jobApplicationApp.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * Competence profile entity
+ */
 @Entity
 @Table(name = "competence_profile")
 @NoArgsConstructor
 @Getter
 public class CompetenceProfileEntity {
 
+    /**
+     * The id of the competence profile
+     * @retunr the competence's id
+     */
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
+    /**
+     * The application the profile is connected to
+     * @return connected application
+     */
     @ManyToOne
     @JsonIgnore
     private ApplicationEntity application;
 
+    /**
+     *The competence the profile contain
+     * @return the competence object
+     */
     @OneToOne
     @JoinColumn(name = "competence_id")
     private CompetenceEntity competence;
 
-    private int years_of_experience;
+    /**
+     * The years of experience in the field
+     * @return the years of experience
+     */
+    private int yearsOfExperience;
 
-
-    public CompetenceProfileEntity(ApplicationEntity application, CompetenceEntity competence, int yearsOfExperience) {
+    public CompetenceProfileEntity(ApplicationEntity application, CompetenceEntity competence, int years_of_experience) {
         this.application = application;
         this.competence = competence;
-        this.years_of_experience = yearsOfExperience;
+        this.yearsOfExperience = years_of_experience;
     }
 }

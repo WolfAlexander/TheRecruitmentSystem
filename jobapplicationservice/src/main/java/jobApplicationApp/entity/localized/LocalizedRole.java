@@ -9,6 +9,9 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 
+/**
+ * Translation to role
+ */
 @Getter
 @Entity
 @NoArgsConstructor
@@ -16,14 +19,32 @@ import java.io.Serializable;
 @IdClass(LocalizedRole.key.class)
 public class LocalizedRole {
 
+
+    /**
+     *Id of the role to translate
+     *
+     * @return id fo the role to translate
+     */
     @Id
     @NotNull
     private Integer roleId;
 
+
+    /**
+     * Id of language to translate to
+     *
+     * @return id of language
+     */
     @Id
     @NotNull
     private Integer languageId;
 
+
+    /**
+     * The translation of the the role to the language specified
+     *
+     * @return the translation
+     */
     @NotNull
     private String translation;
 
@@ -33,8 +54,6 @@ public class LocalizedRole {
         private Integer roleId;
         private Integer languageId;
 
-
-        // implement equals(), hashcode()
     }
 
 }
