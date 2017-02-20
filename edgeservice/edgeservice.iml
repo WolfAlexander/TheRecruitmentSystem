@@ -11,6 +11,16 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:angularjs:1.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:angular-translate:2.13.1" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars.bower:angular-messages:1.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:angular-translate-loader-url:2.13.1" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars.bower:angular-translate-storage-local:2.13.1" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars.bower:angular-translate:2.13.1" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars.bower:angular:1.5.11" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars.bower:angular-translate-storage-cookie:2.13.1" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars.bower:angular-cookies:1.5.11" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-zuul:1.2.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter:1.1.7.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-context:1.1.7.RELEASE" level="project" />
