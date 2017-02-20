@@ -1,6 +1,8 @@
 package registrationapp.controller;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -25,6 +27,8 @@ import java.util.Collection;
 public class RegistrationController
 {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     UserManager userManager;
 
@@ -46,7 +50,7 @@ public class RegistrationController
                 userManager.register(registrationForm);
                 return new RegistrationResponse(HttpStatus.CREATED);
             }catch (RuntimeException ex){
-                //handle
+                logger.error("Unchecked exception was thrown. ", ex);
                 return null;
             }
         }
