@@ -1,6 +1,7 @@
 package controller;
 
 
+import com.netflix.ribbon.proxy.annotation.Http;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,13 +16,15 @@ import registrationapp.httpResponse.RegistrationResponse;
 import registrationapp.inputForm.RegistrationForm;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
-/*
+
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = RegistrationServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)*/
+@SpringBootTest(classes = RegistrationServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class RegistrationControllerTest {
-   /* @Autowired
+    /*
+    @Autowired
     private TestRestTemplate testRestTemplate;
 
     @Ignore
@@ -43,5 +46,63 @@ public class RegistrationControllerTest {
         validRegistrationForm.setPassword("testtestest");
 
         return validRegistrationForm;
-    }*/
+    }
+    */
+
+    @Autowired
+    private TestRestTemplate testRestTemplate;
+
+    @Test
+    public void registerWithValidRegistrationFormTest()
+    {
+        RegistrationForm registrationForm = new RegistrationForm();
+        registrationForm.setFirstname("Test");
+        registrationForm.setLastname("Testsson");
+        registrationForm.setDateOfBirth(new Date(1994, 2, 20));
+        registrationForm.setEmail("test@example.com");
+        registrationForm.setUsername("test");
+        registrationForm.setPassword("password123");
+
+        RegistrationResponse registrationResponse = testRestTemplate.postForObject("/register", registrationForm,
+                RegistrationResponse.class);
+        assertEquals(HttpStatus.CREATED, registrationResponse.getStatus());
+    }
+
+    @Test
+    public void registerWithNonValidRegistrationFormTest()
+    {
+        RegistrationForm registrationForm = new RegistrationForm();
+        registrationForm.setFirstname("T");
+        registrationForm.setLastname("Te");
+        registrationForm.setDateOfBirth(null);
+        registrationForm.setEmail("testexamplecom");
+        registrationForm.setUsername("t");
+        registrationForm.setPassword("pwd");
+
+        RegistrationResponse registrationResponse = testRestTemplate.postForObject("/register", registrationForm,
+                RegistrationResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, registrationResponse.getStatus());
+        assertEquals(6, registrationResponse.getErrorList().size());
+    }
+
+    /*
+    @Test
+    public void findUserByIdTest()
+    {
+
+    }
+
+    @Test
+    public void validateUserByIdTest()
+    {
+
+    }
+
+    @Test
+    public void getUserIdsByNameTest()
+    {
+
+    }
+    */
+
 }
