@@ -52,16 +52,14 @@ public class MysqlApplicationDao implements ApplicationDao{
 
     private ApplicationEntity translateApplication(ApplicationEntity application, String language){
         ApplicationEntity applicationEntity = application;
-        try {
+
             LanguageEntity lang = getLanguage(language);
             application.getStatus().setName(translateStatus(applicationEntity.getStatus(), lang));
 
             for(CompetenceProfileEntity c : application.getCompetenceProfile()){
-                application.getStatus().setName(translateCompetence(c.getCompetence(),lang));
+                c.getCompetence().setName(translateCompetence(c.getCompetence(),lang));
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+
         return applicationEntity;
     }
 
@@ -76,7 +74,11 @@ public class MysqlApplicationDao implements ApplicationDao{
     }
 
     private LanguageEntity getLanguage(String lang){
-        return languageRepository.findByName(lang);
+        LanguageEntity l = languageRepository.findByName(lang);
+        if(l == null){
+            throw new NotValidArgumentException("Not a supported language");
+        }
+        return l;
     }
 
     /**
@@ -196,6 +198,9 @@ public class MysqlApplicationDao implements ApplicationDao{
         }catch (NoMatchException e){
             return new ArrayList<>();
         }
+        resultListOfApplication.forEach((a)->{
+            a = translateApplication(a,lang);
+        });
         return resultListOfApplication;
     }
 
@@ -263,7 +268,7 @@ public class MysqlApplicationDao implements ApplicationDao{
     public Collection<CompetenceEntity> getAllValidCompetences(String lang) {
         Collection<CompetenceEntity> ce = new ArrayList<>();
         competenceRepository.findAll().forEach((c)-> {
-            translateCompetence(c, getLanguage(lang));
+            c.setName(translateCompetence(c, getLanguage(lang)));
             ce.add(c);
         });
         return ce;
@@ -277,7 +282,10 @@ public class MysqlApplicationDao implements ApplicationDao{
     @Override
     public Collection<ApplicationStatusEntity> getAllValidStatus(String lang) {
         Collection<ApplicationStatusEntity> ase = new ArrayList<>();
-        statusRepository.findAll().forEach((c)->ase.add(c));
+        statusRepository.findAll().forEach((c)->{
+            c.setName(translateStatus(c, getLanguage(lang)));
+            ase.add(c);
+        });
         return ase;
     }
 

@@ -4,6 +4,7 @@ import jobApplicationApp.dao.ApplicationDao;
 import jobApplicationApp.dto.form.ApplicationForm;
 import jobApplicationApp.dto.form.ApplicationParamForm;
 import jobApplicationApp.dto.form.ApplicationStatusForm;
+import jobApplicationApp.dto.response.ApplicationResponse;
 import jobApplicationApp.entity.ApplicationEntity;
 import jobApplicationApp.entity.ApplicationStatusEntity;
 import jobApplicationApp.entity.CompetenceEntity;
@@ -29,17 +30,20 @@ public class JobApplicationService {
     @Qualifier("mysql")
     private ApplicationDao applicationDao;
 
+    @Autowired
+    private UserApi userApi;
+
     /**
      * Get job application by id
      * @param id of application
      * @param lang
      * @return application
      */
-    public ApplicationEntity getApplicationById(int id, String lang) throws NotValidArgumentException {
+    public ApplicationResponse getApplicationById(int id, String lang) throws NotValidArgumentException {
         validateId(id,"application id");
         ApplicationEntity applicationEntity = applicationDao.getApplicationById(id,lang);
         log.info("Application with id " + String.valueOf(id) + " was retrieved");
-        return applicationEntity;
+        return new ApplicationResponse(applicationEntity,userApi.getUserById(applicationEntity.getId()));
     }
 
     /**

@@ -62,7 +62,7 @@ public class JobApplicationServiceTest {
             assertThat(returnList).contains(v);
         });
     }
-
+/**
     @Test
     public void getApplicationById() {
         ApplicationEntity  applicationEntity  = jobApplicationEntityGenerater.generateApplicationEntity();
@@ -91,7 +91,7 @@ public class JobApplicationServiceTest {
         assertThat(returnApplication.getCompetenceProfile()).isEqualTo(null);
         assertThat(returnApplication.getDateOfRegistration()).isEqualTo(null);
     }
-
+ **/
     @Test
     public void getApplicationsByParam() {
         ApplicationParamForm applicationParamForm = new ApplicationParamForm("Sven",null,null);
