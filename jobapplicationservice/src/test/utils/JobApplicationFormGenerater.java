@@ -1,14 +1,23 @@
 package utils;
 
-import jobApplicationApp.dto.form.ApplicationForm;
-import jobApplicationApp.dto.form.ApplicationStatusForm;
-import jobApplicationApp.dto.form.AvailabilityForm;
+import jobApplicationApp.dto.form.*;
+import jobApplicationApp.dto.response.ApplicationResponse;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class JobApplicationFormGenerater {
+
+    private JobApplicationEntityGenerater jobApplicationEntityGenerater = new JobApplicationEntityGenerater();
+
+    public ApplicationResponse generateApplicationResponse(){
+        return new ApplicationResponse(jobApplicationEntityGenerater.generateApplicationEntity(),generatePersonForm());
+    }
+
+    private PersonForm generatePersonForm(){
+        return new PersonForm("Lars","Henriksson",new Date(1993,12,32),"test@henriksson.con", new RoleForm("test"));
+    }
 
     public ApplicationForm generateApplicationForm(){
 

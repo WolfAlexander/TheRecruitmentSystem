@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class JobApplicationEntityGenerater {
 
-    public ApplicationEntity generateApplicationEntity(){
+    public ApplicationEntity generateApplicationEntity() {
         Date registrationDate;
         try {
             registrationDate = new SimpleDateFormat("yyyy-MM-dd").parse("2016-02-17");
@@ -17,26 +17,53 @@ public class JobApplicationEntityGenerater {
             throw new RuntimeException("can't create date");
         }
 
-        return  new ApplicationEntity(4,
-                        registrationDate,
-                        generateApplicationStatusEntity(),
-                        generateAvailabilityEntity());
+        return new ApplicationEntity(4,
+                registrationDate,
+                generateApplicationStatusEntity(),
+                generateAvailabilityEntity());
     }
 
-    public ApplicationStatusEntity generateApplicationStatusEntity(){
+    public ApplicationStatusEntity generateApplicationStatusEntity() {
         return new ApplicationStatusEntity("PENDING");
     }
 
-    public AvailabilityEntity generateAvailabilityEntity(){
+    public AvailabilityEntity generateAvailabilityEntity() {
         Date fromDate;
         Date toDate;
         try {
             fromDate = new SimpleDateFormat("yyyy-MM-dd").parse("2016-02-17");
-            toDate =  new SimpleDateFormat("yyyy-MM-dd").parse("2017-02-17");
+            toDate = new SimpleDateFormat("yyyy-MM-dd").parse("2017-02-17");
         } catch (ParseException e) {
             throw new RuntimeException("can't create date");
         }
-        return  new AvailabilityEntity(fromDate,toDate);
+        return new AvailabilityEntity(fromDate, toDate);
     }
 
+    public Collection<ApplicationEntity> generateApplicationEntityList() {
+        ArrayList<ApplicationEntity> a = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            a.add(generateApplicationEntity());
+        }
+        return a;
+    }
+
+    public Collection<ApplicationStatusEntity> generateListOfApplicationStatus(){
+        ArrayList<ApplicationStatusEntity> a = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            a.add(generateApplicationStatusEntity());
+        }
+        return a;
+    }
+
+    public CompetenceEntity generateCompetence(){
+        return new CompetenceEntity("running");
+    }
+
+    public Collection<CompetenceEntity> generateListOfCompetences() {
+        ArrayList<CompetenceEntity> a = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            a.add(generateCompetence());
+        }
+        return a;
+    }
 }

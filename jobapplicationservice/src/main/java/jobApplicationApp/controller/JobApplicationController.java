@@ -129,7 +129,7 @@ public class JobApplicationController {
      * @param language on the status
      * @return collection of application statuses and a http status
      */
-    @GetMapping(value = "/{lang}/getAllValidStatus")
+    @GetMapping(value = "/{language}/getAllValidStatus")
     public ResponseEntity getAllValidStatus(@PathVariable(value = "language") String language){
         try {
             return new ResponseEntity<>(jobApplicationService.getAllValidStatus(language),HttpStatus.OK);

@@ -35,6 +35,10 @@ public class ApplicationStatusEntity {
     private String name;
 
 
+    public ApplicationStatusEntity(String name) {
+        this.name = name;
+    }
+
     /**
      * Set the name of the status
      * @param name to be changed to

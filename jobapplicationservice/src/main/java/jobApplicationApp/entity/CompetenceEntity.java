@@ -36,6 +36,10 @@ public class CompetenceEntity {
     @NotNull
     private String name;
 
+    public CompetenceEntity(String name) {
+        this.name = name;
+    }
+
     /**
      * Set the name of competence
      * @param name is the new name of the competence

@@ -49,33 +49,6 @@ public class MysqlApplicationDao_mockTets {
     private MysqlApplicationDao mysqlApplicationDao;
 
     @Test
-    public void changeApplicationStatus(){
-        try {
-            ApplicationStatusForm applicationStatusForm = new ApplicationStatusForm("PENDING");
-            ApplicationStatusEntity as = new ApplicationStatusEntity("PENDING");
-            given(statusRepository.findByName("PENDING")).willReturn(as);
-            ApplicationEntity applicationEntity = jobApplicationEntityGenerater.generateApplicationEntity();
-            given(applicationRepository.findOne(3)).willReturn(applicationEntity);
-            mysqlApplicationDao.changeApplicationStatus(3,applicationStatusForm, language);
-        }catch (Exception e){
-            fail();
-        }
-    }
-
-    @Ignore //gets a null pointer at this point
-    @Test
-    public void insrtApplicationTest(){
-        try {
-            given(statusRepository.findByName("PENDING")).willReturn(new ApplicationStatusEntity("PENDING"));
-            ApplicationForm applicationForm = jobApplicationFormGenerater.generateApplicationForm();
-            given(availableRepository.findByFromDateAndToDate(applicationForm.getAvailableForWork().getFromDate(),applicationForm.getAvailableForWork().getToDate())).willReturn(null);
-            mysqlApplicationDao.insertApplication(applicationForm, lang);
-        }catch (Exception e){
-            fail("could'nt create a new application");
-        }
-    }
-
-    @Test
     public void getApplicationByNameParam(){
         assertThat(mysqlApplicationDao.getApplicationByParam(new ApplicationParamForm("henrik",null,null), "en").size()).isEqualTo(0);
     }
@@ -87,7 +60,7 @@ public class MysqlApplicationDao_mockTets {
 
     @Test
     public void insertApplicationTest(){
-
+        String language = "en";
         ApplicationForm applicationForm = jobApplicationFormGenerater.generateApplicationForm();
         given(availableRepository.findByFromDateAndToDate(applicationForm.getAvailableForWork().getFromDate(),applicationForm.getAvailableForWork().getToDate())).willReturn(jobApplicationEntityGenerater.generateAvailabilityEntity());
         given(applicationRepository.save(jobApplicationEntityGenerater.generateApplicationEntity())).willReturn(null);
@@ -96,7 +69,7 @@ public class MysqlApplicationDao_mockTets {
      //   competenceProfileRepository.save(c));
 
         try {
-            mysqlApplicationDao.insertApplication(jobApplicationFormGenerater.generateApplicationForm(), lang);
+            mysqlApplicationDao.insertApplication(jobApplicationFormGenerater.generateApplicationForm(), language);
             fail("Could not insert the new application");
         }catch (Exception e){}
 

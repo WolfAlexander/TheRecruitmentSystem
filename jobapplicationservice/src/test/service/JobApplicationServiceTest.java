@@ -146,6 +146,7 @@ public class JobApplicationServiceTest {
 
     @Test
     public void changeStatusOnApplicationByIdTest(){
+        String language = "en";
         ApplicationStatusForm applicationStatusForm = jobApplicationFormGenerater.getApplicationStatusForm();
         try {
             jobApplicationService.changeStatusOnApplicationById(5, applicationStatusForm, language);
@@ -156,8 +157,9 @@ public class JobApplicationServiceTest {
 
     @Test
     public void registerJobApplicationTest(){
+        String language = "en";
         try {
-            jobApplicationService.registerJobApplication(jobApplicationFormGenerater.generateApplicationForm(), lang);
+            jobApplicationService.registerJobApplication(jobApplicationFormGenerater.generateApplicationForm(), language);
         }catch (Exception e){
             fail("could not register new application from service");
         }

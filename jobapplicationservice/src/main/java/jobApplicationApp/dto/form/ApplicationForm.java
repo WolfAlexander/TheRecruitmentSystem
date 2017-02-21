@@ -1,5 +1,6 @@
 package jobApplicationApp.dto.form;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import java.util.Collection;
 @Component
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ApplicationForm {
 
     /**
@@ -41,16 +43,5 @@ public class ApplicationForm {
     @NotNull
     private Collection<CompetenceForm> competenceProfile;
 
-    /**
-     * todo
-     *
-     * @param personId of the creater of the application
-     * @param availableForWork period that the user can work
-     * @param competenceProfile list of competences the user provided
-     */
-    public ApplicationForm(Integer personId, AvailabilityForm availableForWork, Collection<CompetenceForm> competenceProfile) {
-        this.personId = personId;
-        this.availableForWork = availableForWork;
-        this.competenceProfile = competenceProfile;
-    }
+
 }
