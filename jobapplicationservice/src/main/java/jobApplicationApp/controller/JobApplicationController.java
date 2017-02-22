@@ -20,7 +20,6 @@ import java.util.ArrayList;
 /**
  * Controller for url mapping
  */
-@SpringBootApplication
 @RestController
 @RequestMapping("/")
 public class JobApplicationController {
