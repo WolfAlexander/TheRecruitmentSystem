@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 /**
  * Form for status change
  */
-@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class ApplicationStatusForm {

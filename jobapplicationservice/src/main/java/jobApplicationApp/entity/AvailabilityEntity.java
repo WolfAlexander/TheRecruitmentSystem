@@ -14,8 +14,6 @@ import java.util.Date;
 @Entity
 @Table(name="availability")
 @NoArgsConstructor
-@AllArgsConstructor
-
 public class AvailabilityEntity {
 
     /**

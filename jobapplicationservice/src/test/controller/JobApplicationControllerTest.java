@@ -28,9 +28,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.doNothing;
 
 @RunWith(SpringRunner.class)
@@ -99,11 +97,53 @@ public class JobApplicationControllerTest {
         ApplicationForm application = jobApplicationFormGenerater.generateApplicationForm();
         doNothing().when(jobApplicationService).registerJobApplication(any(ApplicationForm.class),anyString());
 
+        ResponseEntity response = this.restTemplate.exchange("/en/",HttpMethod.POST,generateJsonApplicationForm(1,1426291200000L,1463011200000L), String.class);
+
+        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+    }
+    @Test
+
+    public void registerJobApplicationWithTooLowId() {
+        ApplicationForm application = jobApplicationFormGenerater.generateApplicationForm();
+        doNothing().when(jobApplicationService).registerJobApplication(any(ApplicationForm.class),anyString());
+        ResponseEntity response = this.restTemplate.exchange("/en/",HttpMethod.POST,generateJsonApplicationForm(-1,1426291200000L,1463011200000L), String.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("{\"messages\":[\"must be greater than or equal to 0\"]}",response.getBody().toString());
+    }
+
+    @Test
+    public void changeApplicationStatus() {
+        ApplicationForm application = jobApplicationFormGenerater.generateApplicationForm();
+        doNothing().when(jobApplicationService).changeStatusOnApplicationById(anyInt(),any(),anyString());
+        ResponseEntity response = this.restTemplate.exchange("/en/change/status/9",HttpMethod.PUT,generateJsonStatusForm("PENDING"), String.class);
+
+        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+    }
+
+    @Test
+    public void changeApplicationStatusWithoutAnyNameOnStatus() {
+        ApplicationForm application = jobApplicationFormGenerater.generateApplicationForm();
+        doNothing().when(jobApplicationService).changeStatusOnApplicationById(anyInt(),any(),anyString());
+        ResponseEntity response = this.restTemplate.exchange("/en/change/status/9",HttpMethod.PUT,generateJsonStatusForm(null), String.class);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    private HttpEntity<String> generateJsonStatusForm(String name){
         JSONObject request = new JSONObject();
-        request.put("personId", 1);
+        request.put("name", name);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(request.toJSONString(), headers);
+        return entity;
+    }
+
+    private HttpEntity<String> generateJsonApplicationForm(int personId, Long fromDate, Long toDate){
+        JSONObject request = new JSONObject();
+        request.put("personId", personId);
         JSONObject availableForWork = new JSONObject();
-        availableForWork.put("fromDate",1426291200000L);
-        availableForWork.put("toDate", 1463011200000L);
+        availableForWork.put("fromDate",fromDate);
+        availableForWork.put("toDate", toDate);
         request.put("availableForWork", availableForWork);
         JSONArray jsonArray = new JSONArray();
         CompetenceForm competenceForm = jobApplicationFormGenerater.generateCompetenceForm();
@@ -118,10 +158,10 @@ public class JobApplicationControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(request.toJSONString(), headers);
-        ResponseEntity response = this.restTemplate.exchange("/en/",HttpMethod.POST,entity, String.class);
-
-        assertEquals(HttpStatus.OK, response.getBody().toString());
+        return entity;
     }
+
+
 
     @Test
     public void changeStatusOnApplicationByIdWithNoNewStatus(){

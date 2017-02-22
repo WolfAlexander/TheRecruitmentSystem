@@ -14,12 +14,10 @@ import javax.persistence.*;
 @Entity
 @Table(name = "competence_profile")
 @NoArgsConstructor
-@Getter
 public class CompetenceProfileEntity {
 
     /**
      * The id of the competence profile
-     * @retunr the competence's id
      */
     @Id
     @JsonIgnore
@@ -28,7 +26,6 @@ public class CompetenceProfileEntity {
 
     /**
      * The application the profile is connected to
-     * @return connected application
      */
     @ManyToOne
     @JsonIgnore
@@ -38,6 +35,7 @@ public class CompetenceProfileEntity {
      *The competence the profile contain
      * @return the competence object
      */
+    @Getter
     @OneToOne
     @JoinColumn(name = "competence_id")
     private CompetenceEntity competence;

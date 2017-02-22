@@ -15,6 +15,7 @@ import jobApplicationApp.entity.localized.LanguageEntity;
 import jobApplicationApp.entity.localized.LocalizedCompetence;
 import jobApplicationApp.entity.localized.LocalizedStatus;
 import jobApplicationApp.exception.NoMatchException;
+import jobApplicationApp.service.UserApi;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,14 @@ import utils.JobApplicationFormGenerater;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 
@@ -41,7 +44,7 @@ import static org.mockito.Matchers.anyString;
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
 @SpringBootTest(classes = JobApplicationLauncher.class)
-public class MysqlApplicationDao_mockTets {
+public class MysqlApplicationDaoTest {
 
     private JobApplicationEntityGenerator jobApplicationEntityGenerator = new JobApplicationEntityGenerator();
     private JobApplicationFormGenerater jobApplicationFormGenerater = new JobApplicationFormGenerater();
@@ -53,9 +56,9 @@ public class MysqlApplicationDao_mockTets {
     @MockBean private LocalizedStatusRepository localizedStatusRepository;
     @MockBean private LanguageRepository languageRepository;
     @MockBean private LocalizedCompetenceRepository localizedCompetenceRepository;
-    @MockBean private Query query;
+    @MockBean private UserApi userApi;
     @Autowired
-    private MysqlApplicationDao mysqlApplicationDao;
+    private jobApplicationApp.dao.MysqlApplicationDao mysqlApplicationDao;
 
 
 
@@ -132,7 +135,12 @@ public class MysqlApplicationDao_mockTets {
     //todo
     @Test
     public void getApplicationByNameParam(){
-        assertThat(mysqlApplicationDao.getApplicationByParam(new ApplicationParamForm("henrik",null,null), "en").size()).isEqualTo(0);
+        mockTranslation();
+        ArrayList<Integer> listOfIds = new ArrayList<>();
+        listOfIds.add(1);
+        given(userApi.getIdOfUsersWithName(anyString())).willReturn(listOfIds);
+        given(applicationRepository.findAll()).willReturn(jobApplicationEntityGenerator.generateListOfApplicationWithTheSize(2));
+        assertThat(mysqlApplicationDao.getApplicationByParam(new ApplicationParamForm("henrik",null,null), "en").size()).isEqualTo(2);
     }
 
     @Test
@@ -180,6 +188,19 @@ public class MysqlApplicationDao_mockTets {
         }
 
     }
+
+    @Test
+    public void getListOfIntersectionBetweenApplicationList(){
+        mockTranslation();
+        ArrayList<Integer> listOfIds = new ArrayList<>();
+        listOfIds.add(1);
+        given(applicationRepository.getApplicationsThatCanWorkFrom(any())).willReturn(jobApplicationEntityGenerator.generateListOfApplicationWithTheSize(2));
+        given(applicationRepository.getApplicationsThatCanWorkTo(any())).willReturn(jobApplicationEntityGenerator.generateListOfApplicationWithTheSize(2));
+        given(userApi.getIdOfUsersWithName(anyString())).willReturn(listOfIds);
+        given(applicationRepository.findAll()).willReturn(jobApplicationEntityGenerator.generateListOfApplicationWithTheSize(2));
+       assertEquals(2,mysqlApplicationDao.getApplicationByParam(new ApplicationParamForm("sbrm",jobApplicationFormGenerater.getAvailabilityForm(),null),"en").size());
+    }
+
 
     @Test
     public void filterByCompetenceWithoutResult(){

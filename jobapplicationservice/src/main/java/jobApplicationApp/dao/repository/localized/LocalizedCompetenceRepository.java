@@ -2,8 +2,8 @@ package jobApplicationApp.dao.repository.localized;
 
 import jobApplicationApp.entity.localized.LocalizedCompetence;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 
 @Transactional
 public interface LocalizedCompetenceRepository extends CrudRepository<LocalizedCompetence, Integer> {

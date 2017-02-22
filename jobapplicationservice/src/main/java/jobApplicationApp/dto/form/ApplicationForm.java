@@ -12,13 +12,11 @@ import java.util.Collection;
  * Form for retrieving application
  */
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class ApplicationForm  {
 
     /**
      * Person id of application
-     *
      * @return The persons id of the application.
      */
     @NotNull
@@ -28,7 +26,6 @@ public class ApplicationForm  {
 
     /**
      * The period they applicant can work
-     *
      * @return a period where the applicant can work
      */
     @NotNull

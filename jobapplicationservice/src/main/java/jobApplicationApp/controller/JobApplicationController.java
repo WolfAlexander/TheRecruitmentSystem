@@ -1,19 +1,21 @@
 package jobApplicationApp.controller;
 
+
 import jobApplicationApp.dto.form.ApplicationForm;
 import jobApplicationApp.dto.form.ApplicationParamForm;
 import jobApplicationApp.dto.form.ApplicationStatusForm;
 import jobApplicationApp.dto.response.RequestListResponse;
 import jobApplicationApp.dto.response.RequestResponse;
-import jobApplicationApp.entity.ApplicationEntity;
+import jobApplicationApp.service.JobApplicationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import jobApplicationApp.service.JobApplicationService;
+
 import javax.validation.Valid;
 import java.util.ArrayList;
 
@@ -36,9 +38,9 @@ public class JobApplicationController {
      * @return an application and a http status or an error message
      */
     @GetMapping(value = "/{language}/by/id/{id}")
-    public ResponseEntity getApplicationById(@PathVariable(value = "id") int id,@PathVariable(value = "language") String language){
+    public ResponseEntity getApplicationById(@PathVariable(value = "id") int id, @PathVariable(value = "language") String language){
         try{
-            return new ResponseEntity<>(jobApplicationService.getApplicationById(id,language),HttpStatus.OK);
+            return new ResponseEntity<>(jobApplicationService.getApplicationById(id,language), HttpStatus.OK);
         }catch (Exception e){
            return new ResponseEntity<>(new RequestResponse(e.getMessage()),HttpStatus.BAD_REQUEST);
         }
@@ -52,7 +54,7 @@ public class JobApplicationController {
      * @param bindingResult handles validation of input from user
      * @return collection of application and a http status or an error message
      */
-    @PostMapping(value = "/{language}/by/param",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{language}/by/param",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity getApplicationsByParam(@Valid @RequestBody ApplicationParamForm param, @PathVariable(value = "language") String language, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return new ResponseEntity<>(new RequestListResponse(errorBindHandler("param",bindingResult)), HttpStatus.BAD_REQUEST);
@@ -112,7 +114,7 @@ public class JobApplicationController {
      * @return a message and http status describing if the application was accepted
      */
     @PutMapping(value = "/{language}/change/status/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity changeStatusOnApplicationById(@PathVariable(value = "id") int id,@Valid @RequestBody ApplicationStatusForm newStatus,@PathVariable(value = "language") String language, BindingResult bindingResult) {
+    public ResponseEntity changeStatusOnApplicationById(@PathVariable(value = "id") int id, @Valid @RequestBody ApplicationStatusForm newStatus, @PathVariable(value = "language") String language, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(new RequestListResponse(errorBindHandler("status",bindingResult)),HttpStatus.BAD_REQUEST);
         } else {
@@ -160,7 +162,7 @@ public class JobApplicationController {
      * @param bindingResult is the binding information object
      * @return list of the error messages to show user what's wrong
      */
-    private ArrayList<String>  errorBindHandler(String objectName, BindingResult bindingResult){
+    private ArrayList<String> errorBindHandler(String objectName, BindingResult bindingResult){
         ArrayList<String> errorMessages = new ArrayList<>();
         log.info("non valid " + objectName + " object received");
         StringBuilder error = new StringBuilder();

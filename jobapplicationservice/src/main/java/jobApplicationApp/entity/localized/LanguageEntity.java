@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
  * Languages we translate to
  */
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Table(name = "languages")

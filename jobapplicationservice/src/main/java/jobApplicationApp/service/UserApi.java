@@ -17,14 +17,7 @@ public class UserApi {
     private final RestTemplate restTemplate = new RestTemplate();
 
     public PersonForm getUserById(int id){
-
-        Date dateOfRegistration =null;
-        try {
-            dateOfRegistration = new SimpleDateFormat("yyyy-MM-dd").parse("2016-02-17");
-        }catch (Exception e){
-
-        }
-        return new PersonForm("Adrian","Gortzak",dateOfRegistration,"addegor@hotmail.com",new RoleForm("test"));
+        return new PersonForm("Adrian","Gortzak",new Date(2016,02,17),"addegor@hotmail.com",new RoleForm("test"));
         //ResponseEntity<String> response = restTemplate.getForEntity("https://data.sparkfun.com/streams/dZ4EVmE8yGCRGx5XRX1W.json",  String.class);
     }
 

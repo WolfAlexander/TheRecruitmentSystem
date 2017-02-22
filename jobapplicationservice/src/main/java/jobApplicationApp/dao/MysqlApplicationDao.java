@@ -173,13 +173,12 @@ public class MysqlApplicationDao implements ApplicationDao{
                 }
             }
             if (param.getName() != null) {
-                /**
-                //todo check by id when user api is up
                 newResultOfApplicationFilter = new ArrayList();
-                for(Integer i : userApi.getIdOfUsersWithName(param.getName())){
-                     applicationRepository.findByPersonId(i)
-                    addNewToList
-
+                Collection<Integer> userIds = userApi.getIdOfUsersWithName(param.getName());
+                for(ApplicationEntity application : applicationRepository.findAll()){
+                    if(userIds.contains(Integer.valueOf(application.getPersonId()))){
+                        newResultOfApplicationFilter.add(application);
+                    }
                 }
 
                 if (newResultOfApplicationFilter.size() == 0) {
@@ -189,7 +188,7 @@ public class MysqlApplicationDao implements ApplicationDao{
                     resultListOfApplication = newResultOfApplicationFilter;
                 } else {
                     resultListOfApplication = getListOfIntersectionBetweenApplicationList(newResultOfApplicationFilter, resultListOfApplication);
-                }*/
+                }
             }
         }catch (NotValidArgumentException e){
             log.info(e.toString());

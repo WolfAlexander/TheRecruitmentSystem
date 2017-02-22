@@ -2,8 +2,8 @@ package jobApplicationApp.dao.repository.localized;
 
 import jobApplicationApp.entity.localized.LanguageEntity;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 
 @Transactional
 public interface LanguageRepository extends CrudRepository<LanguageEntity, Integer> {
