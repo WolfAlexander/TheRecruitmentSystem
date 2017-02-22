@@ -11,6 +11,7 @@ import jobApplicationApp.entity.localized.LocalizedCompetence;
 import jobApplicationApp.entity.localized.LocalizedStatus;
 import jobApplicationApp.exception.NoMatchException;
 import jobApplicationApp.exception.NotValidArgumentException;
+import jobApplicationApp.service.UserApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,8 @@ public class MysqlApplicationDao implements ApplicationDao{
 
     @PersistenceContext
     private EntityManager em;
-
+    @Autowired
+    private UserApi userApi;
     /**
      * Get a application specified by id, in the wished language
      * @param id of application
@@ -45,7 +47,7 @@ public class MysqlApplicationDao implements ApplicationDao{
      * @return an application with the id and translated to the language
      */
     @Override
-    public ApplicationEntity getApplicationById(int id,String language) {
+    public ApplicationEntity getApplicationById(int id,String language) throws NoMatchException {
 
         ApplicationEntity application = applicationRepository.findOne(id);
         if(application == null){
@@ -91,7 +93,6 @@ public class MysqlApplicationDao implements ApplicationDao{
 
         ApplicationEntity newApplication = new ApplicationEntity(application.getPersonId(),registrationDate,status,availability);
         newApplication = applicationRepository.save(newApplication);
-
         saveCompetenceProfilesToApplication(application.getCompetenceProfile(), newApplication, language);
     }
 
@@ -164,7 +165,7 @@ public class MysqlApplicationDao implements ApplicationDao{
                 resultListOfApplication = filterApplicationsByAvailability(param.getAvailableForWork());
             }
             if (param.getCompetenceProfile() != null) {
-                newResultOfApplicationFilter = filterApplicationsByCompetence(param.getCompetenceProfile());
+                newResultOfApplicationFilter = filterApplicationsByCompetence(param.getCompetenceProfile(),language);
                 if (resultListOfApplication.size() == 0) {
                     resultListOfApplication = newResultOfApplicationFilter;
                 } else {
@@ -172,8 +173,15 @@ public class MysqlApplicationDao implements ApplicationDao{
                 }
             }
             if (param.getName() != null) {
-                //todo check by id
-             /**   newResultOfApplicationFilter = applicationRepository.getApplicationsByPersonName(param.getName());
+                /**
+                //todo check by id when user api is up
+                newResultOfApplicationFilter = new ArrayList();
+                for(Integer i : userApi.getIdOfUsersWithName(param.getName())){
+                     applicationRepository.findByPersonId(i)
+                    addNewToList
+
+                }
+
                 if (newResultOfApplicationFilter.size() == 0) {
                     throw new NoMatchException("No matches will be found");
                 }
@@ -184,8 +192,10 @@ public class MysqlApplicationDao implements ApplicationDao{
                 }*/
             }
         }catch (NotValidArgumentException e){
+            log.info(e.toString());
             throw e;
         }catch (NoMatchException e){
+            log.info(e.toString());
             return new ArrayList<>();
         }
         resultListOfApplication.forEach((application)->{
@@ -218,26 +228,27 @@ public class MysqlApplicationDao implements ApplicationDao{
         }
         return resultListOfApplication;
     }
-
+    private Query query;
     /**
      *
      * @param competenceFormList list of competences that is required of the application
-     * @return ollection of applications that match requirements.
+     * @return collection of applications that match requirements.
      * @throws RuntimeException if no application could be found on a search by parameters
      */
-    private Collection<ApplicationEntity> filterApplicationsByCompetence(Collection<CompetenceForm> competenceFormList) throws RuntimeException {
+    private Collection<ApplicationEntity> filterApplicationsByCompetence(Collection<CompetenceForm> competenceFormList, String language) throws RuntimeException {
         Collection<ApplicationEntity> resultListOfApplication= new ArrayList<>();
         Collection<ApplicationEntity> sqlResultOfApplication;
+
         StringBuilder sqlCondition = new StringBuilder("SELECT a FROM ApplicationEntity a WHERE 1=1 ");
         for(CompetenceForm cf : competenceFormList){
-            CompetenceEntity competenceEntity = competenceRepository.findByName(cf.getName());
-            if(competenceEntity== null){
+            LocalizedCompetence localizedCompetence = localizedCompetenceRepository.getByLanguageIdAndTranslation(getLanguage(language).getId(),cf.getName());
+            if(localizedCompetence== null){
                 throw new NotValidArgumentException("Not existing competence");
             }else {
-                sqlCondition.append("AND " +competenceEntity.getId()+ " IN (SELECT co.competence.id FROM CompetenceProfileEntity co WHERE co.application.id=a.id)");
+                sqlCondition.append("AND " +localizedCompetence.getCompetenceId()+ " IN (SELECT co.competence.id FROM CompetenceProfileEntity co WHERE co.application.id=a.id)");
             }
-            log.info(sqlCondition.toString());
-            Query query = em.createQuery(sqlCondition.toString());
+
+            query = em.createQuery(sqlCondition.toString());
             sqlResultOfApplication =  query.getResultList();
             if (sqlResultOfApplication.size() == 0) {throw new NoMatchException("No matches will be found");};
             if(resultListOfApplication.size() == 0){
@@ -309,17 +320,17 @@ public class MysqlApplicationDao implements ApplicationDao{
         return applicationEntity;
     }
 
-    private String translateStatus(ApplicationStatusEntity StatusEntity, LanguageEntity lang) {
+    private String translateStatus(ApplicationStatusEntity StatusEntity, LanguageEntity lang) throws NotValidArgumentException {
         LocalizedStatus localizedStatus = localizedStatusRepository.getByLanguageIdAndStatusId(lang.getId(),StatusEntity.getId());
         return localizedStatus.getTranslation();
     }
 
-    private String translateCompetence(CompetenceEntity competenceProfile, LanguageEntity lang){
+    private String translateCompetence(CompetenceEntity competenceProfile, LanguageEntity lang) throws NotValidArgumentException{
         LocalizedCompetence localizedCompetence = localizedCompetenceRepository.getByLanguageIdAndCompetenceId(lang.getId(),competenceProfile.getId());
         return localizedCompetence.getTranslation();
     }
 
-    private LanguageEntity getLanguage(String lang){
+    private LanguageEntity getLanguage(String lang) throws NotValidArgumentException{
         LanguageEntity l = languageRepository.findByName(lang);
         if(l == null){
             throw new NotValidArgumentException("Not a supported language");

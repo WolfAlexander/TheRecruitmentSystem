@@ -53,4 +53,9 @@ public class CompetenceProfileEntity {
         this.competence = competence;
         this.yearsOfExperience = years_of_experience;
     }
+
+    public CompetenceProfileEntity(CompetenceEntity competence, int yearsOfExperience) {
+        this.competence = competence;
+        this.yearsOfExperience = yearsOfExperience;
+    }
 }

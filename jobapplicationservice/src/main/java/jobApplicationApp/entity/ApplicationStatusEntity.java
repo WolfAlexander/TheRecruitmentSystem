@@ -1,6 +1,7 @@
 package jobApplicationApp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "status")
 @Getter
 public class ApplicationStatusEntity {

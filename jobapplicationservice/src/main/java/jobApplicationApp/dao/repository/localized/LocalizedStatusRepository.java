@@ -1,7 +1,5 @@
 package jobApplicationApp.dao.repository.localized;
 
-import jobApplicationApp.entity.localized.LocalizedCompetence;
-import jobApplicationApp.entity.localized.LocalizedRole;
 import jobApplicationApp.entity.localized.LocalizedStatus;
 import org.springframework.data.repository.CrudRepository;
 

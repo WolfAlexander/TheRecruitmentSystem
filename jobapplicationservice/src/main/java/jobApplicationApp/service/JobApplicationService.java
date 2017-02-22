@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
 
@@ -91,11 +93,24 @@ public class JobApplicationService {
      * @param language
      * @return a collection of applications
      */
-    public Collection<ApplicationEntity> getApplicationsByParam(ApplicationParamForm param, String language) {
+    public Collection<ApplicationResponse> getApplicationsByParam(ApplicationParamForm param, String language) {
         Collection<ApplicationEntity> applicationsByParam = applicationDao.getApplicationByParam(param, language);
         log.info("Search for application resulted in " + applicationsByParam.size() + " applications");
-        return applicationsByParam;
+        return convertListToApplicationResponse(applicationsByParam);
     }
+
+    private ApplicationResponse convertToApplicationResponse(ApplicationEntity application){
+        return new ApplicationResponse(application,userApi.getUserById(application.getPersonId()));
+    }
+    private Collection<ApplicationResponse> convertListToApplicationResponse(Collection<ApplicationEntity> applications){
+        ArrayList<ApplicationResponse> responses = new ArrayList<>();
+        applications.forEach((a)->{
+            responses.add(convertToApplicationResponse(a));
+        });
+        return responses;
+    }
+
+
 
     /**
      * Validate identification

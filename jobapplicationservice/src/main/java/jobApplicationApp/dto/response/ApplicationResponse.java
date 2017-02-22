@@ -49,7 +49,13 @@ public class ApplicationResponse {
      */
     private Date dateOfRegistration;
 
-    private AvailabilityEntity availableAt;
+    /**
+     * The period the user is available for work
+     *
+     * @return period user can work
+     */
+    private AvailabilityEntity AvailableForWork;
+
     /**
      * Create an application response from application entity and person form
      * @param application to create
@@ -61,6 +67,6 @@ public class ApplicationResponse {
       this.competenceProfile =application.getCompetenceProfile();
       this.dateOfRegistration = application.getDateOfRegistration();
       this.person = person;
-      this.availableAt = application.getAvailableForWork();
+      this.AvailableForWork = application.getAvailableForWork();
     }
 }

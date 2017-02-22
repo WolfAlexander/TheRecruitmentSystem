@@ -3,20 +3,18 @@ package jobApplicationApp.dto.form;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 
 /**
  * Form for retrieving application
  */
-@Component
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplicationForm {
+public class ApplicationForm  {
 
     /**
      * Person id of application

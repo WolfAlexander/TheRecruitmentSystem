@@ -104,7 +104,6 @@
             <version>1.16.10</version>
         </dependency>
     </dependencies>
-
     <properties>
         <java.version>1.8</java.version>
     </properties>

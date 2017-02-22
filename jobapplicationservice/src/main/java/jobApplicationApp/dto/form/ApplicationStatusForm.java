@@ -16,7 +16,6 @@ public class ApplicationStatusForm {
 
     /**
      * New status to be put on the application
-     *
      * @return the new status
      */
     @NotNull

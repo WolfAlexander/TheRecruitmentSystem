@@ -9,6 +9,7 @@ import jobApplicationApp.entity.ApplicationEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 /**
  * Controller for url mapping
  */
+@SpringBootApplication
 @RestController
 @RequestMapping("/")
 public class JobApplicationController {
@@ -87,8 +89,8 @@ public class JobApplicationController {
      * @param bindingResult  handles validation of input from user
      * @return a message and http status describing if the application was accepted
      */
-    @PostMapping(value = "/{language}/",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity registerJobApplication(@Valid @RequestBody ApplicationForm application,@PathVariable(value = "language") String language, BindingResult bindingResult) {
+    @PostMapping(value = "/{language}/",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity registerJobApplication(@Valid @RequestBody ApplicationForm application, BindingResult bindingResult, @PathVariable(value = "language") String language) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(new RequestListResponse(errorBindHandler("application",bindingResult)),HttpStatus.BAD_REQUEST);
         } else {
@@ -117,7 +119,7 @@ public class JobApplicationController {
         } else {
             try {
                 jobApplicationService.changeStatusOnApplicationById(id, newStatus, language);
-                return new ResponseEntity<String>(HttpStatus.ACCEPTED);
+                return new ResponseEntity<String>("New status have been set on application",HttpStatus.ACCEPTED);
             } catch (Exception e) {
                 return new ResponseEntity<>(new RequestResponse(e.getMessage()),HttpStatus.BAD_REQUEST);
             }
@@ -154,7 +156,6 @@ public class JobApplicationController {
 
     /**
      * Handle bad binds
-     *
      * logs full error to debug and short description to info
      * @param objectName of object that fail to bind
      * @param bindingResult is the binding information object

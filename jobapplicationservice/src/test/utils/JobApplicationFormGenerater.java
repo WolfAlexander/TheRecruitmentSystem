@@ -2,17 +2,20 @@ package utils;
 
 import jobApplicationApp.dto.form.*;
 import jobApplicationApp.dto.response.ApplicationResponse;
+import jobApplicationApp.entity.ApplicationEntity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 public class JobApplicationFormGenerater {
 
-    private JobApplicationEntityGenerater jobApplicationEntityGenerater = new JobApplicationEntityGenerater();
+    private JobApplicationEntityGenerator jobApplicationEntityGenerator = new JobApplicationEntityGenerator();
 
     public ApplicationResponse generateApplicationResponse(){
-        return new ApplicationResponse(jobApplicationEntityGenerater.generateApplicationEntity(),generatePersonForm());
+        return new ApplicationResponse(jobApplicationEntityGenerator.generateApplicationEntity(),generatePersonForm());
     }
 
     private PersonForm generatePersonForm(){
@@ -20,16 +23,26 @@ public class JobApplicationFormGenerater {
     }
 
     public ApplicationForm generateApplicationForm(){
-
-
-        return new ApplicationForm(5,this.getAvailabilityForm(),null);
-
+        return new ApplicationForm(5,this.getAvailabilityForm(),generateListCompetenceFormWithSize(10));
     }
 
     public ApplicationStatusForm getApplicationStatusForm(){
-
         return new ApplicationStatusForm("PENDING");
     }
+
+    public CompetenceForm generateCompetenceForm(){
+        return new CompetenceForm("running",1);
+    }
+
+
+    public Collection<CompetenceForm> generateListCompetenceFormWithSize(int size){
+        ArrayList<CompetenceForm> a = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            a.add(generateCompetenceForm());
+        }
+        return a;
+    }
+
 
     public AvailabilityForm getAvailabilityForm(){
         Date fromDate;

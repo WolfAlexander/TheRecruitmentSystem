@@ -1,5 +1,7 @@
 package jobApplicationApp.entity.localized;
 
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +16,7 @@ import java.io.Serializable;
 @Getter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @IdClass(LocalizedCompetence.key.class)
 @Table(name = "localized_competence")
 public class LocalizedCompetence {

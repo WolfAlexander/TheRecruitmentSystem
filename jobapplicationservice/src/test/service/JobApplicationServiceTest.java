@@ -4,6 +4,7 @@ import jobApplicationApp.JobApplicationLauncher;
 import jobApplicationApp.dao.MysqlApplicationDao;
 import jobApplicationApp.dto.form.ApplicationParamForm;
 import jobApplicationApp.dto.form.ApplicationStatusForm;
+import jobApplicationApp.dto.response.ApplicationResponse;
 import jobApplicationApp.entity.*;
 import jobApplicationApp.exception.NotValidArgumentException;
 import jobApplicationApp.service.JobApplicationService;
@@ -14,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import utils.JobApplicationEntityGenerater;
+import utils.JobApplicationEntityGenerator;
 import utils.JobApplicationFormGenerater;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import static org.mockito.BDDMockito.given;
 public class JobApplicationServiceTest {
 
     private JobApplicationFormGenerater jobApplicationFormGenerater = new JobApplicationFormGenerater();
-    private JobApplicationEntityGenerater jobApplicationEntityGenerater = new JobApplicationEntityGenerater();
+    private JobApplicationEntityGenerator jobApplicationEntityGenerator = new JobApplicationEntityGenerator();
 
     @MockBean
     private MysqlApplicationDao mysqlApplicationDao;
@@ -62,22 +63,22 @@ public class JobApplicationServiceTest {
             assertThat(returnList).contains(v);
         });
     }
-/**
+
     @Test
     public void getApplicationById() {
-        ApplicationEntity  applicationEntity  = jobApplicationEntityGenerater.generateApplicationEntity();
+        ApplicationEntity  applicationEntity  = jobApplicationEntityGenerator.generateApplicationEntity();
 
         given(this.mysqlApplicationDao.getApplicationById(1,"en")).willReturn(applicationEntity);
-        ApplicationEntity returnApplication = jobApplicationService.getApplicationById(1,"en");
+        ApplicationResponse returnApplication = jobApplicationService.getApplicationById(1,"en");
         assertEquals(returnApplication.getStatus().getName(), "PENDING");
     }
 
     @Test
     public void getApplicationByBadId() {
-        ApplicationEntity  applicationEntity  = jobApplicationEntityGenerater.generateApplicationEntity();
+        ApplicationEntity  applicationEntity  = jobApplicationEntityGenerator.generateApplicationEntity();
         given(this.mysqlApplicationDao.getApplicationById(-1,"en")).willReturn(applicationEntity);
         try{
-            ApplicationEntity returnApplication = jobApplicationService.getApplicationById(-2,"en");
+            ApplicationResponse returnApplication = jobApplicationService.getApplicationById(-2,"en");
             fail("Not allowed id was accepted");
         }catch (NotValidArgumentException e){}
     }
@@ -86,12 +87,12 @@ public class JobApplicationServiceTest {
     @Test
     public void getNoneExistingApplicationById() {
         given(this.mysqlApplicationDao.getApplicationById(1,"en")).willReturn(new ApplicationEntity());
-        ApplicationEntity returnApplication = jobApplicationService.getApplicationById(1,"en");
+        ApplicationResponse returnApplication = jobApplicationService.getApplicationById(1,"en");
         assertThat(returnApplication.getAvailableForWork()).isEqualTo(null);
         assertThat(returnApplication.getCompetenceProfile()).isEqualTo(null);
         assertThat(returnApplication.getDateOfRegistration()).isEqualTo(null);
     }
- **/
+
     @Test
     public void getApplicationsByParam() {
         ApplicationParamForm applicationParamForm = new ApplicationParamForm("Sven",null,null);
@@ -101,7 +102,7 @@ public class JobApplicationServiceTest {
         collection.add(new ApplicationEntity());//3
         collection.add(new ApplicationEntity());//4
         given(this.mysqlApplicationDao.getApplicationByParam(applicationParamForm, "en")).willReturn(collection);
-        Collection<ApplicationEntity> returnApplicationEntities = jobApplicationService.getApplicationsByParam(applicationParamForm, "en");
+        Collection<ApplicationResponse> returnApplicationEntities = jobApplicationService.getApplicationsByParam(applicationParamForm, "en");
         assertEquals(returnApplicationEntities.size(),4);
     }
 

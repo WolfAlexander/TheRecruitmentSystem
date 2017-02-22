@@ -1,5 +1,6 @@
 package jobApplicationApp.entity.localized;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.io.Serializable;
 @Getter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @IdClass(LocalizedStatus.key.class)
 @Table(name = "localized_status")
 public class LocalizedStatus{
@@ -21,7 +23,6 @@ public class LocalizedStatus{
 
     /**
      *Id of the status to translate
-     *
      * @return id fo the status to translate
      */
     @Id
@@ -31,7 +32,6 @@ public class LocalizedStatus{
 
     /**
      * Id of language to translate to
-     *
      * @return id of language
      */
     @Id
@@ -41,7 +41,6 @@ public class LocalizedStatus{
 
     /**
      * The translation of the the status to the language specified
-     *
      * @return the translation
      */
     @NotNull

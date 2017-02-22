@@ -69,6 +69,13 @@ public class ApplicationEntity {
     @OneToMany(mappedBy = "application")
     private Collection<CompetenceProfileEntity> competenceProfile;
 
+    public ApplicationEntity(int personId, Date dateOfRegistration, ApplicationStatusEntity status, AvailabilityEntity availableForWork, Collection<CompetenceProfileEntity> competenceProfile) {
+        this.personId = personId;
+        this.dateOfRegistration = dateOfRegistration;
+        this.status = status;
+        this.availableForWork = availableForWork;
+        this.competenceProfile = competenceProfile;
+    }
 
     public ApplicationEntity(int personId, Date dateOfRegistration, ApplicationStatusEntity status, AvailabilityEntity availableForWork) {
         this.personId = personId;
@@ -76,8 +83,6 @@ public class ApplicationEntity {
         this.status = status;
         this.availableForWork = availableForWork;
     }
-
-
 
     /**
      * Set application status
