@@ -1,7 +1,8 @@
-package resources.utils;
+package utils;
 
 import jobApplicationApp.dto.form.*;
 import jobApplicationApp.dto.response.ApplicationResponse;
+import jobApplicationApp.entity.ApplicationEntity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

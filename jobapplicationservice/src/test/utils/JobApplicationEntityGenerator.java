@@ -1,4 +1,4 @@
-package resources.utils;
+package utils;
 
 import jobApplicationApp.entity.*;
 import jobApplicationApp.entity.localized.LocalizedCompetence;
