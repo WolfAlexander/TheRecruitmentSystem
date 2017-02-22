@@ -1,16 +1,15 @@
-package dao;
+package JobApplication.dao;
 
+import JobApplication.utils.JobApplicationEntityGenerator;
+import JobApplication.utils.JobApplicationFormGenerater;
 import jobApplicationApp.JobApplicationLauncher;
-import jobApplicationApp.dao.MysqlApplicationDao;
 import jobApplicationApp.dao.repository.*;
 import jobApplicationApp.dao.repository.localized.LanguageRepository;
 import jobApplicationApp.dao.repository.localized.LocalizedCompetenceRepository;
 import jobApplicationApp.dao.repository.localized.LocalizedStatusRepository;
 import jobApplicationApp.dto.form.ApplicationForm;
 import jobApplicationApp.dto.form.ApplicationParamForm;
-import jobApplicationApp.dto.form.ApplicationStatusForm;
 import jobApplicationApp.entity.ApplicationEntity;
-import jobApplicationApp.entity.ApplicationStatusEntity;
 import jobApplicationApp.entity.localized.LanguageEntity;
 import jobApplicationApp.entity.localized.LocalizedCompetence;
 import jobApplicationApp.entity.localized.LocalizedStatus;
@@ -23,15 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import utils.JobApplicationEntityGenerator;
-import utils.JobApplicationFormGenerater;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
 import java.util.ArrayList;
-import java.util.List;
-
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.assertj.core.api.Java6Assertions.assertThat;

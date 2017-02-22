@@ -1,5 +1,4 @@
-package controller;
-
+package JobApplication.controller;
 
 import jobApplicationApp.JobApplicationLauncher;
 import jobApplicationApp.dto.form.ApplicationForm;
@@ -9,7 +8,6 @@ import jobApplicationApp.exception.NotValidArgumentException;
 import jobApplicationApp.service.JobApplicationService;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -21,8 +19,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import utils.JobApplicationEntityGenerator;
-import utils.JobApplicationFormGenerater;
+import JobApplication.utils.*;
 
 import java.util.ArrayList;
 

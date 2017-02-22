@@ -1,5 +1,7 @@
-package service;
+package JobApplication.service;
 
+import JobApplication.utils.JobApplicationEntityGenerator;
+import JobApplication.utils.JobApplicationFormGenerater;
 import jobApplicationApp.JobApplicationLauncher;
 import jobApplicationApp.dao.MysqlApplicationDao;
 import jobApplicationApp.dto.form.ApplicationParamForm;
@@ -15,8 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import utils.JobApplicationEntityGenerator;
-import utils.JobApplicationFormGenerater;
+
 
 import java.util.ArrayList;
 import java.util.Collection;

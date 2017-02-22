@@ -1,4 +1,4 @@
 jobapplication-service:
   script:
     - cd jobapplicationservice/
-    - mvn clean test
+    - mvn test
