@@ -6,9 +6,8 @@ import registrationapp.entity.CredentialEntity;
 
 /**
  * This interface is a repository that extends the CrudRepository interface. Default CRUD
- * operations can be used to access the database. This interface handles the User entity.
+ * operations can be used to access the database. This interface handles the CredentialEntity.
  *
- * @author Albin Friedner
  */
 
 public interface CredentialsRepository extends CrudRepository<CredentialEntity, Integer> {

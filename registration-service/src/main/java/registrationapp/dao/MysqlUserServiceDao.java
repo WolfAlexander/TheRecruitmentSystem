@@ -21,6 +21,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+/**
+ * This class implements the UserServiceDao and therefore handles the communication with the
+ * database used in the recruitment system.
+ *
+ */
+
 @Repository
 @Qualifier("mysql")
 public class MysqlUserServiceDao implements UserServiceDao {
@@ -51,18 +57,33 @@ public class MysqlUserServiceDao implements UserServiceDao {
         CredentialEntity credential = credentialsRepository.save(new CredentialEntity(user.getId(),username,password));
     }
 
+    /**
+     * Gets a user from a database on ID. The role is translated to the language that the client uses.
+     *
+     * @param id The id of a user registered in the database
+     * @param lang  The language used by the client that currently interacts with the service
+     * @return  An Entity of the person with the specified ID
+     */
     @Override
     public PersonEntity getUserByIdAndLanguage(int id,String lang) {
         PersonEntity personEntity = userRepository.findOne(id);
         return translateRole(personEntity,getLanguage(lang));
     }
 
+    /**
+     * Gets ids of users based on the first name of the user
+     *
+     * @param name The first name of the user(s) that is being looked up
+     * @return  A Collection of the user ids that matches the specified first name
+     */
     @Override
     public Collection<Integer> getUserIdsByName(String name) {
         ArrayList<Integer> list = new ArrayList<>();
-        for (PersonEntity p:userRepository.findByFirstName(name)) {
+        for (PersonEntity p: userRepository.findByFirstName(name))
+        {
             list.add(p.getId());
-        }userRepository.findByFirstName(name);
+        }
+        userRepository.findByFirstName(name);
         return list;
     }
 
@@ -77,6 +98,12 @@ public class MysqlUserServiceDao implements UserServiceDao {
         return personEntity;
     }
 
+    /**
+     * Validates if a user exists in the database
+     *
+     * @param id The id of the user that is being validated
+     * @return true if the user exists in the database. false otherwise
+     */
     @Override
     public boolean validate(int id) {
         return userRepository.exists(id);

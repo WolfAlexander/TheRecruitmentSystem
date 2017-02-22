@@ -6,6 +6,10 @@ import registrationapp.inputForm.RegistrationForm;
 import java.util.Collection;
 import java.util.Date;
 
+/**
+ * This is an interface for communication with a database.
+ */
+
 public interface UserServiceDao {
 
     void registerNewUser(String firstName, String lastName, Date dateOfBirth, String email, String username, String password);
