@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: production
+    active: dev
   application:
     name: jobapplication-service
   cloud:

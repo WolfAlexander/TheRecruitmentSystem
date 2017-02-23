@@ -185,11 +185,13 @@ public class MysqlApplicationDaoTest {
         mockTranslation();
         ArrayList<Integer> listOfIds = new ArrayList<>();
         listOfIds.add(1);
+
         given(applicationRepository.getApplicationsThatCanWorkFrom(any())).willReturn(jobApplicationEntityGenerator.generateListOfApplicationWithTheSize(2));
         given(applicationRepository.getApplicationsThatCanWorkTo(any())).willReturn(jobApplicationEntityGenerator.generateListOfApplicationWithTheSize(2));
+
         given(userApi.getIdOfUsersWithName(anyString())).willReturn(listOfIds);
         given(applicationRepository.findAll()).willReturn(jobApplicationEntityGenerator.generateListOfApplicationWithTheSize(2));
-       assertEquals(2,mysqlApplicationDao.getApplicationByParam(new ApplicationParamForm("sbrm",jobApplicationFormGenerater.getAvailabilityForm(),null),"en").size());
+       assertEquals(2,mysqlApplicationDao.getApplicationByParam(new ApplicationParamForm(null,jobApplicationFormGenerater.getAvailabilityForm(),null),"en").size());
     }
 
 

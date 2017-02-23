@@ -20,7 +20,7 @@ public class JobApplicationEntityGenerator {
             throw new RuntimeException("can't create date");
         }
 
-        return new ApplicationEntity(1,
+        return new ApplicationEntity(1,1,
                 registrationDate,
                 generateApplicationStatusEntity(),
                 generateAvailabilityEntity(),

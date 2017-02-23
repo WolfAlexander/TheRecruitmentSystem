@@ -159,13 +159,13 @@ public class MysqlApplicationDao implements ApplicationDao{
         Collection<ApplicationEntity> newResultOfApplicationFilter = new ArrayList<>();
         try {
             if (param.getAvailableForWork() != null) {
-                filterReturnHandler(filterApplicationsByAvailability(param.getAvailableForWork()),resultListOfApplication);
+                resultListOfApplication = filterReturnHandler(filterApplicationsByAvailability(param.getAvailableForWork()),resultListOfApplication);
             }
             if (param.getCompetenceProfile() != null) {
-                filterReturnHandler(filterApplicationsByCompetence(param.getCompetenceProfile(),language),resultListOfApplication);
+                resultListOfApplication = filterReturnHandler(filterApplicationsByCompetence(param.getCompetenceProfile(),language),resultListOfApplication);
             }
             if (param.getName() != null) {
-                filterReturnHandler(filterApplicationsByName(param.getName()),resultListOfApplication);
+                resultListOfApplication = filterReturnHandler(filterApplicationsByName(param.getName()),resultListOfApplication);
             }
         }catch (NotValidArgumentException e){
             log.info(e.toString());
@@ -224,8 +224,7 @@ public class MysqlApplicationDao implements ApplicationDao{
         Collection<ApplicationEntity> resultListOfApplication= new ArrayList<>();
         Collection<ApplicationEntity> sqlResultOfApplication;
         if (availabilityForm != null) {
-            sqlResultOfApplication = applicationRepository.getApplicationsThatCanWorkFrom(availabilityForm.getFromDate());
-                resultListOfApplication = sqlResultOfApplication;
+            resultListOfApplication = applicationRepository.getApplicationsThatCanWorkFrom(availabilityForm.getFromDate());
         }
         if (availabilityForm.getToDate() != null) {
             sqlResultOfApplication = applicationRepository.getApplicationsThatCanWorkTo(availabilityForm.getToDate());
