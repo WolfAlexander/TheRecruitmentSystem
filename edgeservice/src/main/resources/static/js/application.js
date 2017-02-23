@@ -83,6 +83,8 @@ angular.module("application", ['ngRoute', 'ngCookies',  'ngMessages', 'pascalpre
         $rootScope.loginForm_pending_request = true;
         $rootScope.login_user_not_exists_error = false;
         $rootScope.login_user_cred_error = false;
+        $rootScope.login_service_gone = false;
+        $rootScope.logout_success = false;
 
         /**
          * Creating json request
@@ -127,6 +129,7 @@ angular.module("application", ['ngRoute', 'ngCookies',  'ngMessages', 'pascalpre
     $cookies.remove("token");
     $rootScope.authenticated = false;
     $rootScope.logout_success = true;
+    $location.path("/login");
     
 }).factory('UrlLanguageStorage', ['$location', function($location) {
     return {
