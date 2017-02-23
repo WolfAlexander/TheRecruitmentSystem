@@ -22,7 +22,7 @@
         </div>
 
         <div ng-messages="registrationForm.firstname.$error" role="alert" ng-show="registrationForm.firstname.$dirty">
-            <div ng-message="required" translate>registration.form.fields.errorMsg.required</div>
+            <div ng-message="required" translate>forms.fields.errorMsg.required</div>
             <div ng-message="minlength" translate>registration.form.firstName.errorMsg.minlength</div>
         </div>
 
@@ -38,7 +38,7 @@
                    required/>
 
             <div ng-messages="registrationForm.lastname.$error" role="alert" ng-show="registrationForm.lastname.$dirty">
-                <div ng-message="required" translate>registration.form.fields.errorMsg.required</div>
+                <div ng-message="required" translate>forms.fields.errorMsg.required</div>
                 <div ng-message="minlength" translate>registration.form.lastName.errorMsg.minlength</div>
             </div>
         </div>
@@ -57,7 +57,7 @@
                    required />
 
             <div ng-messages="registrationForm.dateOfBirth.$error" role="alert" ng-show="registrationForm.dateOfBirth.$dirty">
-                <div ng-message="required" translate>registration.form.fields.errorMsg.required</div>
+                <div ng-message="required" translate>forms.fields.errorMsg.required</div>
                 <div ng-message="date" translate>registration.form.dateOfBirth.errorMsg.patternError</div>
             </div>
         </div>
@@ -73,7 +73,7 @@
                    required/>
 
             <div ng-messages="registrationForm.email.$error" role="alert" ng-show="registrationForm.email.$dirty">
-                <div ng-message="required" translate>registration.form.fields.errorMsg.required</div>
+                <div ng-message="required" translate>forms.fields.errorMsg.required</div>
                 <div ng-message="email" translate>registration.form.email.errorMsg</div>
             </div>
         </div>
@@ -90,8 +90,8 @@
                    required/>
 
             <div ng-messages="registrationForm.username.$error" role="alert" ng-show="registrationForm.username.$dirty">
-                <div ng-message="required" translate>registration.form.fields.errorMsg.required</div>
-                <div ng-message="minlength" translate>registration.form.username.errorMsg.minlength</div>
+                <div ng-message="required" translate>forms.fields.errorMsg.required</div>
+                <div ng-message="minlength" translate>forms.username.errorMsg.minlength</div>
             </div>
         </div>
 
@@ -107,13 +107,13 @@
                        required/>
 
                 <div ng-messages="registrationForm.password.$error" role="alert" ng-show="registrationForm.password.$dirty">
-                    <div ng-message="required" translate>registration.form.fields.errorMsg.required</div>
-                    <div ng-message="minlength" translate>registration.form.password.errorMsg.minlength</div>
+                    <div ng-message="required" translate>forms.fields.errorMsg.required</div>
+                    <div ng-message="minlength" translate>forms.password.errorMsg.minlength</div>
                 </div>
         </div>
 
         <!--Submit button-->
         <button type="submit" ng-disabled = "registrationForm.$invalid" class="btn btn-primary" translate>registration.form.submitBttn</button>
-        <span ng-show="registrationForm_pending_request">Registering...</span>
+        <span ng-show="registrationForm_pending_request">registration.form.pending</span>
     </form>
 </section>

@@ -1,9 +1,6 @@
 package authapp.controller;
 
-import authapp.security.AuthRequest;
-import authapp.security.AuthResponse;
-import authapp.security.RSAJwtTokenFactory;
-import authapp.security.RSAJwtTokenFactoryException;
+import authapp.security.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +55,9 @@ public class AuthController {
             performUsernamePasswordAuthentication(authRequest.getUsername(), authRequest.getPassword());
             final String jwtToken = RSAJwtTokenFactory.generateTokenForAUser(getUserDetailsByUsername(authRequest.getUsername()));
 
-            return new ResponseEntity<Object>(new AuthResponse(jwtToken), HttpStatus.OK);
+            return new ResponseEntity<Object>(new AuthTokeResponse(jwtToken), HttpStatus.OK);
         }catch (AuthenticationException authEx){
-            return new ResponseEntity<String>("Could not authenticate user!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(new AuthFailResponse("Could not authenticate user!"), HttpStatus.UNAUTHORIZED);
         }catch (RSAJwtTokenFactoryException ex){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

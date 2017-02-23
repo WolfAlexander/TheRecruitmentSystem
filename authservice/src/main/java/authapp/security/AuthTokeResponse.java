@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Getter
 @AllArgsConstructor
-public class AuthResponse implements Serializable{
+public class AuthTokeResponse implements Serializable{
     private static final long serialVersionUID = 9104047414186210425L;
 
     private final String token;
