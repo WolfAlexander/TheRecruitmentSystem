@@ -6,28 +6,29 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-
+/**
+ * Languages translated to
+ */
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
 @Table(name = "languages")
 public class LanguageEntity {
 
+
+    /**
+     * The primary key to the language
+     * @return id of language
+     */
     @Id
     private Integer id;
 
+
+    /**
+     * A shortening of the language name, in two letters.
+     * @return language name
+     */
     @NotNull
     private String name;
-
-    public LanguageEntity(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
 }

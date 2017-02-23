@@ -4,6 +4,7 @@ import jobApplicationApp.dao.ApplicationDao;
 import jobApplicationApp.dto.form.ApplicationForm;
 import jobApplicationApp.dto.form.ApplicationParamForm;
 import jobApplicationApp.dto.form.ApplicationStatusForm;
+import jobApplicationApp.dto.response.ApplicationResponse;
 import jobApplicationApp.entity.ApplicationEntity;
 import jobApplicationApp.entity.ApplicationStatusEntity;
 import jobApplicationApp.entity.CompetenceEntity;
@@ -13,8 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import java.util.Collection;
 
+import java.util.ArrayList;
+import java.util.Collection;
 
 
 /**
@@ -29,52 +31,58 @@ public class JobApplicationService {
     @Qualifier("mysql")
     private ApplicationDao applicationDao;
 
+    @Autowired
+    private UserApi userApi;
+
     /**
-     * Get job application by id
+     * Get a job application by id
      * @param id of application
-     * @param lang
-     * @return application
+     * @param language of application
+     * @return an application
      */
-    public ApplicationEntity getApplicationById(int id, String lang) throws NotValidArgumentException {
+    public ApplicationResponse getApplicationById(int id, String language) throws NotValidArgumentException {
         validateId(id,"application id");
-        ApplicationEntity applicationEntity = applicationDao.getApplicationById(id,lang);
+        ApplicationEntity applicationEntity = applicationDao.getApplicationById(id,language);
         log.info("Application with id " + String.valueOf(id) + " was retrieved");
-        return applicationEntity;
+        return new ApplicationResponse(applicationEntity,userApi.getUserById(applicationEntity.getId()));
     }
 
     /**
-     * Change status on application
-     * @param id on application to change status on
-     * @param newStatus on application
+     * Change status on the application
+     * @param id of application to change status on
+     * @param newStatus of application
+     * @param language of application
+     * @throws NotValidArgumentException
      */
-    public void changeStatusOnApplicationById(int id, ApplicationStatusForm newStatus) throws NotValidArgumentException {
+    public void changeStatusOnApplicationById(int id, ApplicationStatusForm newStatus, String language) throws NotValidArgumentException {
         validateId(id,"application id");
-        applicationDao.changeApplicationStatus(id,newStatus);
+        applicationDao.changeApplicationStatus(id,newStatus,language);
         log.info("Changing status on application with id " + id +" to " + newStatus);
     }
 
     /**
      * Register a new job application
      * @param application to register
+     * @param language of application
      * @throws NotValidArgumentException
      */
-    public void registerJobApplication(ApplicationForm application) throws NotValidArgumentException {
-        applicationDao.insertApplication(application);
+    public void registerJobApplication(ApplicationForm application, String language) throws NotValidArgumentException {
+        applicationDao.insertApplication(application, language);
         log.info("A new application was created by userId [" + application.getPersonId() + "]");
     }
 
     /**
-     * Get a page with defined size of applications and also which page to retrieve
+     * Get a page with specific amount of applications and also which page to retrieve
      * @param pageSize of the retrieved page
      * @param pageNmr of page to be retrieved
-     * @param lang
+     * @param language of application
      * @return a collection of applications
      * @throws NotValidArgumentException
      */
-    public Collection<ApplicationEntity> getApplicationsPage(int pageSize, int pageNmr, String lang) throws NotValidArgumentException {
+    public Collection<ApplicationEntity> getApplicationsPage(int pageSize, int pageNmr, String language) throws NotValidArgumentException {
         validateId(pageNmr,"page number");
         validateId(pageSize,"page size");
-        Collection<ApplicationEntity>  applications = applicationDao.getXApplicationsFrom(pageNmr*pageSize,pageSize,lang);
+        Collection<ApplicationEntity>  applications = applicationDao.getXApplicationsFrom(pageNmr*pageSize,pageSize,language);
         log.info("applications page " + pageNmr + " with size " + pageSize + " was retrieved");
         return applications;
     }
@@ -82,18 +90,31 @@ public class JobApplicationService {
     /**
      *Get application by parameter object to filter applications
      * @param param contains all parameters
-     * @param lang
+     * @param language of application's parameters
      * @return a collection of applications
      */
-    public Collection<ApplicationEntity> getApplicationsByParam(ApplicationParamForm param, String lang) {
-        Collection<ApplicationEntity> applicationsByParam = applicationDao.getApplicationByParam(param, lang);
+    public Collection<ApplicationResponse> getApplicationsByParam(ApplicationParamForm param, String language) {
+        Collection<ApplicationEntity> applicationsByParam = applicationDao.getApplicationByParam(param, language);
         log.info("Search for application resulted in " + applicationsByParam.size() + " applications");
-        return applicationsByParam;
+        return convertListToApplicationResponse(applicationsByParam);
     }
+
+    private ApplicationResponse convertToApplicationResponse(ApplicationEntity application){
+        return new ApplicationResponse(application,userApi.getUserById(application.getPersonId()));
+    }
+    private Collection<ApplicationResponse> convertListToApplicationResponse(Collection<ApplicationEntity> applications){
+        ArrayList<ApplicationResponse> responses = new ArrayList<>();
+        applications.forEach((a)->{
+            responses.add(convertToApplicationResponse(a));
+        });
+        return responses;
+    }
+
+
 
     /**
      * Validate identification
-     * @param id is the identifier of the objec
+     * @param id is the identifier of the object
      * @param idName is the name of the identifier
      * @throws NotValidArgumentException
      */
@@ -107,18 +128,18 @@ public class JobApplicationService {
     /**
      * Get all valid competences allowed on an application
      * @return collection of competences
-     * @param lang
+     * @param language of status
      */
-    public Collection<CompetenceEntity> getAllValidCompetences(String lang) {
-        return applicationDao.getAllValidCompetences(lang);
+    public Collection<CompetenceEntity> getAllValidCompetences(String language) {
+        return applicationDao.getAllValidCompetences(language);
     }
 
     /**
      * Get all valid application status allowed on an application
      * @return collection of application status
-     * @param lang
+     * @param language of status
      */
-    public Collection<ApplicationStatusEntity> getAllValidStatus(String lang) {
-        return applicationDao.getAllValidStatus(lang);
+    public Collection<ApplicationStatusEntity> getAllValidStatus(String language) {
+        return applicationDao.getAllValidStatus(language);
     }
 }

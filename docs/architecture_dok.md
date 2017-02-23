@@ -2,11 +2,11 @@
 ## The Recruiting Application
 ### Team
 
-Name | Email
+|Name | Email|
 ------------ | -------------
-**Adrian Gortzak** | gortzak@kth.se <br/>
-**Albin Friedner** | <br/>
-**Alexander Nikalayeu** | nikal@kth.se
+| **Adrian Gortzak** | gortzak@kth.se |
+|**Albin Friedner** | |
+|**Alexander Nikalayeu** | nikal@kth.se |
 
 ### Table of content
 1. <b>Introduction</b>
@@ -111,7 +111,14 @@ The structure of the JobApplication services can be seen in picture 2.2
 
 
 ###### Logging
-(Logging, motivate what is logged, how it is logged and where the log is.)
+* **Information logging** - Every call should be logged when the required task is done. Not before!
+* **Error logging** - Should be logged at the place the error occur
+
+###### Testing
+To merge with the developer branch the project needs to:
+ 1. Have a minimum of 80% code coverage (getters and setters are not included)
+ 2. Build successfully (no test can fail)
+
 
 ### 3. Security View
 ##### Security issues considered
@@ -160,34 +167,38 @@ Those files are distributed between developers.
 
 ### 4. Data View
 
-###### Transactions
-(Motivate when and how transactions begin and end.)
-todo
-
-
 ###### Structure
-There are two data sources for this project. The first one, used at runtime, is a mysql server. It is accessible from anywhere on the internet by username, password and the non standard port. The reson for this is that we want to work with the same test data. Because a bug it much more easy to replicate of we all working with the same program and data.   The second database is an embedded h2 server meant for testing so we don't change the real data during a test. Both databases have the same structure (see picture 4.3). In the application we make transactions to one or more specific
- parts of the database by repository (see picture 4.1). The data retrieved will be handled as entities, objects that represent the database and also has the connections that the database has (see picture 4.2). 
+There are two data sources for this project. 
 
-```java
-@Transactional
-public interface CompetenceProfileRepository extends CrudRepository<CompetenceProfileEntity, Integer> {
-}
-```
-4.1. repository
+The first one, used at runtime, is a mysql server. It is accessible from anywhere on the internet by username, password and the non standard port. The reason for this is that we want to work with the same test data. Because it's easier to replicate a bug working with the same version of the program program and the exact same data.   
+
+The second database is an embedded h2 server meant for testing so we don't change the real data during a test. 
+
+Every service that need's a database has an mysql database connected to that container. At this time there are two databases, one for the user information and one for the applications. We though that the user service should take care of everything that concerns the users and therefor has a db structure 
+with only user information (seen in pic 4.2). The application service will require some user information but will ask for this information by the user services restApi. The application service therefor only contain application information and its structure can be seen in picture 4.3 
+ 
+
 <br/><br/><br/><br/>
-![db architecture](./images/db.png)
-4.2. Database design
-<br/><br/><br/><br>
-![or-mapping](./images/OR-mapping.png)
-4.3. OR-mapping
-
-
+![db architecture](./images/db_jobapplication.png)
+4.1. Database for jobApplication service 
+<br/><br/><br/><br/>
+![db architecture](./images/db_user.png)
+4.2. Database for registration service 
 
 ##### Old SSN to new dateOfBirth
 In old system SSN were entered by applicants and in the new system date of birth will be used
 instead. New database will be redesigned but old data cannot be lost. Solution is to create a new 
 db table where persons id is a foreign key to the person and SSN store in SSN column. 
+
+###### Transactions
+(Motivate when and how transactions begin and end.)
+todo
+```java
+@Transactional
+public interface CompetenceProfileRepository extends CrudRepository<CompetenceProfileEntity, Integer> {
+}
+```
+4.3. repository
 
 ### 5. Non-Functional View 
 This part includes information about non-functional requirements that are not mentioned in other parts of the documentation.
@@ -276,16 +287,71 @@ Plugin also deploys image to given Docker machine.
 #### Production
 ##### Information
 ###### Running Environment
-todo
+To run the application all that is needed is Docker machine to run the containers and being able to unzip .zip or tar.gz
 ###### Building, deployment and running
-todo
+* Building - The build will already be compiled and stored in folders with name connected to the service
+
+To deploy the services we can just execute the deploy script
+```shell
+cd /path/to/dir/therecrutmentsystem
+./deploy_unix.sh
+```
+
+The services are now running in the docker container and can be accessible through [localhost:9090](localhost:9090)
+
+Standard credentials for a recruiter
+ * **Username** : Recruiter
+ * **Password** : 7a9d89as79d8as7d
+
+If you need to see the logs of a service, you can do so by
+ ```shell
+ docker logs name_of_the_service
+ ```
+ 
+ or restart one you cant restart them  by
+  ```shell
+  docker restart name_of_the_service
+  ```
 ##### Requirement 
 * [Docker](https://www.docker.com/)
 
 
-##### Instructions to deploy services
-todo
+### Releases
 
+##### Folder structure
+
+-------------
+1. [x] = file 
+1. [ ] = folder
+
+-------------
+
+1. [ ] folder root
+    1. [ ] docs
+    1. [ ] scripts
+    1. [ ] services
+    1. [x] deploy_unix.sh
+    1. [x] README.txt
+
+##### Docs
+All releases should have the latest documentation directly in the folder's root under doc/ and should include: 
+* javadoc
+* UML classdiagram of all the services
+* database structure UML
+* database start structure & data file for an easy import
+
+##### Services
+All services are stored in the Service/ folder and each of the services should contain everything the service requires to run.
+
+#### Archiving releases 
+
+Every release should be documented in the (DockerReleses/Versions/releases.md) file in the following way:
+
+| Version   | File                             | checksum_md5                     | checksum_sha256                                                   | realise date |
+| --------- |:--------------------------------:| :-------------------------------:|:-----------------------------------------------------------------:|:---------------:|
+| v1.0      |TheRecruitmentSystem_v.1.0.tar.gz | e03ede35c89bd856ecec74c2f2f5f8f9 | f67a6f0ee384b51badb1073078f6ead98e0949e6b983a0652a4ad06b4effab38  | 2017-03-14
+
+<br>
 
 ###### Tools, frameworks and libraries:
 - [Spring](https://spring.io/)  Framework with [Spring boot](https://projects.spring.io/spring-boot/) , Spring Cloud, Spring Security and more Spring projects - main development framework

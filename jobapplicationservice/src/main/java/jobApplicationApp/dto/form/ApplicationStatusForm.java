@@ -5,11 +5,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 
-@NoArgsConstructor
+/**
+ * Form for status change
+ */
 @AllArgsConstructor
 @Getter
 public class ApplicationStatusForm {
 
+
+    /**
+     * New status to be put on the application
+     * @return the new status
+     */
     @NotNull
     private String name;
 }

@@ -1,4 +1,5 @@
-maven-package:
+jobapplication-service:
   script:
     - cd jobapplicationservice/
-    - mvn package
+    - mvn install -B
+    - cat target/site/jacoco/index.html
