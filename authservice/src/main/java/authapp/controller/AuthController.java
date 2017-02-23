@@ -17,6 +17,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +29,8 @@ import javax.validation.Valid;
 
 /**
  * Authentication controller where users can request
+ *
+ * @author WolfAlexander nikal@kth.se
  */
 @RestController
 @RequestMapping("/auth")
@@ -49,14 +52,15 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> generateJwtToken(@Valid @RequestBody AuthRequest authRequest, BindingResult bindingResult){
         if(bindingResult.hasErrors())
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-
-        performUsernamePasswordAuthentication(authRequest.getUsername(), authRequest.getPassword());
+            return new ResponseEntity<Object>(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
 
         try {
+            performUsernamePasswordAuthentication(authRequest.getUsername(), authRequest.getPassword());
             final String jwtToken = RSAJwtTokenFactory.generateTokenForAUser(getUserDetailsByUsername(authRequest.getUsername()));
 
             return new ResponseEntity<Object>(new AuthResponse(jwtToken), HttpStatus.OK);
+        }catch (AuthenticationException authEx){
+            return new ResponseEntity<String>("Could not authenticate user!", HttpStatus.BAD_REQUEST);
         }catch (RSAJwtTokenFactoryException ex){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -67,7 +71,7 @@ public class AuthController {
      * @param username - entered username by user
      * @param password - entered password by user
      */
-    private void performUsernamePasswordAuthentication(String username, String password){
+    private void performUsernamePasswordAuthentication(String username, String password) {
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );

@@ -11,12 +11,24 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Detailed information about a user
+ *
+ * @author WolfAlexander nikal@kth.se
+ */
 public class JwtUserDetails implements UserDetails {
     private final Long id;
     private final String username;
     private final String password;
     private final Collection<GrantedAuthority> roles;
 
+    /**
+     * Create user information using manual input
+     * @param id - user id
+     * @param username - name of the user
+     * @param password - user password
+     * @param roles - activities that user has
+     */
     public JwtUserDetails(Long id, String username, String password, Collection<GrantedAuthority> roles) {
         this.id = id;
         this.username = username;
@@ -24,6 +36,10 @@ public class JwtUserDetails implements UserDetails {
         this.roles = roles;
     }
 
+    /**
+     * Create user information from an JPA user entity
+     * @param userEntity - JPA user entity
+     */
     public JwtUserDetails(UserEntity userEntity){
         this.id = userEntity.getId();
         this.username = userEntity.getUsername();

@@ -9,6 +9,8 @@ import java.io.Serializable;
 
 /**
  * This object represents a request that should be send to authentication service by client
+ *
+ * @author WolfAlexander nikal@kth.se
  */
 @Getter
 @Setter

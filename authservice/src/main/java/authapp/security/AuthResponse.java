@@ -5,6 +5,12 @@ import lombok.Getter;
 
 import java.io.Serializable;
 
+/**
+ * Custom response to user request for a token
+ * This response will be send only if token is created
+ *
+ * @author WolfAlexander nikal@kth.se
+ */
 @Getter
 @AllArgsConstructor
 public class AuthResponse implements Serializable{

@@ -12,7 +12,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
  */
 
 @SpringBootApplication
-//@EnableEurekaClient
+@EnableEurekaClient
 public class RegistrationServiceApplication
 {
 	public static void main(String[] args)

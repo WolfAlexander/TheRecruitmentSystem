@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * This class logs events in AuthController using AOP with AspectJ
+ *
+ * @author WolfAlexander nikal@kth.se
  */
 @Aspect
 @Component
