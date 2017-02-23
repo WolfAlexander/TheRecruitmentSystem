@@ -17,5 +17,5 @@ public interface UserServiceDao {
     boolean validate(int id);
     PersonEntity getUserByIdAndLanguage(int id, String lang);
     Collection<Integer> getUserIdsByName(String name);
-    JwtUserDetails getUserAndCredentialsByUsername(String lang, String username);
+    JwtUserDetails getUserAndCredentialsByUsername(String username);
 }

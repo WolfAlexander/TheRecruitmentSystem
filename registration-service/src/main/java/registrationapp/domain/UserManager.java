@@ -96,12 +96,11 @@ public class UserManager {
     /**
      * Gets a user and credentials for a specified username and language.
      *
-     * @param lang  the language that the client is using
      * @param username  the username that is being looked up
      * @return  a DTO that encapsulate a PersonEntity and a CredentialsEntity
      */
-    public JwtUserDetails getUserAndCredentialsByUsername(String lang, String username)
+    public JwtUserDetails getUserAndCredentialsByUsername(String username)
     {
-        return userServiceDao.getUserAndCredentialsByUsername(lang, username);
+        return userServiceDao.getUserAndCredentialsByUsername(username);
     }
 }

@@ -96,12 +96,11 @@ public class MysqlUserServiceDao implements UserServiceDao {
     /**
      * Gets a user and credentials for a specified username and language.
      *
-     * @param lang  the language that the client is using
      * @param username  the username that is being looked up
      * @return  a DTO that encapsulate a PersonEntity and a CredentialsEntity
      */
     @Override
-    public JwtUserDetails getUserAndCredentialsByUsername(String lang, String username) {
+    public JwtUserDetails getUserAndCredentialsByUsername(String username) {
         CredentialEntity credentialEntity = credentialsRepository.findByUsername(username);
         PersonEntity personEntity = userRepository.findOne(credentialEntity.getPersonId());
         List<RoleEntity> roleEntities = new ArrayList<>();

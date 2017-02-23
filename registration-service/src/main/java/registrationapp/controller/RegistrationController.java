@@ -104,15 +104,13 @@ public class RegistrationController
      * request to the domain for looking up a user and its credentials for a
      * specified username.
      *
-     * @param lang  the language that the client is using
      * @param username  the username of the user being looked up
      * @return  the user and its credentials for the specified username
      */
-    @GetMapping(value="{lang}/get/usercredentials/by/{username}")
-    public JwtUserDetails getUserAndCredentialsByUsername(@PathVariable(value = "lang") String lang
-            , @PathVariable(value = "username") String username)
+    @GetMapping(value="/get/usercredentials/by/{username}")
+    public JwtUserDetails getUserAndCredentialsByUsername(@PathVariable(value = "username") String username)
     {
-        return userManager.getUserAndCredentialsByUsername(lang, username);
+        return userManager.getUserAndCredentialsByUsername(username);
     }
 
 }
