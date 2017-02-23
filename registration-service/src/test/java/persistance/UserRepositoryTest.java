@@ -28,8 +28,9 @@ public class UserRepositoryTest{
     private UserRepository userRepository;
 
     @Autowired
-    private RoleRepository roleRepository;*/
-    /*
+    private RoleRepository roleRepository;
+*/
+/*
     @Test
     public void testRegisterUserWithOKParameters() throws Exception
     {
@@ -45,6 +46,7 @@ public class UserRepositoryTest{
         assertEquals(user.getPassword(),"pwd");
     }
 */
+/*
 
     public PersonEntity generatePersonEntity(){
         Date dateOfBirth;
@@ -60,7 +62,7 @@ public class UserRepositoryTest{
         //return new LocalizedRole(new RoleEntity("Recruiter"),new LanguageEntity("sv"),"Recruiter");
         return new RoleEntity("Recruiter");
     }
-/**
+
 
     @Test
     public void getPersonInformationFirstName(){

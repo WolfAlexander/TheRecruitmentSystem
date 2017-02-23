@@ -1,4 +1,6 @@
-angular.module("application", ['ngRoute', 'ngMessages', 'pascalprecht.translate']).config(function ($routeProvider, $translateProvider) {
+angular.module("application", ['ngRoute', 'ngCookies',  'ngMessages', 'pascalprecht.translate']).config(function ($routeProvider, $translateProvider, $locationProvider) {
+    $locationProvider.hashPrefix('');
+
     /*Routing*/
     $routeProvider
     .when('/', {
@@ -13,6 +15,14 @@ angular.module("application", ['ngRoute', 'ngMessages', 'pascalprecht.translate'
         templateUrl: 'form.html',
         controller: 'registration',
         controllerAs: 'registration'
+    }).when("/content", {
+        templateUrl: 'content.html',
+        controller: 'content',
+        controllerAs: 'content'
+    }).when("/logout", {
+        templateUrl: 'login.html',
+        controller: 'logout',
+        controllerAs: 'logout'
     });
 
     /*Translate config*/
@@ -66,9 +76,61 @@ angular.module("application", ['ngRoute', 'ngMessages', 'pascalprecht.translate'
                 $rootScope.registration_unavailable_error = true;
         });
     }
-}).controller('login', function () {
+}).controller('login', function ($rootScope, $scope, $http, $location, $cookies) {
     var self = this;
 
+    self.submitLoginForm = function (loginForm) {
+        $rootScope.loginForm_pending_request = true;
+        $rootScope.login_user_not_exists_error = false;
+        $rootScope.login_user_cred_error = false;
+        $rootScope.login_service_gone = false;
+        $rootScope.logout_success = false;
+
+        /**
+         * Creating json request
+         */
+        var params = JSON.stringify(
+            {
+                username : $scope.login.username,
+                password : $scope.login.password
+            }
+        );
+
+        $http({
+            method: 'POST',
+            url: '/api/auth/login',
+            headers: {'Content-Type': 'application/json'},
+            data: params
+        }).then(function successCallback(response) {
+            $rootScope.loginForm_pending_request = false;
+            $location.path("/content");
+            $rootScope.login_success_alert = true;
+            $cookies.put("token", response.data.token);
+
+            $rootScope.authenticated = true;
+
+        }, function errorCallback(response) {
+            if(response.status == 401)
+                $rootScope.login_user_not_exists_error = this;
+            else if(response.status == 400)
+                $rootScope.login_user_cred_input_error = true;
+            else if(response.status == 500)
+                $rootScope.login_service_error = true;
+            else if(response.status == 410)
+                $rootScope.login_service_gone = true;
+
+            $rootScope.loginForm_pending_request = false;
+        });
+    }
+
+}).controller('content', function ($rootScope, $scope, $http, $location) {
+
+}).controller('logout', function ($rootScope, $location, $cookies) {
+    $cookies.remove("token");
+    $rootScope.authenticated = false;
+    $rootScope.logout_success = true;
+    $location.path("/login");
+    
 }).factory('UrlLanguageStorage', ['$location', function($location) {
     return {
         put: function (name, value) {},
