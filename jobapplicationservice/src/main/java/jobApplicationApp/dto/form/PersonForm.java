@@ -13,7 +13,6 @@ public class PersonForm {
 
     /**
      * The first name of the user
-     *
      * @return first name
      */
     private String firstName;
@@ -21,7 +20,6 @@ public class PersonForm {
 
     /**
      * The last name of the user
-     *
      * @return last name
      */
     private String lastName;
@@ -29,7 +27,6 @@ public class PersonForm {
 
     /**
      * The users date of birth
-     *
      * return date of birth
      */
     private Date dateOfBirth;
@@ -37,23 +34,18 @@ public class PersonForm {
 
     /**
      * The users email address
-     *
-     *
      * @return email address
      */
     private String email;
 
     /**
      * The role the user have on the site
-     *
-     *
      * @return The users role
      */
     private RoleForm role;
 
     /**
      * Constructor without competences though the are connected after an application is created
-     *
      * @param firstName
      * @param lastName
      * @param dateOfBirth

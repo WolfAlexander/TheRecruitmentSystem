@@ -9,9 +9,10 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class RoleForm {
+
+
     /**
      * Name of the role
-     *
      * @return role name
      */
     private String name;

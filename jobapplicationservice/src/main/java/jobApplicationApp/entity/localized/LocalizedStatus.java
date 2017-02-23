@@ -53,6 +53,23 @@ public class LocalizedStatus{
         private Integer statusId;
         private Integer languageId;
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            key key = (key) o;
+
+            if (statusId != null ? !statusId.equals(key.statusId) : key.statusId != null) return false;
+            return languageId != null ? languageId.equals(key.languageId) : key.languageId == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = statusId != null ? statusId.hashCode() : 0;
+            result = 31 * result + (languageId != null ? languageId.hashCode() : 0);
+            return result;
+        }
     }
 }
 

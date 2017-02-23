@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Table(name = "languages")
 public class LanguageEntity {
@@ -18,7 +19,6 @@ public class LanguageEntity {
 
     /**
      * The primary key to the language
-     *
      * @return id of language
      */
     @Id
@@ -26,8 +26,7 @@ public class LanguageEntity {
 
 
     /**
-     *A shortening of the language name, in two letters.
-     *
+     * A shortening of the language name, in two letters.
      * @return language name
      */
     @NotNull
