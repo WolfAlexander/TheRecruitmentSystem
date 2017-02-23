@@ -10,5 +10,7 @@ import registrationapp.entity.CredentialEntity;
  *
  */
 
-public interface CredentialsRepository extends CrudRepository<CredentialEntity, Integer> {
+public interface CredentialsRepository extends CrudRepository<CredentialEntity, Integer>
+{
+    CredentialEntity findByUsername(String username);
 }

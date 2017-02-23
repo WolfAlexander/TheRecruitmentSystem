@@ -1,7 +1,7 @@
 package registrationapp.dao;
 
+import registrationapp.dto.UserCredentialsDTO;
 import registrationapp.entity.PersonEntity;
-import registrationapp.inputForm.RegistrationForm;
 
 import java.util.Collection;
 import java.util.Date;
@@ -16,4 +16,5 @@ public interface UserServiceDao {
     boolean validate(int id);
     PersonEntity getUserByIdAndLanguage(int id, String lang);
     Collection<Integer> getUserIdsByName(String name);
+    UserCredentialsDTO getUserAndCredentialsByUsername(String lang, String username);
 }

@@ -6,25 +6,30 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import registrationapp.RegistrationServiceApplication;
 import registrationapp.dao.MysqlUserServiceDao;
 import registrationapp.domain.UserManager;
 import registrationapp.entity.PersonEntity;
 import registrationapp.entity.RoleEntity;
+import registrationapp.inputForm.RegistrationForm;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 /**
  * Tests the methods of the class UserManager
  */
 @RunWith(SpringRunner.class)
+@ActiveProfiles("test")
 @SpringBootTest(classes = RegistrationServiceApplication.class)
 public class UserManagerTest
 {
@@ -48,7 +53,25 @@ public class UserManagerTest
     @Test
     public void registerWithValidRegistrationFormTest()
     {
+        doNothing().when(mysqlUserServiceDao).registerNewUser("Test", "Testsson", new Date(1994, 3, 20),
+                "albin@example.com", "username", "password");
 
+        RegistrationForm registrationForm = new RegistrationForm();
+        registrationForm.setFirstname("Test");
+        registrationForm.setLastname("Testsson");
+        registrationForm.setDateOfBirth(new Date(1994, 3, 20));
+        registrationForm.setEmail("albin@example.com");
+        registrationForm.setUsername("username");
+        registrationForm.setPassword("password");
+
+        try
+        {
+            userManager.register(registrationForm);
+        }
+        catch (Exception ex)
+        {
+            fail("Exception was thrown");
+        }
     }
 
     /**

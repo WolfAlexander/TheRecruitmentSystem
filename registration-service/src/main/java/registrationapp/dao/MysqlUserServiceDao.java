@@ -10,12 +10,12 @@ import registrationapp.dao.persistance.PersonRepository;
 import registrationapp.dao.persistance.RoleRepository;
 import registrationapp.dao.persistance.localized.LanguageRepository;
 import registrationapp.dao.persistance.localized.LocalizedRoleRepository;
+import registrationapp.dto.UserCredentialsDTO;
 import registrationapp.entity.CredentialEntity;
 import registrationapp.entity.PersonEntity;
 import registrationapp.entity.RoleEntity;
 import registrationapp.entity.localized.LanguageEntity;
 import registrationapp.entity.localized.LocalizedRoleEntity;
-import registrationapp.inputForm.RegistrationForm;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -85,6 +85,16 @@ public class MysqlUserServiceDao implements UserServiceDao {
         }
         userRepository.findByFirstName(name);
         return list;
+    }
+
+    //TODO: Finish method
+    @Override
+    public UserCredentialsDTO getUserAndCredentialsByUsername(String lang, String username) {
+        CredentialEntity credentialEntity = credentialsRepository.findByUsername(username);
+        PersonEntity personEntity = userRepository.findOne(credentialEntity.getPersonId());
+        PersonEntity localizedPersonEntity = translateRole(personEntity, getLanguage(lang));
+        UserCredentialsDTO userCredentialsDTO = new UserCredentialsDTO(localizedPersonEntity, credentialEntity);
+        return userCredentialsDTO;
     }
 
     private LanguageEntity getLanguage(String lang){

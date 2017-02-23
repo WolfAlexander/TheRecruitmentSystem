@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import registrationapp.dao.UserServiceDao;
+import registrationapp.dto.UserCredentialsDTO;
 import registrationapp.entity.PersonEntity;
 import registrationapp.inputForm.RegistrationForm;
 
@@ -89,5 +90,10 @@ public class UserManager {
             logger.info("User with ID " + userID + " was looked up in the database by the name " + name);
         }
         return userIDs;
+    }
+
+    public UserCredentialsDTO getUserAndCredentialsByUsername(String lang, String username)
+    {
+        return userServiceDao.getUserAndCredentialsByUsername(lang, username);
     }
 }

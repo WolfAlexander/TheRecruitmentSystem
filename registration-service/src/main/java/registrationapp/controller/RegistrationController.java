@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import registrationapp.domain.UserManager;
+import registrationapp.dto.UserCredentialsDTO;
 import registrationapp.entity.PersonEntity;
 import registrationapp.httpResponse.RegistrationResponse;
 import registrationapp.inputForm.RegistrationForm;
@@ -88,8 +89,8 @@ public class RegistrationController
      * request to the domain for looking up user ids for the specified name in the
      * database
      *
-     * @param lang The language that the client is using
-     * @param name The first name of the user(s) being looked up
+     * @param lang  the language that the client is using
+     * @param name  the first name of the user(s) being looked up
      * @return true if the user exists in the database. false otherwise.
      */
     @GetMapping(value = "{lang}/get/users/by/name/{name}")
@@ -97,6 +98,20 @@ public class RegistrationController
         return userManager.getUserIdsByName(name);
     }
 
-    //TODO: Add method getUserAndCredentialsByUsername
+    /**
+     * Recieves a HTTP Get request from the client. Redirects the handling of the
+     * request to the domain for looking up a user and its credentials for a
+     * specified username.
+     *
+     * @param lang  the language that the client is using
+     * @param username  the username of the user being looked up
+     * @return  the user and its credentials for the specified username
+     */
+    @GetMapping(value="{lang}/get/by/{username}")
+    public UserCredentialsDTO getUserAndCredentialsByUsername(@PathVariable(value = "lang") String lang
+            , @PathVariable(value = "username") String username)
+    {
+        return userManager.getUserAndCredentialsByUsername(lang, username);
+    }
 
 }
