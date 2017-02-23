@@ -107,7 +107,7 @@ public class RegistrationController
      * @param username  the username of the user being looked up
      * @return  the user and its credentials for the specified username
      */
-    @GetMapping(value="{lang}/get/by/{username}")
+    @GetMapping(value="{lang}/get/usercredentials/by/{username}")
     public UserCredentialsDTO getUserAndCredentialsByUsername(@PathVariable(value = "lang") String lang
             , @PathVariable(value = "username") String username)
     {

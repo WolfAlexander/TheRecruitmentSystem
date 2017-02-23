@@ -5,6 +5,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,6 +30,8 @@ import java.util.Collection;
 import java.util.Date;
 import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
@@ -39,6 +43,9 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(classes = RegistrationServiceApplication.class)
 public class MySqlUserDaoTest
 {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     MysqlUserServiceDao mysqlUserServiceDao;
 
@@ -58,7 +65,7 @@ public class MySqlUserDaoTest
     LanguageRepository languageRepository;
 
     @MockBean
-    PersonEntity user;
+    PersonEntity p;
 
     /**
      * Sets up the test by
@@ -79,17 +86,14 @@ public class MySqlUserDaoTest
         given(roleRepository.findOne(2))
                 .willReturn(new RoleEntity("Testrole"));
 
-        RoleEntity roleEntity = roleRepository.findOne(2);
-        System.out.println("Roleentity id " + roleEntity.getId());
-        given(userRepository.save(new PersonEntity("Test", "Testsson", new Date(1994, 3, 20)
-                , "albin@example.com", new RoleEntity("Testrole"))))
+        given(userRepository.save(any(PersonEntity.class)))
                 .willReturn(new PersonEntity("Test", "Testsson", new Date(1994, 3, 20)
-                        , "albin@example.com", roleEntity));
+                        , "albin@example.com", new RoleEntity("Testrole")));
 
-        given(user.getId())
+        given(p.getId())
             .willReturn(22);
 
-        given(credentialsRepository.save(new CredentialEntity(user.getId(), "username", "password")))
+        given(credentialsRepository.save(any(CredentialEntity.class)))
                 .willReturn(new CredentialEntity(22, "username", "password"));
 
         try
@@ -126,18 +130,16 @@ public class MySqlUserDaoTest
             method1.setAccessible(true);
             method2 = classToUse.getDeclaredMethod("translateRole", PersonEntity.class, LanguageEntity.class);
             method2.setAccessible(true);
-            given(languageRepository.findByName("sv"))
-                    .willReturn(new LanguageEntity("sv"));
             given(method1.invoke(new MysqlUserServiceDao(), "sv"))
                     .willReturn(new LanguageEntity("sv"));
             LanguageEntity languageEntity = (LanguageEntity) method1.invoke(new MysqlUserServiceDao(), "sv");
-            given(method2.invoke(new MysqlUserServiceDao(), personEntity, languageEntity))
+            given(method2.invoke(new MysqlUserServiceDao(), any(PersonEntity.class), any(LanguageEntity.class)))
                     .willReturn(new PersonEntity("Test", "Testsson", new Date(1994, 3, 20),
                             "albin@example.com", new RoleEntity("Testroll")));
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+
         }
 
         PersonEntity personResponse = mysqlUserServiceDao.getUserByIdAndLanguage(5, "sv");
@@ -180,15 +182,22 @@ public class MySqlUserDaoTest
 
         given(userRepository.findByFirstName("Bengt")).willReturn(persons);
 
-        PersonEntity p = new PersonEntity();
-
-        doReturn(1)
-                .doReturn(2)
-                .doReturn(3)
-                .when(p).getId();
+        when(p.getId()).thenReturn(1).thenReturn(2).thenReturn(3);
 
         Collection<Integer> integers = mysqlUserServiceDao.getUserIdsByName("Bengt");
 
         assertEquals(3, integers.size());
+    }
+
+    @Test
+    public void getUserAndCredentialsByUsername()
+    {
+        given(credentialsRepository.findByUsername(any(String.class)))
+                .willReturn(new CredentialEntity(5, "testuser", "testpassword"));
+
+        given(userRepository.findOne(any(Integer.class)))
+                .willReturn(new PersonEntity("test", "testsson", new Date(1994, 3, 20)
+                        , "albin@example.com", new RoleEntity("Testrole")));
+
     }
 }

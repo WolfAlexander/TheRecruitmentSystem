@@ -7,11 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.env.SystemEnvironmentPropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import registrationapp.RegistrationServiceApplication;
 import registrationapp.dao.MysqlUserServiceDao;
+import registrationapp.domain.UserManager;
+import registrationapp.dto.UserCredentialsDTO;
+import registrationapp.entity.CredentialEntity;
 import registrationapp.entity.PersonEntity;
 import registrationapp.entity.RoleEntity;
 import registrationapp.httpResponse.RegistrationResponse;
@@ -20,7 +24,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 
@@ -49,7 +55,8 @@ public class RegistrationControllerTest
     private TestRestTemplate testRestTemplate;
 
     @MockBean
-    private MysqlUserServiceDao mysqlUserServiceDao;
+    private UserManager userManager;
+
 
     /**
      * Tests the response when sending a HTTP Post with a valid form to the REST API.
@@ -58,8 +65,7 @@ public class RegistrationControllerTest
     @Test
     public void registerWithValidRegistrationFormTest()
     {
-        doNothing().when(mysqlUserServiceDao).registerNewUser("Test", "Testsson", new Date(1994, 2, 20)
-                , "test@example.com", "username", "password");
+        doNothing().when(userManager).register(any(RegistrationForm.class));
 
         RegistrationForm registrationForm = new RegistrationForm();
         registrationForm.setFirstname("Test");
@@ -95,29 +101,6 @@ public class RegistrationControllerTest
         assertEquals(6, registrationResponse.getErrorList().size());
     }
 
-    /**
-     * Tests the response when sending a HTTP Post with a valid form to the REST API.
-     * A RuntimeException is encountered in the test.
-     */
-    @Test
-    public void registerWithUncheckedExceptionTest()
-    {
-        doThrow(new RuntimeException()).when(mysqlUserServiceDao).registerNewUser("Test", "Testsson", new Date(1994, 2, 20)
-                , "test@example.com", "username", "password");
-
-        RegistrationForm registrationForm = new RegistrationForm();
-        registrationForm.setFirstname("Test");
-        registrationForm.setLastname("Testsson");
-        registrationForm.setDateOfBirth(new Date(1994, 2, 20));
-        registrationForm.setEmail("test@example.com");
-        registrationForm.setUsername("test");
-        registrationForm.setPassword("password123");
-
-        RegistrationResponse registrationResponse = testRestTemplate.postForObject("/register", registrationForm
-                , RegistrationResponse.class);
-
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, registrationResponse.getStatus());
-    }
 
     /**
      * Tests if a user can be found on id correctly
@@ -125,7 +108,7 @@ public class RegistrationControllerTest
     @Test
     public void findUserByIdTest()
     {
-        given(mysqlUserServiceDao.getUserByIdAndLanguage(5, "sv"))
+        given(userManager.getUserById(5, "sv"))
                 .willReturn(new PersonEntity("Test", "Testsson", new Date(1994, 3, 20),
                         "albin@example.com", new RoleEntity("Testrole")));
         PersonEntity personEntity = testRestTemplate.getForObject("/sv/get/by/5", PersonEntity.class);
@@ -138,10 +121,10 @@ public class RegistrationControllerTest
     @Test
     public void validateUserByIdTest()
     {
-        given(mysqlUserServiceDao.validate(5))
+        given(userManager.validate(5))
                 .willReturn(true);
 
-        Boolean bool = testRestTemplate.getForObject("sv/validate/5", Boolean.class);
+        Boolean bool = testRestTemplate.getForObject("/sv/validate/5", Boolean.class);
         assertEquals(true, bool);
     }
 
@@ -155,11 +138,48 @@ public class RegistrationControllerTest
         intList.add(1);
         intList.add(2);
         intList.add(3);
-        given(mysqlUserServiceDao.getUserIdsByName("albin"))
+        given(userManager.getUserIdsByName("albin"))
                 .willReturn(intList);
-        Collection<Integer> users = testRestTemplate.getForObject("sv/get/users/by/name/albin", Collection.class);
+        Collection<Integer> users = testRestTemplate.getForObject("/sv/get/users/by/name/albin", Collection.class);
         assertEquals(3, users.size());
 
+    }
+
+    @Test
+    public void getUserAndCredentialsByUsernameTest()
+    {
+        given(userManager.getUserAndCredentialsByUsername("sv", "testuser"))
+                .willReturn(new UserCredentialsDTO(new PersonEntity("test", "testsson", new Date(1994, 3, 20)
+                        , "albin@example.com", new RoleEntity("Testroll"))
+                        , new CredentialEntity(5, "testuser", "testpassword")));
+
+        UserCredentialsDTO userCredentialsDTO = testRestTemplate.getForObject("/sv/get/usercredentials/by/testuser", UserCredentialsDTO.class);
+
+        assertEquals("test", userCredentialsDTO.getPersonEntity().getFirstName());
+        assertEquals(5, (long) userCredentialsDTO.getCredentialEntity().getPersonId());
+    }
+
+    /**
+     * Tests the response when sending a HTTP Post with a valid form to the REST API.
+     * A RuntimeException is encountered in the test.
+     */
+    @Test
+    public void registerWithUncheckedExceptionTest()
+    {
+        doThrow(new RuntimeException("Unchecked exception")).when(userManager).register(any(RegistrationForm.class));
+
+        RegistrationForm registrationForm = new RegistrationForm();
+        registrationForm.setFirstname("Test");
+        registrationForm.setLastname("Testsson");
+        registrationForm.setDateOfBirth(new Date(1994, 2, 20));
+        registrationForm.setEmail("test@example.com");
+        registrationForm.setUsername("test");
+        registrationForm.setPassword("password123");
+
+        RegistrationResponse registrationResponse = testRestTemplate.postForObject("/register", registrationForm
+                , RegistrationResponse.class);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, registrationResponse.getStatus());
     }
 
 

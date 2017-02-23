@@ -11,6 +11,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import registrationapp.RegistrationServiceApplication;
 import registrationapp.dao.MysqlUserServiceDao;
 import registrationapp.domain.UserManager;
+import registrationapp.dto.UserCredentialsDTO;
+import registrationapp.entity.CredentialEntity;
 import registrationapp.entity.PersonEntity;
 import registrationapp.entity.RoleEntity;
 import registrationapp.inputForm.RegistrationForm;
@@ -22,6 +24,7 @@ import java.util.Date;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -114,5 +117,19 @@ public class UserManagerTest
                 .willReturn(intList);
         Collection<Integer> users = userManager.getUserIdsByName("albin");
         assertEquals(3, users.size());
+    }
+
+    @Test
+    public void getUserAndCredentialsByUsernameTest()
+    {
+        given(mysqlUserServiceDao.getUserAndCredentialsByUsername(any(String.class), any(String.class)))
+                .willReturn(new UserCredentialsDTO(new PersonEntity("test", "testsson", new Date(1994, 3, 20)
+                        , "albin@example.com", new RoleEntity("Testroll"))
+                        , new CredentialEntity(5, "testuser", "testpassword")));
+
+        UserCredentialsDTO userCredentialsDTO = userManager.getUserAndCredentialsByUsername("sv", "testuser");
+
+        assertEquals("test", userCredentialsDTO.getPersonEntity().getFirstName());
+        assertEquals(5, (long)userCredentialsDTO.getCredentialEntity().getPersonId());
     }
 }
