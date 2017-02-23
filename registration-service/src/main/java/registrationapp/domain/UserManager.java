@@ -92,6 +92,13 @@ public class UserManager {
         return userIDs;
     }
 
+    /**
+     * Gets a user and credentials for a specified username and language.
+     *
+     * @param lang  the language that the client is using
+     * @param username  the username that is being looked up
+     * @return  a DTO that encapsulate a PersonEntity and a CredentialsEntity
+     */
     public UserCredentialsDTO getUserAndCredentialsByUsername(String lang, String username)
     {
         return userServiceDao.getUserAndCredentialsByUsername(lang, username);

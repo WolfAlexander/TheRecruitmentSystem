@@ -80,6 +80,7 @@ public class MySqlUserDaoTest
                 .willReturn(new RoleEntity("Testrole"));
 
         RoleEntity roleEntity = roleRepository.findOne(2);
+        System.out.println("Roleentity id " + roleEntity.getId());
         given(userRepository.save(new PersonEntity("Test", "Testsson", new Date(1994, 3, 20)
                 , "albin@example.com", new RoleEntity("Testrole"))))
                 .willReturn(new PersonEntity("Test", "Testsson", new Date(1994, 3, 20)
