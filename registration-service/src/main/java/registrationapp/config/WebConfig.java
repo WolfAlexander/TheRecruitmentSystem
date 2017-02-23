@@ -20,7 +20,7 @@ import registrationapp.security.JwtTokenFilter;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@Profile("production")
+@Profile({ "production", "dev" })
 public class WebConfig extends WebSecurityConfigurerAdapter {
 
     /**

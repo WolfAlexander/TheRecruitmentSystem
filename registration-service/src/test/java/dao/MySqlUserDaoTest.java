@@ -188,7 +188,7 @@ public class MySqlUserDaoTest
 
         assertEquals(3, integers.size());
     }
-
+    /*
     @Test
     public void getUserAndCredentialsByUsername()
     {
@@ -200,4 +200,5 @@ public class MySqlUserDaoTest
                         , "albin@example.com", new RoleEntity("Testrole")));
 
     }
+    */
 }

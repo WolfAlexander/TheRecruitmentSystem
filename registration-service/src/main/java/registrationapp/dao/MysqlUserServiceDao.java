@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Repository;
 import registrationapp.dao.persistance.CredentialsRepository;
 import registrationapp.dao.persistance.PersonRepository;
@@ -16,10 +18,14 @@ import registrationapp.entity.PersonEntity;
 import registrationapp.entity.RoleEntity;
 import registrationapp.entity.localized.LanguageEntity;
 import registrationapp.entity.localized.LocalizedRoleEntity;
+import registrationapp.security.JwtUserDetails;
+import sun.text.resources.ro.CollationData_ro;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class implements the UserServiceDao and therefore handles the communication with the
@@ -95,12 +101,15 @@ public class MysqlUserServiceDao implements UserServiceDao {
      * @return  a DTO that encapsulate a PersonEntity and a CredentialsEntity
      */
     @Override
-    public UserCredentialsDTO getUserAndCredentialsByUsername(String lang, String username) {
+    public JwtUserDetails getUserAndCredentialsByUsername(String lang, String username) {
         CredentialEntity credentialEntity = credentialsRepository.findByUsername(username);
         PersonEntity personEntity = userRepository.findOne(credentialEntity.getPersonId());
-        PersonEntity localizedPersonEntity = translateRole(personEntity, getLanguage(lang));
-        UserCredentialsDTO userCredentialsDTO = new UserCredentialsDTO(localizedPersonEntity, credentialEntity);
-        return userCredentialsDTO;
+        List<RoleEntity> roleEntities = new ArrayList<>();
+        roleEntities.add(personEntity.getRole());
+        Collection<GrantedAuthority> roles = mapToGrantedAuthorities(roleEntities);
+        JwtUserDetails jwtUserDetails = new JwtUserDetails((long)credentialEntity.getPersonId(), credentialEntity.getUsername()
+                ,credentialEntity.getPassword(), roles);
+        return jwtUserDetails;
     }
 
     private LanguageEntity getLanguage(String lang){
@@ -123,5 +132,11 @@ public class MysqlUserServiceDao implements UserServiceDao {
     @Override
     public boolean validate(int id) {
         return userRepository.exists(id);
+    }
+
+    private List<GrantedAuthority> mapToGrantedAuthorities(List<RoleEntity> roles){
+        return roles.stream()
+                .map(r -> new SimpleGrantedAuthority(r.getName()))
+                .collect(Collectors.toList());
     }
 }

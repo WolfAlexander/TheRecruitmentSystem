@@ -118,7 +118,7 @@ public class UserManagerTest
         Collection<Integer> users = userManager.getUserIdsByName("albin");
         assertEquals(3, users.size());
     }
-
+    /*
     @Test
     public void getUserAndCredentialsByUsernameTest()
     {
@@ -132,4 +132,5 @@ public class UserManagerTest
         assertEquals("test", userCredentialsDTO.getPersonEntity().getFirstName());
         assertEquals(5, (long)userCredentialsDTO.getCredentialEntity().getPersonId());
     }
+    */
 }

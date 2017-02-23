@@ -12,6 +12,7 @@ import registrationapp.dto.UserCredentialsDTO;
 import registrationapp.entity.PersonEntity;
 import registrationapp.httpResponse.RegistrationResponse;
 import registrationapp.inputForm.RegistrationForm;
+import registrationapp.security.JwtUserDetails;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -108,7 +109,7 @@ public class RegistrationController
      * @return  the user and its credentials for the specified username
      */
     @GetMapping(value="{lang}/get/usercredentials/by/{username}")
-    public UserCredentialsDTO getUserAndCredentialsByUsername(@PathVariable(value = "lang") String lang
+    public JwtUserDetails getUserAndCredentialsByUsername(@PathVariable(value = "lang") String lang
             , @PathVariable(value = "username") String username)
     {
         return userManager.getUserAndCredentialsByUsername(lang, username);

@@ -9,6 +9,7 @@ import registrationapp.dao.UserServiceDao;
 import registrationapp.dto.UserCredentialsDTO;
 import registrationapp.entity.PersonEntity;
 import registrationapp.inputForm.RegistrationForm;
+import registrationapp.security.JwtUserDetails;
 
 import java.util.Collection;
 
@@ -99,7 +100,7 @@ public class UserManager {
      * @param username  the username that is being looked up
      * @return  a DTO that encapsulate a PersonEntity and a CredentialsEntity
      */
-    public UserCredentialsDTO getUserAndCredentialsByUsername(String lang, String username)
+    public JwtUserDetails getUserAndCredentialsByUsername(String lang, String username)
     {
         return userServiceDao.getUserAndCredentialsByUsername(lang, username);
     }

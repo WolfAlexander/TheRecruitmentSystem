@@ -144,7 +144,7 @@ public class RegistrationControllerTest
         assertEquals(3, users.size());
 
     }
-
+    /*
     @Test
     public void getUserAndCredentialsByUsernameTest()
     {
@@ -158,6 +158,7 @@ public class RegistrationControllerTest
         assertEquals("test", userCredentialsDTO.getPersonEntity().getFirstName());
         assertEquals(5, (long) userCredentialsDTO.getCredentialEntity().getPersonId());
     }
+    */
 
     /**
      * Tests the response when sending a HTTP Post with a valid form to the REST API.
