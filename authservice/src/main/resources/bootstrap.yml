@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: production
+  application:
+    name: auth-service
+  cloud:
+    config:
+      uri: http://192.168.99.100:9999

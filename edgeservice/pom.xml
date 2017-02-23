@@ -91,6 +91,12 @@
 
         <dependency>
             <groupId>org.webjars.bower</groupId>
+            <artifactId>angular-cookies</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
             <artifactId>angular-messages</artifactId>
             <version>1.6.1</version>
         </dependency>
