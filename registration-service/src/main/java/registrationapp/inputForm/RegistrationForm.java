@@ -1,15 +1,11 @@
 package registrationapp.inputForm;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -24,30 +20,91 @@ import java.util.Date;
 @NoArgsConstructor
 public class RegistrationForm
 {
+    /**
+     * -- SETTER --
+     * Set the first name of the user
+     *
+     * -- GETTER --
+     * Get the first name of the user
+     *
+     * @param firstname The first name of the user
+     * @return The first name of the user
+     *
+     */
     @NotNull
     @Size(min = 2)
     private String firstname;
 
+    /**
+     * -- SETTER --
+     * Set the last name of the user
+     *
+     * -- GETTER --
+     * Get the last name of the user
+     *
+     * @param lastname The last name of the user
+     * @return The last name of the user
+     *
+     */
     @NotNull
     @Size(min = 3)
     private String lastname;
-    /*
+
+    /**
+     * -- SETTER --
+     * Set the date the user was born
+     *
+     * -- GETTER --
+     * Get the date the user was born
+     *
+     * @param dateOfBirth The date the user was born
+     * @return The date the user was born
+     *
+     */
     @NotNull
-    @DateTimeFormat(pattern="yyyy-MM-dd", iso = DateTimeFormat.ISO.DATE)
-    private LocalDate dateOfBirth;
-*/
-    @NotNull
-    //@JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
 
+    /**
+     * -- SETTER --
+     * Set the email of the user
+     *
+     * -- GETTER --
+     * Get the email of the user
+     *
+     * @param email The email of the user
+     * @return The email of the user
+     *
+     */
     @NotNull
     @Email
     private String email;
-    
+
+    /**
+     * -- SETTER --
+     * Set the username of the user
+     *
+     * -- GETTER --
+     * Get the username of the user
+     *
+     * @param username The username of the user
+     * @return The username of the user
+     *
+     */
     @NotNull
     @Size(min = 2)
     private String username;
-    
+
+    /**
+     * -- SETTER --
+     * Set the password of the user
+     *
+     * -- GETTER --
+     * Get the password of the user
+     *
+     * @param password The password of the user
+     * @return The password of the user
+     *
+     */
     @NotNull
     @Size(min = 8)
     private String password;
