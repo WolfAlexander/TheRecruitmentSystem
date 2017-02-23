@@ -48,9 +48,9 @@ public class JobApplicationService {
     }
 
     /**
-     * Change status on application
-     * @param id on application to change status on
-     * @param newStatus on application
+     * Change status on the application
+     * @param id of application to change status on
+     * @param newStatus of application
      * @param language of application
      * @throws NotValidArgumentException
      */
@@ -72,7 +72,7 @@ public class JobApplicationService {
     }
 
     /**
-     * Get a page with defined size of applications and also which page to retrieve
+     * Get a page with specific amount of applications and also which page to retrieve
      * @param pageSize of the retrieved page
      * @param pageNmr of page to be retrieved
      * @param language of application
@@ -90,7 +90,7 @@ public class JobApplicationService {
     /**
      *Get application by parameter object to filter applications
      * @param param contains all parameters
-     * @param language
+     * @param language of application's parameters
      * @return a collection of applications
      */
     public Collection<ApplicationResponse> getApplicationsByParam(ApplicationParamForm param, String language) {
@@ -114,7 +114,7 @@ public class JobApplicationService {
 
     /**
      * Validate identification
-     * @param id is the identifier of the objec
+     * @param id is the identifier of the object
      * @param idName is the name of the identifier
      * @throws NotValidArgumentException
      */

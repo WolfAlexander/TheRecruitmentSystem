@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 @AllArgsConstructor
 @ControllerAdvice
 public class RequestResponse {
+
     /**
      * Message for the user
-     *
      * @return the message
      */
     private String message;

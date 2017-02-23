@@ -311,18 +311,18 @@ If you need to see the logs of a service, you can do so by
     1. [x] README.txt
 
 ##### Docs
-All release should have the latest documentation directly in the folders root under doc/ and should include 
+All releases should have the latest documentation directly in the folder's root under doc/ and should include: 
 * javadoc
 * UML classdiagram of all the services
 * database structure UML
 * database start structure & data file for an easy import
 
 ##### Services
-All services are stored in the Service/ folder and each of the services should contain everything the service require to run.
+All services are stored in the Service/ folder and each of the services should contain everything the service requires to run.
 
 #### Archiving releases 
 
-Every release should be documented in the (DockerReleses/Versions/releases.md) file in the following way.
+Every release should be documented in the (DockerReleses/Versions/releases.md) file in the following way:
 
 | Version   | File                             | checksum_md5                     | checksum_sha256                                                   | realise date |
 | --------- |:--------------------------------:| :-------------------------------:|:-----------------------------------------------------------------:|:---------------:|

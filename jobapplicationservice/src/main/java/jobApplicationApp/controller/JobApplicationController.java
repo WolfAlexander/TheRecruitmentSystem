@@ -32,9 +32,9 @@ public class JobApplicationController {
     private JobApplicationService jobApplicationService;
 
     /**
-     * Get an application by its id
+     * Get an application by id
      * @param id of the application
-     * @param language of the applications parameters
+     * @param language of the application's parameters
      * @return an application and a http status or an error message
      */
     @GetMapping(value = "/{language}/by/id/{id}")
@@ -49,8 +49,8 @@ public class JobApplicationController {
 
     /**
      * Get applications by parameters
-     * @param param is the parameters to filter with
-     * @param language of the applications parameters
+     * @param param are the parameters to filter with
+     * @param language of the applications' parameters
      * @param bindingResult handles validation of input from user
      * @return collection of application and a http status or an error message
      */
@@ -68,9 +68,9 @@ public class JobApplicationController {
     }
 
     /**
-     * Get an application page, containing a defined amount of applications starting from a defined page number
-     * @param pageNmr on page to retrive
-     * @param language on applications parameters
+     * Get an application page, containing a defined amount of applications starting from a specific page number
+     * @param pageNmr of the page to retrieve
+     * @param language on applications' parameters
      * @param pageSize of a page (in applications)
      * @return collection of application and a http status
      */
@@ -86,7 +86,7 @@ public class JobApplicationController {
     /**
      * Register a new job application
      * @param application to register
-     * @param language of the new application
+     * @param language of the new application's parameters
      * @param bindingResult  handles validation of input from user
      * @return a message and http status describing if the application was accepted
      */
@@ -107,11 +107,11 @@ public class JobApplicationController {
 
     /**
      * Changes status on an application
-     * @param id of application to change status on
+     * @param id of the application to change the status on
      * @param newStatus of the application
      * @param language of the status
      * @param bindingResult handles validation of input from user
-     * @return a message and http status describing if the application was accepted
+     * @return a message and http status describing if the status change was accepted
      */
     @PutMapping(value = "/{language}/change/status/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity changeStatusOnApplicationById(@PathVariable(value = "id") int id, @Valid @RequestBody ApplicationStatusForm newStatus, @PathVariable(value = "language") String language, BindingResult bindingResult) {
@@ -157,8 +157,8 @@ public class JobApplicationController {
 
     /**
      * Handle bad binds
-     * logs full error to debug and short description to info
-     * @param objectName of object that fail to bind
+     * logs full error to debug and short description to inform
+     * @param objectName of object that fails to bind
      * @param bindingResult is the binding information object
      * @return list of the error messages to show user what's wrong
      */

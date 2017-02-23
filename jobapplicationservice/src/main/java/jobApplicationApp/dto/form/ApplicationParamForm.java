@@ -17,7 +17,6 @@ public class ApplicationParamForm {
 
     /**
      * First name of the user on the application
-     *
      * @return required name
      */
     private String name;
@@ -25,7 +24,6 @@ public class ApplicationParamForm {
 
     /**
      * Period the applicant should be able to work on
-     *
      * return required period
      */
     private AvailabilityForm availableForWork;
@@ -33,7 +31,6 @@ public class ApplicationParamForm {
 
     /**
      * The competences the applicant should have
-     *
      * @return list of competences
      */
     private Collection<CompetenceForm> competenceProfile;

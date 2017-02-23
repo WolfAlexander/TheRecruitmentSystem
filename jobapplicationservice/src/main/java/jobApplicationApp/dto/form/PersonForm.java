@@ -26,26 +26,26 @@ public class PersonForm {
 
 
     /**
-     * The users date of birth
+     * The user's date of birth
      * return date of birth
      */
     private Date dateOfBirth;
 
 
     /**
-     * The users email address
+     * The user's email address
      * @return email address
      */
     private String email;
 
     /**
-     * The role the user have on the site
-     * @return The users role
+     * The role the user has on the site
+     * @return The user's role
      */
     private RoleForm role;
 
     /**
-     * Constructor without competences though the are connected after an application is created
+     * Constructor without competences
      * @param firstName
      * @param lastName
      * @param dateOfBirth

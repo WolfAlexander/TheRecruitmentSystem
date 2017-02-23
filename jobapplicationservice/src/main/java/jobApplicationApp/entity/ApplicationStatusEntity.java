@@ -20,7 +20,7 @@ public class ApplicationStatusEntity {
 
 
     /**
-     *The Id of the status
+     *The id of the status
      * @return id of status
      */
     @Id

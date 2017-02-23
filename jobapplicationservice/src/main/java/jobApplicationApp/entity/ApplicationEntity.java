@@ -30,14 +30,14 @@ public class ApplicationEntity {
 
 
     /**
-     * The id of the person that creater of the application
+     * The id of the person that created the application
      * @return the persons id
      */
     @NotNull
     private int personId;
 
     /**
-     * The date the application was registerd
+     * The date the application was registered
      * @return date of registration
      */
     @Column(name = "date_of_registration")
@@ -63,13 +63,20 @@ public class ApplicationEntity {
 
 
     /**
-     * List of competences the user have provided
-     *
+     * List of competences the user has provided
      * @return competences of user
      */
     @OneToMany(mappedBy = "application")
     private Collection<CompetenceProfileEntity> competenceProfile;
 
+    /**
+     * Create Application
+     * @param personId id of the creator
+     * @param dateOfRegistration of the application
+     * @param status of the application
+     * @param availableForWork period that the person can work
+     * @param competenceProfile list of competences
+     */
     public ApplicationEntity(int personId, Date dateOfRegistration, ApplicationStatusEntity status, AvailabilityEntity availableForWork, Collection<CompetenceProfileEntity> competenceProfile) {
         this.personId = personId;
         this.dateOfRegistration = dateOfRegistration;
@@ -78,6 +85,13 @@ public class ApplicationEntity {
         this.competenceProfile = competenceProfile;
     }
 
+    /**
+     *  Create Application
+     * @param personId id of the creator
+     * @param dateOfRegistration of the application
+     * @param status of the application
+     * @param availableForWork period that the person can work
+     */
     public ApplicationEntity(int personId, Date dateOfRegistration, ApplicationStatusEntity status, AvailabilityEntity availableForWork) {
         this.personId = personId;
         this.dateOfRegistration = dateOfRegistration;
@@ -87,7 +101,6 @@ public class ApplicationEntity {
 
     /**
      * Set application status
-     *
      * @param newStatus to set on the application
      */
     public void changeStatus(ApplicationStatusEntity newStatus) {

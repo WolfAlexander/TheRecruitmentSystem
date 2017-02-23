@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
- * Languages we translate to
+ * Languages translated to
  */
 @Entity
 @AllArgsConstructor

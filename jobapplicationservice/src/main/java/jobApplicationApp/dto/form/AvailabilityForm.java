@@ -19,14 +19,12 @@ public class AvailabilityForm {
 
     /**
      * The start of the working period
-     *
      * @retrun the start date
      */
     private Date fromDate;
 
     /**
      * The end of the working period
-     *
      * @return end date
      */
     private Date toDate;

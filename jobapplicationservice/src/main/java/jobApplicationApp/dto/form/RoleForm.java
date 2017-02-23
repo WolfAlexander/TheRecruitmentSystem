@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Form for the users role on the system
+ * Form for the user's role on the system
  */
 @AllArgsConstructor
 @Getter

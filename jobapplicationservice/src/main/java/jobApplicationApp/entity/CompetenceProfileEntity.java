@@ -32,7 +32,7 @@ public class CompetenceProfileEntity {
     private ApplicationEntity application;
 
     /**
-     *The competence the profile contain
+     *The competence the profile contains
      * @return the competence object
      */
     @Getter

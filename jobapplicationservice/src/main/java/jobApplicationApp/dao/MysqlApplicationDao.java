@@ -22,6 +22,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.*;
 
+/**
+ * DAO for mysql implementation
+ */
 @Repository
 @Qualifier("mysql")
 public class MysqlApplicationDao implements ApplicationDao{
@@ -39,12 +42,11 @@ public class MysqlApplicationDao implements ApplicationDao{
     @PersistenceContext private EntityManager em;
 
     /**
-     * Get a application specified by id, in the wished language
+     * Get an application specified by id, in the wanted language
      * @param id of application
      * @param language of application
-     * @return an application with the id and translated to the language
+     * @return an application with the id, translated to the language
      */
-    @Override
     public ApplicationEntity getApplicationById(int id,String language) throws NoMatchException {
 
         ApplicationEntity application = applicationRepository.findOne(id);
@@ -58,13 +60,12 @@ public class MysqlApplicationDao implements ApplicationDao{
 
 
     /**
-     * Changes the application status in database by id
+     * Changes the application status in the database by id
      * @param applicationId of application to change status on
      * @param status to change application to
      * @param language of status
-     * @throws NotValidArgumentException it translation of status dose'nt exist
+     * @throws NotValidArgumentException if translation of status doesn't exist
      */
-    @Override
     public void changeApplicationStatus(int applicationId, ApplicationStatusForm status, String language) throws NotValidArgumentException {
         ApplicationEntity application = getApplicationById(applicationId,language);
         LocalizedStatus localizedStatus = localizedStatusRepository.getByLanguageIdAndTranslation(getLanguage(language).getId(),status.getName());
@@ -81,9 +82,8 @@ public class MysqlApplicationDao implements ApplicationDao{
      * Insert new application to database
      * @param application to be inserted into database
      * @param language of application parameters
-     * @throws NotValidArgumentException if competence dos'nt exist
+     * @throws NotValidArgumentException if competence doesn't exist
      */
-    @Override
     public void insertApplication(ApplicationForm application, String language) throws NotValidArgumentException {
         ApplicationStatusEntity status = statusRepository.findByName("PENDING");
         Date registrationDate = new Date();
@@ -96,7 +96,7 @@ public class MysqlApplicationDao implements ApplicationDao{
 
     /**
      * Get availability entity for application
-     * @param availabilityForm for from and to date
+     * @param availabilityForm for start date and end date
      * @return a valid availability entity
      */
     private AvailabilityEntity getAvailability(AvailabilityForm availabilityForm){
@@ -114,7 +114,7 @@ public class MysqlApplicationDao implements ApplicationDao{
     /**
      * Save competence profiles to application
      * @param competenceLists of competences to be added to the application
-     * @param newApplication to attached the competences to
+     * @param newApplication to attach the competences to
      * @param language of competences
      * @throws NotValidArgumentException if competence can't be found
      */
@@ -134,13 +134,12 @@ public class MysqlApplicationDao implements ApplicationDao{
     }
 
     /**
-     * Get a specified number of application from a specified application defined by id from database
-     * @param startId is the start point of the list of application
+     * Get a specified number of applications from a specified application defined by id from database
+     * @param startId is the start point of the list of applications
      * @param numberOfApplication to retrieve
      * @param language of applications
      * @return collection of applications
      */
-    @Override
     public Collection<ApplicationEntity> getXApplicationsFrom(int startId, int numberOfApplication, String language) {
         Collection<ApplicationEntity> listOfApplications = applicationRepository.getXApplicationsFrom(startId,numberOfApplication);
         listOfApplications.forEach((application)->{
@@ -152,10 +151,9 @@ public class MysqlApplicationDao implements ApplicationDao{
     /**
      * Get applications by parameters
      * @param param to filter with
-     * @param language of applications
+     * @param language of application's parameters
      * @return a collection of applications
      */
-    @Override
     public Collection<ApplicationEntity> getApplicationByParam(ApplicationParamForm param, String language) {
         Collection<ApplicationEntity> resultListOfApplication= new ArrayList<>();
         Collection<ApplicationEntity> newResultOfApplicationFilter = new ArrayList<>();
@@ -182,7 +180,7 @@ public class MysqlApplicationDao implements ApplicationDao{
 
 
     /**
-     * Handler for each part of search, deciding if there will be no result, if it's the first search or should do a intersection between all results
+     * Handler for each part of search, deciding if there will be no result, if it's the first search or should do an intersection between all results
      * @param newResultOfApplicationFilter is the return from the previous search
      * @param resultListOfApplication is the resulting list of previous searches
      * @return resulting list of application after one part os filter
@@ -277,7 +275,6 @@ public class MysqlApplicationDao implements ApplicationDao{
      * @param language of competences
      * @return collection of competences
      */
-    @Override
     public Collection<CompetenceEntity> getAllValidCompetences(String language) {
         Collection<CompetenceEntity> ce = new ArrayList<>();
         competenceRepository.findAll().forEach((c)-> {
@@ -292,7 +289,6 @@ public class MysqlApplicationDao implements ApplicationDao{
      * @return collection of application status
      * @param language of statuses
      */
-    @Override
     public Collection<ApplicationStatusEntity> getAllValidStatus(String language) {
         Collection<ApplicationStatusEntity> ase = new ArrayList<>();
         statusRepository.findAll().forEach((c)->{
@@ -303,10 +299,10 @@ public class MysqlApplicationDao implements ApplicationDao{
     }
 
     /**
-     * Makes the intersection of two lists of application
-     * @param map1 first list of application
-     * @param map2 second list of application
-     * @return collection of application that intersect with each other.
+     * Makes the intersection of two lists of applications
+     * @param map1 first list of applications
+     * @param map2 second list of applications
+     * @return collection of applications that intersect with each other.
      */
     private Collection<ApplicationEntity> getListOfIntersectionBetweenApplicationList(Collection<ApplicationEntity> map1, Collection<ApplicationEntity> map2){
         Collection<ApplicationEntity> applicationListResult = new ArrayList<>();

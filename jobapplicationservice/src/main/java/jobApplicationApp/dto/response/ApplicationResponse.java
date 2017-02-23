@@ -26,7 +26,7 @@ public class ApplicationResponse {
     private int id;
 
     /**
-     *The user that created the application
+     * The user that created the application
      * @return creator of application
      */
     private PersonForm person;
@@ -51,7 +51,6 @@ public class ApplicationResponse {
 
     /**
      * The period the user is available for work
-     *
      * @return period user can work
      */
     private AvailabilityEntity AvailableForWork;

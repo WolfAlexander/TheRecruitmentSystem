@@ -12,9 +12,9 @@ import java.util.Collection;
 @Getter
 @AllArgsConstructor
 public class RequestListResponse {
+
     /**
      * Messages for the user
-     *
      * @return the messages
      */
     private Collection<String> messages;

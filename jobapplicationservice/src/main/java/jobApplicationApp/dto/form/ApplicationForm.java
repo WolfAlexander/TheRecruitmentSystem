@@ -17,7 +17,7 @@ public class ApplicationForm  {
 
     /**
      * Person id of application
-     * @return The persons id of the application.
+     * @return The person's id of the application.
      */
     @NotNull
     @Min(0)
@@ -25,18 +25,16 @@ public class ApplicationForm  {
 
 
     /**
-     * The period they applicant can work
+     * The period the applicant can work
      * @return a period where the applicant can work
      */
     @NotNull
     private AvailabilityForm availableForWork;
 
     /**
-     * List of all competence the person provided
+     * List of all competences the person provided
      * @return list of competences with years of experience in the specified field
      */
     @NotNull
     private Collection<CompetenceForm> competenceProfile;
-
-
 }
