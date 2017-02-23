@@ -1,6 +1,5 @@
 # The Recruitment System
 [![build status](https://git.gortz.org/IV1201/TheRecruitmentSystem/badges/develop/build.svg)](https://git.gortz.org/IV1201/TheRecruitmentSystem/commits/develop)
-[![coverage report](https://git.gortz.org/IV1201/TheRecruitmentSystem/badges/develop/coverage.svg)](https://git.gortz.org/IV1201/TheRecruitmentSystem/commits/jobapplication-multilan-feature)
 
 Project in IV1201 Architecture and design of global applications
 
