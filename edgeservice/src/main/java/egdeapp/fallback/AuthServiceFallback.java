@@ -1,24 +1,35 @@
 package egdeapp.fallback;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.json.simple.JSONObject;
 import org.springframework.cloud.netflix.zuul.filters.route.ZuulFallbackProvider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class TestFallbackProvider implements ZuulFallbackProvider {
+/**
+ * Hystrix fallback for Authentication Service
+ * This class represents a default response to a request to the authentication service
+ * when service is unavailable
+ */
+public class AuthServiceFallback implements ZuulFallbackProvider {
+    /**
+     * Defines which route in properties this fallback should react to
+     * @return name of the route
+     */
     @Override
     public String getRoute() {
-        return "registration-service";
+        return "auth-service";
     }
 
+    /**
+     * Defines response when fallback initiated
+     * @return custom fallback response
+     */
     @Override
     public ClientHttpResponse fallbackResponse() {
         return new ClientHttpResponse() {
@@ -46,7 +57,7 @@ public class TestFallbackProvider implements ZuulFallbackProvider {
             public InputStream getBody() throws IOException {
                 JSONObject response = new JSONObject();
                 response.put("status", getStatusCode());
-                response.put("message", "Registration service is gone!");
+                response.put("message", "Authentication service is unavailable!");
 
                 return new ByteArrayInputStream(response.toString().getBytes("utf-8"));
             }
