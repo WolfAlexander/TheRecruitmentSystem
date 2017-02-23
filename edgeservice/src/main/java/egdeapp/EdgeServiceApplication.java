@@ -6,12 +6,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.cloud.netflix.zuul.filters.route.ZuulFallbackProvider;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
 
 /**
  * Configuration and startup of Edge Service
  */
 @SpringBootApplication
 @EnableZuulProxy
+@PropertySource("classpath:security/ssl_cred.properties")
 public class EdgeServiceApplication{
     /**
      * Creating Hystrix fallback for authentication service
