@@ -3,8 +3,10 @@ package registrationapp.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,11 +26,13 @@ import registrationapp.security.JwtTokenFilter;
 public class WebConfig extends WebSecurityConfigurerAdapter {
 
     /**
-     * @return new filter that handles JWT tokens
+     * Setting up which request mappings should be ignored by the filters
+     * @param web
+     * @throws Exception
      */
-    @Bean
-    public JwtTokenFilter filter(){
-        return new JwtTokenFilter();
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/register/**");
     }
 
     @Override
@@ -42,7 +46,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/register" ).permitAll()
                     .anyRequest().authenticated();
 
-        http.addFilterBefore(filter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         http.headers().cacheControl();
     }
 }
