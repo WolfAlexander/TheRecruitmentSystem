@@ -90,7 +90,8 @@ to call this service by name, not ip-address and port. If several instances of s
 Redis will de used as message broker. Idea is to use Redis in future stage for POST requests - so that no POST request will be lost due to a down service.[5]
 
 ###### Authentication Service
-Authentication service will provide tokens and check if they are valid. [6]
+Authentication service provides authentication and also serves as JWT(Json Web Token) provider. This service will use registration-service to get user credentials,
+perform check, create and return JWT if proper credentials are given. [6]
 
 ###### Registration Service
 Registration service will perform registration of new users. This service has a REST API that accepts HTTP POST requests from
@@ -114,25 +115,48 @@ The structure of the JobApplication services can be seen in picture 2.2
 
 ### 3. Security View
 ##### Security issues considered
-- Authentication on each service and different access level/roles
+- Authentication on each service, JWT and different access level/roles
 - Accessing services without gateway
 - Encrypting all client-traffic
 - Access to config files
+- Access to credentials files
 
-###### Authentication on each service and different access level/roles
-Since the system is decoupled in independent services, each of them has to authenticate user requests. We are going to use 
-OAuth2 and tokens(possibly JWT). That means that each client request will have a header containing a token, when request hits a service,
-the service will take the token and ask an authentication service if a given token is valid and level of authorization. [6]
+###### Authentication on each service, JWT and different access level/roles
+Since the system is decoupled in independent services we have to handle security on each service to some extend.
+Also since we have REST services we want to have stateless authentication to keep having stateless system. There are several ways
+but most popular are OAuth2 and/or JWT. OAuth has different flow.[8]
+Mostly problem for us is that OAuth2 usually stores tokens and other information in either it's own database or in memory. User will
+authenticate themselves, get at token, request resource service with that token, the service will ask authentication service if token 
+is valid and also if needed for information about the user. This is a good secure way, but problem is that authentication service becomes
+single point of failure and also it kind of creates state in stateless system.
+<br/>
+<br/> 
+Maybe being authentication service it is not that bad to be
+single point since if some security part of system is down, then something is really wrong and then system should not continue working, but we
+wanted to create something less fragile but still secure. That is where JWT comes in. JWT has three parts - header, payload and signature. Payload contains
+any information that is needed about a user and signature makes sure the not one has been manipulating the payload. It looked good, but there still
+was recommendations to use a reference token and value token. Reference token is just som big string that will travel outside system network
+and user will store it. Then some proxy will convert reference to value token that contains information about user. Again, good idea but some 
+service will again be overloaded and have to save tokens. 
+<br/>
+<br/>
+We decided to instead to encrypt JWT with RSA256 2048 key and send value outside system network. We also sign JWT with different RSA256 2048 key
+and send the token over HTTPS.
 
 ###### Accessing service without gateway
 A simple way to make sure that services are only accessible trought gateway is to have all services on same network and give all services, except gateway, local ip-address.
 
 ###### Encrypting all client-traffic
-Self-seined certificate and HTTPS.
+To encrypt traffic to gateway we are using SSL. 
+We have self-signed certificate with RSA256 2048 key exchange and AES_128_GCM cipher. That way all traffic is encrypted.
 
 ###### Access to config files
 Access to config files is restricted and only config service has credentials. Credentials are not saved in repository but 
  distributed between developers. In future, information in config-files can be encrypted.
+ 
+###### Access to credentials files
+There are several files holding sensitive information like secret to private keys. Whose files will never made it to git repository.
+Those files are distributed between developers.
 
 ### 4. Data View
 
@@ -203,8 +227,7 @@ make sure that no write request disappear if service is down and need time to ge
 
 The structure of the micro-services can be seen in picture 6.1 
 
-
-![micro-services-deployment_diagram](./images/micro-services-deployment_diagram.png)
+![micro-services-deployment_diagram](./images/deployment_diagram.PNG)
 6.1 micro-services deployment diagram
 
 
@@ -308,3 +331,5 @@ Due to time constraint and resources limitation in this course project we implem
 [6] [Syer, D. (2015) Spring and angular JS: A secure single Page Application.](https://spring.io/blog/2015/01/12/spring-and-angular-js-a-secure-single-page-application) (Accessed: 9 February 2017).
 
 [7] [Java's official docker repository](https://hub.docker.com/_/java/)
+
+[8] [API Gateway OAuth 2.0 Authentication Flows](https://docs.oracle.com/cd/E39820_01/doc.11121/gateway_docs/content/oauth_flows.html)
