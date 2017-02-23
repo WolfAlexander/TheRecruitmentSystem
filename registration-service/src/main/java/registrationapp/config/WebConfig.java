@@ -39,8 +39,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/" ).permitAll()
-                    .antMatchers("/info").authenticated()
+                    .antMatchers("/registration" ).permitAll()
                     .anyRequest().authenticated();
 
         http.addFilterBefore(filter(), UsernamePasswordAuthenticationFilter.class);
