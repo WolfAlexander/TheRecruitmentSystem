@@ -1,5 +1,6 @@
 package authapp.service;
 
+import authapp.profiles.Production;
 import authapp.security.JwtUserDetails;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import javax.naming.ServiceUnavailableException;
  *
  * @author WolfAlexander nikal@kth.se
  */
+@Production
 @Service
 public class UserDetailsRetrieverService implements UserDetailsService{
     @Autowired
@@ -31,6 +33,7 @@ public class UserDetailsRetrieverService implements UserDetailsService{
     @HystrixCommand(fallbackMethod = "userServiceUnavailable")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         JwtUserDetails userDetails = restTemplate.getForObject("http://REGISTRATION-SERVICE/user/"+username, JwtUserDetails.class);
+
 
         if(userDetails == null)
             throw new UsernameNotFoundException("No user found with given username: " + username);

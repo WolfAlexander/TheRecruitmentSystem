@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: production
   application:
     name: auth-service
   cloud:

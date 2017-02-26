@@ -9,16 +9,6 @@ echo
 echo
 echo
 
-#Building configservice with maven docker plugin
-echo Building discoveryservice
-cd ..
-cd discoveryservice
-mvn package docker:build -Ddocker.host=$DOCKER_HOST -Ddocker.cert.path=$DOCKER_CERT_PATH
-
-echo
-echo
-echo
-
 #Building discoveryservice with maven docker plugin
 echo Building discoveryservice
 cd ..
@@ -34,6 +24,20 @@ echo Building edgeservice
 cd ..
 cd edgeservice
 mvn package docker:build -Ddocker.host=$DOCKER_HOST -Ddocker.cert.path=$DOCKER_CERT_PATH
+
+echo
+echo
+echo
+
+#Building authentication-service with maven docker plugin
+echo Building authentication service
+cd ..
+cd authservice
+mvn package docker:build -Ddocker.host=$DOCKER_HOST -Ddocker.cert.path=$DOCKER_CERT_PATH
+
+echo
+echo
+echo
 
 #Building registration-service with maven docker plugin
 echo Building registration service

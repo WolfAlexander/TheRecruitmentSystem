@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import registrationapp.domain.UserManager;
@@ -15,7 +17,9 @@ import registrationapp.inputForm.RegistrationForm;
 import registrationapp.security.JwtUserDetails;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * REST API that is used to redirect HTTP requests to domain that handles logic. This REST API
@@ -67,6 +71,7 @@ public class RegistrationController
      * @param lang The language that the client is using
      * @return An entity representing the user being looked up
      */
+    // "/{lang}/persons/{id}"
     @GetMapping(value = "/{lang}/get/by/{id}")
     public PersonEntity getPersonById(@PathVariable(value = "id") int id, @PathVariable(value = "lang") String lang){
         return userManager.getUserById(id,lang);
@@ -80,6 +85,7 @@ public class RegistrationController
      * @param lang The language that the client is using
      * @return true if the user exists in the database. false otherwise.
      */
+    // "/{lang}/persons/{id}/valid"
     @GetMapping(value = "{lang}/validate/{id}")
     public Boolean validateUserId(@PathVariable(value = "id") int id, @PathVariable(value = "lang") String lang){
         return userManager.validate(id);
@@ -94,6 +100,7 @@ public class RegistrationController
      * @param name  the first name of the user(s) being looked up
      * @return true if the user exists in the database. false otherwise.
      */
+    // "/{lang}/persons/{name}"
     @GetMapping(value = "{lang}/get/users/by/name/{name}")
     public Collection<Integer> getUserIdsByName(@PathVariable(value = "lang") String lang, @PathVariable(value = "name") String name){
         return userManager.getUserIdsByName(name);
@@ -107,10 +114,13 @@ public class RegistrationController
      * @param username  the username of the user being looked up
      * @return  the user and its credentials for the specified username
      */
+    // "/{lang}/persons/{name}/details"
     @GetMapping(value="/get/usercredentials/by/{username}")
-    public JwtUserDetails getUserAndCredentialsByUsername(@PathVariable(value = "username") String username)
-    {
-        return userManager.getUserAndCredentialsByUsername(username);
+    public JwtUserDetails getUserAndCredentialsByUsername(@PathVariable(value = "username") String username) {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        return new JwtUserDetails(1L, "user", " password", grantedAuthorities);
+        //return userManager.getUserAndCredentialsByUsername(username);
     }
 
 }

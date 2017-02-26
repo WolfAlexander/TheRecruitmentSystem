@@ -37,6 +37,7 @@ public class JobApplicationController {
      * @param language of the application's parameters
      * @return an application and a http status or an error message
      */
+    // "/{lang]/applications/{id}"
     @GetMapping(value = "/{language}/by/id/{id}")
     public ResponseEntity getApplicationById(@PathVariable(value = "id") int id, @PathVariable(value = "language") String language){
         try{
@@ -54,6 +55,7 @@ public class JobApplicationController {
      * @param bindingResult handles validation of input from user
      * @return collection of application and a http status or an error message
      */
+    // "/{lang}/applications/"
     @PostMapping(value = "/{language}/by/param",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity getApplicationsByParam(@Valid @RequestBody ApplicationParamForm param, @PathVariable(value = "language") String language, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
@@ -74,6 +76,7 @@ public class JobApplicationController {
      * @param pageSize of a page (in applications)
      * @return collection of application and a http status
      */
+    // "/{lang}/pages/{pageNmr}"
     @GetMapping(value = "/{language}/page/{pageSize}/{pageNmr}")
     public ResponseEntity getApplicationsPage(@PathVariable(value = "pageNmr") int pageNmr,@PathVariable(value = "language") String language, @PathVariable(value = "pageSize") int pageSize){
         try{
@@ -90,6 +93,7 @@ public class JobApplicationController {
      * @param bindingResult  handles validation of input from user
      * @return a message and http status describing if the application was accepted
      */
+    // "/{lang}/applications/"
     @PostMapping(value = "/{language}/",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity registerJobApplication(@Valid @RequestBody ApplicationForm application, BindingResult bindingResult, @PathVariable(value = "language") String language) {
         if (bindingResult.hasErrors()) {
@@ -113,6 +117,7 @@ public class JobApplicationController {
      * @param bindingResult handles validation of input from user
      * @return a message and http status describing if the status change was accepted
      */
+    // "/{lang}/application/{id}"
     @PutMapping(value = "/{language}/change/status/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity changeStatusOnApplicationById(@PathVariable(value = "id") int id, @Valid @RequestBody ApplicationStatusForm newStatus, @PathVariable(value = "language") String language, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -132,6 +137,7 @@ public class JobApplicationController {
      * @param language on the status
      * @return collection of application statuses and a http status
      */
+    // "/{lang}/statuses"
     @GetMapping(value = "/{language}/getAllValidStatus")
     public ResponseEntity getAllValidStatus(@PathVariable(value = "language") String language){
         try {
@@ -146,6 +152,7 @@ public class JobApplicationController {
      * @param language on the competences
      * @return collection of competences and a http status
      */
+    // "/{lang}/competences"
     @GetMapping(value = "/{language}/getAllValidCompetences")
     public ResponseEntity getAllValidCompetences(@PathVariable(value = "language") String language){
         try {

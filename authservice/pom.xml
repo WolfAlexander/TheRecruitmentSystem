@@ -4,19 +4,20 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>se.kth.IV1201.project</groupId>
+    <artifactId>auth-service</artifactId>
+    <version>0.1</version>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.5.1.RELEASE</version>
     </parent>
 
-    <groupId>se.kth.IV1201.project</groupId>
-    <artifactId>auth-service</artifactId>
-    <version>0.1</version>
-
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <docker.image.prefix>iv1201</docker.image.prefix>
     </properties>
 
     <dependencyManagement>
@@ -102,7 +103,7 @@
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>0.4.13</version>
                 <configuration>
-                    <imageName>${project.artifactId}</imageName>
+                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
                     <dockerDirectory>${project.basedir}</dockerDirectory>
 
                     <resources>
