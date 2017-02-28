@@ -1,3 +1,0 @@
-eureka:
-  server:
-    evictionIntervalTimerInMs: 1000
