@@ -14,7 +14,6 @@ import java.io.Serializable;
  * @author WolfAlexander nikal@kth.se
  */
 @Getter
-@Setter
 @AllArgsConstructor
 public class AuthRequest implements Serializable {
     private static final long serialVersionUID = 7622816671628629971L;
