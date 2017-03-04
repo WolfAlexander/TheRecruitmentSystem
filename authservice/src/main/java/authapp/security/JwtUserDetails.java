@@ -1,28 +1,45 @@
 package authapp.security;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @ToString
+@JsonDeserialize(using = JwtUserDetailsDeserializer.class)
 public class JwtUserDetails implements UserDetails {
-    private final Long id;
-    private final String username;
-    private final String password;
-    private final Collection<? extends GrantedAuthority> roles;
+    private  Long id;
+    private  String username;
+    private  String password;
+    private  Collection<? extends GrantedAuthority> authorities;
 
     public JwtUserDetails(Long id, String username, String password, Collection<? extends GrantedAuthority> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.roles = roles;
+        this.authorities = roles;
+    }
+
+    public JwtUserDetails(Long id, String username, String password, GrantedAuthority authority) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(authority);
+        this.authorities = grantedAuthorities;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return authorities;
     }
 
     @Override

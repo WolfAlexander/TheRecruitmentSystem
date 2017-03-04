@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  *
  * @author WolfAlexander nikal@kth.se
  */
-
 @Configuration
 @SuppressWarnings("SpringJavaAutowiringInspection")
 public class WebConfig extends WebSecurityConfigurerAdapter{

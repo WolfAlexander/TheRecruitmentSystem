@@ -57,8 +57,11 @@ public class AuthController {
 
             return new ResponseEntity<Object>(new AuthTokeResponse(jwtToken), HttpStatus.OK);
         }catch (AuthenticationException authEx){
+            authEx.printStackTrace();
+            //logger.warn();
             return new ResponseEntity<Object>(new AuthFailResponse("Could not authenticate user!"), HttpStatus.UNAUTHORIZED);
         }catch (RSAJwtTokenFactoryException ex){
+            ex.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -69,6 +72,7 @@ public class AuthController {
      * @param password - entered password by user
      */
     private void performUsernamePasswordAuthentication(String username, String password) {
+        System.out.println("GIVEN: " + username + " " + password);
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );

@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
+/**
+ * Application configuration for testing
+ */
 @ForTesting
 @Configuration
 @SuppressWarnings("SpringJavaAutowiringInspection")

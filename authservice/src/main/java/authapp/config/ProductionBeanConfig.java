@@ -8,6 +8,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * Application configuration for production
+ */
 @Production
 @Configuration
 public class ProductionBeanConfig {
@@ -28,6 +31,6 @@ public class ProductionBeanConfig {
      */
     @Bean(name = "userDetailsService")
     public UserDetailsService userDetailsServiceProduction(){
-        return new UserDetailsRetrieverService();
+        return new UserDetailsRetrieverService(restTemplate());
     }
 }
