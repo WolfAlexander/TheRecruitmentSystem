@@ -65,6 +65,7 @@ public class RSAJwtTokenFactory {
      * @throws RSAJwtTokenFactoryException if any errors occur during token generation, see exception message for cause
      */
     public static String generateTokenForAUser(UserDetails userDetails) throws RSAJwtTokenFactoryException{
+        log.info("Generating authorization token");
         JWTClaimsSet claimsSet = createJwtClaims(userDetails);
 
         return generateToken(claimsSet);
@@ -91,7 +92,6 @@ public class RSAJwtTokenFactory {
 
     private static Date generateExpirationDate(){
         Long oneDayInMilliseconds = 86400000L;
-        log.warn("Valid: " + new Date(System.currentTimeMillis() + oneDayInMilliseconds));
         return new Date(System.currentTimeMillis() + oneDayInMilliseconds);
     }
 
@@ -102,6 +102,7 @@ public class RSAJwtTokenFactory {
         SignedJWT signedJWT = signToken(signKey, claimsSet);
         JWEObject encryptedJWT = encryptToken(encryptKey, signedJWT);
 
+        log.info("Token successfully generated");
         return encryptedJWT.serialize();
     }
 
@@ -117,12 +118,12 @@ public class RSAJwtTokenFactory {
 
         } catch (NoSuchAlgorithmException e) {
             String errorMessage = "Encryption algorithm not found!";
-            log.error(errorMessage, e);
+            log.error("SERVICE_ERROR",errorMessage, e);
             throw new RSAJwtTokenFactoryException(errorMessage);
 
         } catch (InvalidKeySpecException e) {
             String errorMessage = "Key factory could not get public encryption key for given specification";
-            log.error(errorMessage, e);
+            log.error("SERVICE_ERROR", errorMessage, e);
             throw new RSAJwtTokenFactoryException(errorMessage);
 
         }
@@ -131,8 +132,11 @@ public class RSAJwtTokenFactory {
     private static File getKeyFile(String filename) {
         URL urlToFile = RSAJwtTokenFactory.class.getClassLoader().getResource(filename);
 
-        if(urlToFile == null)
-            throw new RSAJwtTokenFactoryException("Could not find " + filename);
+        if(urlToFile == null){
+            log.error("SERVICE_ERROR", "Could not create URL to key file: " + filename);
+            throw new RSAJwtTokenFactoryException("Key file not found! File name: " + filename);
+        }
+
 
         return new File(urlToFile.getPath());
     }
@@ -141,7 +145,7 @@ public class RSAJwtTokenFactory {
         try {
             return Files.readAllBytes(keyFile.toPath());
         } catch (IOException e) {
-            log.error("Could not read bytes from key file!", e);
+            log.error("SERVICE_ERROR", "Could not read bytes from key file!", e);
             throw new RSAJwtTokenFactoryException("Could not read content from key file!");
         }
     }
@@ -165,7 +169,7 @@ public class RSAJwtTokenFactory {
 
             return converter.getKeyPair(encryptedKeyPair.decryptKeyPair(decryptorProvider));
         } catch (IOException e) {
-           log.error("ould not decrypt provided private signing key file!", e);
+            log.error("SERVICE_ERROR","Could not decrypt provided private signing key file!", e);
             throw new RSAJwtTokenFactoryException("Could not decrypt provided private signing key file!");
         }
     }
@@ -179,10 +183,10 @@ public class RSAJwtTokenFactory {
 
             return (PEMEncryptedKeyPair) pemParser.readObject();
         } catch (FileNotFoundException e) {
-            log.error("Could not find key file: " + filename, e);
+            log.error("SERVICE_ERROR", "Could not find key file: " + filename, e);
             throw new RSAJwtTokenFactoryException("Could not find key file: " + filename);
         } catch (IOException e) {
-            log.error("Could not read key object!", e);
+            log.error("SERVICE_ERROR", "Could not read decryption key object!", e);
             throw new RSAJwtTokenFactoryException("Could not read decryption key object!");
         }
     }
@@ -204,7 +208,7 @@ public class RSAJwtTokenFactory {
 
             return signedJWT;
         } catch (JOSEException e) {
-            log.error(e.getMessage(), e);
+            log.error("SERVICE_ERROR", e.getMessage(), e);
             throw new RSAJwtTokenFactoryException(e.getMessage());
         }
     }
@@ -216,7 +220,7 @@ public class RSAJwtTokenFactory {
 
             return jwe;
         } catch (JOSEException e) {
-            log.error(e.getMessage(), e);
+            log.error("SERVICE_ERROR", "Could not encrypt token!", e);
             throw new RSAJwtTokenFactoryException("Could not encrypt token!");
         }
     }

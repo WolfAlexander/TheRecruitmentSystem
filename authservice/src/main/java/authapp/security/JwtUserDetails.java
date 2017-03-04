@@ -1,17 +1,19 @@
 package authapp.security;
 
+import authapp.deserializer.JwtUserDetailsDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+/**
+ * This object represents detail information about a user that is needed for authentication
+ * and token generation
+ */
 @ToString
 @JsonDeserialize(using = JwtUserDetailsDeserializer.class)
 public class JwtUserDetails implements UserDetails {
@@ -20,13 +22,27 @@ public class JwtUserDetails implements UserDetails {
     private  String password;
     private  Collection<? extends GrantedAuthority> authorities;
 
-    public JwtUserDetails(Long id, String username, String password, Collection<? extends GrantedAuthority> roles) {
+    /**
+     * Create user details with list of authorities
+     * @param id - user id
+     * @param username - name of the user
+     * @param password - password to authenticate the user
+     * @param authorities - granted authorities to this user
+     */
+    public JwtUserDetails(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.authorities = roles;
+        this.authorities = authorities;
     }
 
+    /**
+     * Create user details with only one authority
+     * @param id - user id
+     * @param username - name of the user
+     * @param password - password to authenticate the user
+     * @param authority - granted authority to this user
+     */
     public JwtUserDetails(Long id, String username, String password, GrantedAuthority authority) {
         this.id = id;
         this.username = username;

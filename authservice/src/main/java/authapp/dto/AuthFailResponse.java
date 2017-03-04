@@ -1,4 +1,4 @@
-package authapp.security;
+package authapp.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

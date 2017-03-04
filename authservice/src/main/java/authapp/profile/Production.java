@@ -1,4 +1,4 @@
-package authapp.profiles;
+package authapp.profile;
 
 import org.springframework.context.annotation.Profile;
 
@@ -7,11 +7,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Annotation for testing profile that used for all elements that should be initialized for testing
+ * Annotation for production profile that used for all elements that should be initialized in production release
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Profile("testing")
-public @interface ForTesting{
+@Profile("production")
+public @interface Production{
+
 }

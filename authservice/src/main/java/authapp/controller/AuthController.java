@@ -1,18 +1,17 @@
 package authapp.controller;
 
-import authapp.security.*;
+import authapp.dto.AuthFailResponse;
+import authapp.dto.AuthRequest;
+import authapp.dto.AuthTokeResponse;
+import authapp.service.LoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
@@ -32,13 +31,26 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    private static Logger logger = LoggerFactory.getLogger(AuthController.class);
+    private static Logger log = LoggerFactory.getLogger(AuthController.class);
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+    private final AuthenticationManager authenticationManager;
+    private final LoginService loginService;
 
+    /**
+     * Injecting dependencies
+     * @param userDetailsService - UserDetailsService instance
+     * @param authenticationManager - AuthenticationManager instance
+     * @param loginService - LoginService instance
+     */
     @Autowired
-    private AuthenticationManager authenticationManager;
+    public AuthController(UserDetailsService userDetailsService, AuthenticationManager authenticationManager, LoginService loginService) {
+        this.userDetailsService = userDetailsService;
+        this.authenticationManager = authenticationManager;
+        this.loginService = loginService;
+
+        log.info("Auth Controller initialized");
+    }
 
     /**
      * Generates a token when user tries to login
@@ -48,43 +60,31 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> generateJwtToken(@Valid @RequestBody AuthRequest authRequest, BindingResult bindingResult){
-        if(bindingResult.hasErrors())
+        log.info("/login received request");
+
+        if(bindingResult.hasErrors()){
+            log.warn("Request contains user input errors: " + bindingResult.getFieldErrors());
             return new ResponseEntity<Object>(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
+        }
+
+        log.info("Request does not contain user input errors");
 
         try {
-            performUsernamePasswordAuthentication(authRequest.getUsername(), authRequest.getPassword());
-            final String jwtToken = RSAJwtTokenFactory.generateTokenForAUser(getUserDetailsByUsername(authRequest.getUsername()));
+            String jwtToken = loginService.authenticateAndGetToken(authRequest.getUsername(), authRequest.getPassword());
 
+            log.info("Authentication passed and token created!");
             return new ResponseEntity<Object>(new AuthTokeResponse(jwtToken), HttpStatus.OK);
-        }catch (AuthenticationException authEx){
-            authEx.printStackTrace();
-            //logger.warn();
-            return new ResponseEntity<Object>(new AuthFailResponse("Could not authenticate user!"), HttpStatus.UNAUTHORIZED);
-        }catch (RSAJwtTokenFactoryException ex){
-            ex.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch (UsernameNotFoundException ex) {
+            log.warn(ex.getMessage(), ex);
+            return new ResponseEntity<Object>(new AuthFailResponse(ex.getMessage()), HttpStatus.UNAUTHORIZED);
+        }catch (BadCredentialsException ex){
+            log.warn("User could not authenticate: Bad credentials");
+            return new ResponseEntity<Object>(new AuthFailResponse("User could not authenticate: Bad credentials"), HttpStatus.UNAUTHORIZED);
+        }catch (Exception ex){
+            log.error("SERVICE_ERROR", "Serious service error occurred! ", ex);
+            return new ResponseEntity<Object>(new AuthFailResponse("Error occurred on the service"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * Perform Spring Security authentication and adding to SecurityContext
-     * @param username - entered username by user
-     * @param password - entered password by user
-     */
-    private void performUsernamePasswordAuthentication(String username, String password) {
-        System.out.println("GIVEN: " + username + " " + password);
-        final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password)
-        );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
-
-    /**
-     * @param username - given username
-     * @return UserDetails that contains all information about the user
-     */
-    private UserDetails getUserDetailsByUsername(String username){
-        return userDetailsService.loadUserByUsername(username);
-    }
 }

@@ -2,7 +2,7 @@ package authapp.service;
 
 import authapp.entity.RoleEntity;
 import authapp.entity.UserEntity;
-import authapp.profiles.ForTesting;
+import authapp.profile.ForTesting;
 import authapp.repository.UserRepository;
 import authapp.security.JwtUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;

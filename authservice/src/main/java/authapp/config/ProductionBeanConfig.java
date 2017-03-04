@@ -1,6 +1,6 @@
 package authapp.config;
 
-import authapp.profiles.Production;
+import authapp.profile.Production;
 import authapp.service.UserDetailsRetrieverService;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

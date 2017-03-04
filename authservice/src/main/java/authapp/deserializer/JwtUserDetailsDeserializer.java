@@ -1,8 +1,8 @@
-package authapp.security;
+package authapp.deserializer;
 
+import authapp.security.JwtUserDetails;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,9 +13,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
+/**
+ * Json Deserializer for JwtUserDetails object
+ * Converts Json information to POJO
+ */
 public class JwtUserDetailsDeserializer extends JsonDeserializer<JwtUserDetails>{
     private final String ID_FIELD_IDENTIFIER = "id";
     private final String USERNAME_FIELD_IDENTIFIER = "username";
@@ -23,6 +25,14 @@ public class JwtUserDetailsDeserializer extends JsonDeserializer<JwtUserDetails>
     private final String AUTHORITIES_FIELD_IDENTIFIER = "authorities";
     private final String ONE_AUTHORITY_FIELD_IDENTIFIER = "authority";
 
+    /**
+     * Converts Json to POJO
+     * @param jsonParser
+     * @param deserializationContext
+     * @return
+     * @throws IOException
+     * @throws JsonProcessingException
+     */
     @Override
     public JwtUserDetails deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);

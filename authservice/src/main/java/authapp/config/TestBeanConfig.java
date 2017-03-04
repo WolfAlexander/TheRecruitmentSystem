@@ -2,7 +2,7 @@ package authapp.config;
 
 import authapp.entity.RoleEntity;
 import authapp.entity.UserEntity;
-import authapp.profiles.ForTesting;
+import authapp.profile.ForTesting;
 import authapp.repository.RoleRepository;
 import authapp.repository.UserRepository;
 import authapp.service.UserDetailsServiceTestImpl;
