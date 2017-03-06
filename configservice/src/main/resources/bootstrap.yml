@@ -1,3 +1,6 @@
+server:
+  port: 9999
+
 spring:
   application:
     name: config-service
@@ -8,5 +11,3 @@ spring:
           uri: ${config.git.uri}
           username: ${config.git.user}
           password: ${config.git.pass}
-server:
-  port: 9999

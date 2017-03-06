@@ -1,4 +1,4 @@
-package edgeapp;
+package edgeapp.controller;
 
 
 import egdeapp.EdgeServiceApplication;

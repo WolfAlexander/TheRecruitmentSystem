@@ -20,3 +20,22 @@ spring:
   cloud:
       config:
         uri: http://localhost:9999
+---
+# Properties for testing
+spring:
+  profiles: testing
+  cloud:
+    config:
+      enabled: false
+eureka:
+  client:
+    enabled: false
+
+zuul:
+  routes:
+    auth-service:
+        serviceId: auth-service
+        path: /auth/**
+    test-service:
+      path: /test/**
+      url: http://localhost:9876
