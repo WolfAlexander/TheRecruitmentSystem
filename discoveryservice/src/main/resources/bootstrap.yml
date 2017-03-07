@@ -20,3 +20,11 @@ spring:
   cloud:
       config:
         uri: http://localhost:9999
+
+---
+# Properties for testing
+spring:
+  profiles: testing
+  cloud:
+    config:
+      enabled: false
