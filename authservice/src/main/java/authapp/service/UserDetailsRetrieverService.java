@@ -1,6 +1,8 @@
 package authapp.service;
 
+import authapp.entity.UserEntity;
 import authapp.profile.Production;
+import authapp.repository.UserRepository;
 import authapp.security.JwtUserDetails;
 import authapp.security.RSAJwtTokenFactory;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.naming.ServiceUnavailableException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This service will request an user service for information about a certain user
@@ -31,13 +36,16 @@ public class UserDetailsRetrieverService implements UserDetailsService{
     private final String SERVICE_NAME = "REGISTRATION-SERVICE";
     private final RestTemplate restTemplate;
 
+    private final UserRepository userRepository;
+
     /**
      * Autowiring RestTemplate instance
      * @param restTemplate - RestTemplate instance
      */
     @Autowired
-    public UserDetailsRetrieverService(RestTemplate restTemplate) {
+    public UserDetailsRetrieverService(RestTemplate restTemplate, UserRepository userRepository) {
         this.restTemplate = restTemplate;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -47,9 +55,35 @@ public class UserDetailsRetrieverService implements UserDetailsService{
      * @throws UsernameNotFoundException if user with given name not found
      */
     @Override
-    @HystrixCommand(fallbackMethod = "userServiceUnavailable")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("Loading user detains for " + username);
+        log.info("Loading user details for " + username);
+
+        JwtUserDetails userDetails = getUserFromLocalDB(username);
+
+        if(userDetails != null){
+            return userDetails;
+        }else{
+
+            return getUserFromUserService(username);
+        }
+    }
+
+    private JwtUserDetails getUserFromLocalDB(String username){
+        log.info("Trying to load user details from local database");
+
+        UserEntity userEntity = userRepository.findByUsername(username);
+
+        if(userEntity == null)
+            return null;
+        else
+            return new JwtUserDetails(userEntity.getId(), userEntity.getUsername(), userEntity.getPassword(), new SimpleGrantedAuthority(userEntity.getRoles().get(0).getName()));
+    }
+
+
+    @HystrixCommand(fallbackMethod = "userServiceUnavailable")
+    private JwtUserDetails getUserFromUserService(String username){
+        log.info("Trying to load user details from user service");
+
         JwtUserDetails userDetails = getUserDetailsByName(username);
 
         if(userDetails == null){

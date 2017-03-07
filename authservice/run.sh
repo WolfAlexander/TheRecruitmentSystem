@@ -11,4 +11,4 @@ docker rm auth-service
 
 # Start new container from an existing image
 echo Starting new container
-docker run -d --name auth-service -p "9898:9898" iv1201/auth-service
+docker run -d --name auth-service -p "9898:9898" -e "SPRING_PROFILES_ACTIVE=production" iv1201/auth-service

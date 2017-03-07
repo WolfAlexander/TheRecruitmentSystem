@@ -16,6 +16,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * Checking init values of the filter and testing log output
+ */
 public class ResponseLoggingTest {
     private final ResponseLogging filter = new ResponseLogging();
 
