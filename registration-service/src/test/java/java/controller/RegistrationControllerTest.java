@@ -41,16 +41,6 @@ import static org.mockito.Mockito.doThrow;
 public class RegistrationControllerTest
 {
 
-    /**
-     * Sets up the test by
-     * TODO: Finish this comment
-     */
-    @BeforeClass
-    public static void setup()
-    {
-        System.setProperty("spring.cloud.config.enabled", "false");
-    }
-
     @Autowired
     private TestRestTemplate testRestTemplate;
 

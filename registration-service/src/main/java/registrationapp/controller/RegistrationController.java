@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.validation.BindingResult;
@@ -38,6 +39,12 @@ public class RegistrationController
 
     @Autowired
     UserManager userManager;
+
+    @GetMapping("/test")
+    @PreAuthorize("hasRole('USER')")
+    public String test(){
+        return "Works!";
+    }
 
     /**
      * Receives a HTTP Post request from a registration form. Redirects
@@ -115,11 +122,12 @@ public class RegistrationController
      * @return  the user and its credentials for the specified username
      */
     // "/{lang}/persons/{name}/details"
+    @PreAuthorize("hasRole('SERVICE')")
     @GetMapping(value="/get/usercredentials/by/{username}")
     public JwtUserDetails getUserAndCredentialsByUsername(@PathVariable(value = "username") String username) {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        return new JwtUserDetails(1L, "user", " password", grantedAuthorities);
+        return new JwtUserDetails(1L, "user", "password", grantedAuthorities);
         //return userManager.getUserAndCredentialsByUsername(username);
     }
 
