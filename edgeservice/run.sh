@@ -10,4 +10,4 @@ docker rm edge-service
 
 # Start new container from an existing image
 echo Starting new container
-docker run -d --name edge-service -p "8080:8080" iv1201/edge-service
+docker run --net="host" -d --name edge-service -p "8080:8080" -e  "SPRING_PROFILES_ACTIVE=local" iv1201/edge-service

@@ -23,7 +23,16 @@ angular.module("application", ['ngRoute', 'ngCookies',  'ngMessages', 'pascalpre
         templateUrl: 'login.html',
         controller: 'logout',
         controllerAs: 'logout'
-    });
+    })
+    /**
+     *Adrian
+     */
+        .when("/application", {
+            templateUrl: 'application.html',
+            controller: 'jobApplication',
+            controllerAs: 'application'
+        })
+    ;
 
     /*Translate config*/
     $translateProvider.useUrlLoader('/messageBundle');
@@ -31,7 +40,13 @@ angular.module("application", ['ngRoute', 'ngCookies',  'ngMessages', 'pascalpre
     $translateProvider.preferredLanguage('en');
     $translateProvider.fallbackLanguage('en');
 
-}).controller('navigation', function ($scope, $translate, $location) {
+})    .controller('jobApplication', function ($scope, $translate, $location) {
+    //todo
+
+/**
+ * Alex
+ */
+    }).controller('navigation', function ($scope, $translate, $location) {
     $scope.changeLanguage = function (lang) {
         $translate.use(lang);
         $location.search('lang', lang);

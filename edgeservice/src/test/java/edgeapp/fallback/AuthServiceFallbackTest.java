@@ -77,6 +77,7 @@ public class AuthServiceFallbackTest {
     }
 
     @Test
+    @Ignore
     public void testingFallbackResponse(){
         ResponseEntity<String> response = restTemplate.getForEntity("/auth", String.class);
         JSONObject jsonResponse = new JSONObject(response.getBody());
