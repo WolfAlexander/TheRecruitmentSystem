@@ -20,7 +20,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = JobApplicationLauncher.class)
-@ActiveProfiles("test")
+@ActiveProfiles("testing")
 public class UserApiTest {
 
     private JobApplicationFormGenerater jobApplicationFormGenerater = new JobApplicationFormGenerater();

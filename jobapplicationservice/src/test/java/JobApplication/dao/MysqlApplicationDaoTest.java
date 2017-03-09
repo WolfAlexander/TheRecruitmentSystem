@@ -33,7 +33,7 @@ import static org.mockito.Matchers.anyString;
 
 
 @RunWith(SpringRunner.class)
-@ActiveProfiles("test")
+@ActiveProfiles("testing")
 @SpringBootTest(classes = JobApplicationLauncher.class)
 public class MysqlApplicationDaoTest {
 

@@ -29,7 +29,7 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.doNothing;
 
 @RunWith(SpringRunner.class)
-@ActiveProfiles("test")
+@ActiveProfiles("testing")
 @SpringBootTest(classes = JobApplicationLauncher.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class JobApplicationControllerTest {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
