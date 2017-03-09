@@ -5,31 +5,35 @@
 |Name | Email|
 ------------ | -------------
 | **Adrian Gortzak** | gortzak@kth.se |
-|**Albin Friedner** | |
+|**Albin Friedner** | friedner@kth.se
 |**Alexander Nikalayeu** | nikal@kth.se |
 
 ### Table of content
-1. <b>Introduction</b>
-2. <b>Functionality View</b>
-3. <b>Security View</b>
-4. <b>Data View</b>
-5. <b>Non-Functional View</b>
-6. <b>Deployment View</b>
-7. <b>Implementation View</b>
+1. [<b>Introduction</b>](#introduction)
+2. [<b>Functional view</b>](#functionality_view)
+3. [<b>Design view</b>](#design_view)
+4. [<b>Security</b>](#security_view)
+5. [<b>Data view</b>](#data_view)
+6. [<b>Non-Functional View</b>](#non_func_view)
+7. [<b>Deployment view</b>](#deployment_view)
+8. [<b>Implementation View</b>](#implementation_view)
+9. [<b>Problems</b>](#problems)
 
-### 1. Introduction
+ ### 1. Introduction <a href = "#introduction"/> 
 In this document the architecture for the recruit system we have developed is explained. The document will describe
 the features and properties as well as the decisions behind them. We also explain considerations we have made before 
 the decision of a solution. Non-functional requirements and possible unsolved issues is also described.
 
-### 2. Functionality View
+### 2. Functionality View <a href = "#functionality_view"/> 
 
 [Requirments from product owner](project-task.pdf)
 
 ![use_cases](./images/Use_cases.png)
 2.1 use cases
 
-### 3. Design View
+This use case diagram shows that there are several actors and all they have different functionality. 
+
+### 3. Design View <a href = "#design_view"/> 
 ##### Architecture choice
 This application is implemented as microservices distributed-system. Microservices architecture means separately deployed 
 units and each unit(microservice) has it own objective[1]. Reasons for choosing microservices pattern are: 
@@ -50,7 +54,7 @@ means that clients request goes thought public API and API is talking to fine-gr
 ##### Design choices
 ###### Client-side load balancing
 This system is using client-side balancing. That means that all clients(services that need other services) are keeping track of which instance of a service to ask. One alternative
-would be a centralized load-balancing where one service is a load balanser and other services would go thought it to get to other services. That could create bottlenecks. Client-side 
+would be a centralized load-balancing where one service is a load balancer and other services would go thought it to get to other services. That could create bottlenecks. Client-side 
 load balancing solves that problem. [4]
 <br/>
 <br/>
@@ -61,7 +65,7 @@ This system is using Redis message broker for any "write" requests. That is used
 
 #### Microservices in the system
 ###### Edge service
-Edge service is gatewey för this system. That is were all client request goes thought. We are using Spring Cloud Netflix projects to implement this. Netflix Zuul as gateway 
+Edge service is gateway för this system. That is were all client request goes thought. We are using Spring Cloud Netflix projects to implement this. Netflix Zuul as gateway 
 since it is a reliable easy to use gateway library that also implements load balancer and circuit breaker design pattern so we do not have to do it manually. [5]
 
 ###### Configuration Service
@@ -91,7 +95,7 @@ Redis will de used as message broker. Idea is to use Redis in future stage for P
 
 ###### Authentication Service
 Authentication service provides authentication and also serves as JWT(Json Web Token) provider. This service will use registration-service to get user credentials,
-perform check, create and return JWT if proper credentials are given. [6]
+perform check, create and return JWT if proper credentials are given.[6] More on security could be found in [security section](#security_view).
 
 ###### Registration Service
 Registration service will perform registration of new users. This service has a REST API that accepts HTTP POST requests from
@@ -109,7 +113,6 @@ The structure of the JobApplication services can be seen in picture 2.2
 ![job-application-service_architecture](./images/JobApplicationService.png)
 2.2. JobApplication service architecture
 
-
 ###### Logging
 * **Information logging** - Every call should be logged when the required task is done. Not before!
 * **Error logging** - Should be logged at the place the error occur
@@ -120,7 +123,7 @@ To merge with the developer branch the project needs to:
  2. Build successfully (no test can fail)
 
 
-### 3. Security View
+###  4. Security View <a href = "#security_view"/>
 ##### Security issues considered
 - Authentication on each service, JWT and different access level/roles
 - Accessing services without gateway
@@ -131,7 +134,7 @@ To merge with the developer branch the project needs to:
 ###### Authentication on each service, JWT and different access level/roles
 Since the system is decoupled in independent services we have to handle security on each service to some extend.
 Also since we have REST services we want to have stateless authentication to keep having stateless system. There are several ways
-but most popular are OAuth2 and/or JWT. OAuth has different flow.[8]
+but most popular are OAuth2 and/or JWT. OAuth has different flows.[8]
 Mostly problem for us is that OAuth2 usually stores tokens and other information in either it's own database or in memory. User will
 authenticate themselves, get at token, request resource service with that token, the service will ask authentication service if token 
 is valid and also if needed for information about the user. This is a good secure way, but problem is that authentication service becomes
@@ -148,24 +151,25 @@ service will again be overloaded and have to save tokens.
 <br/>
 <br/>
 We decided to instead to encrypt JWT with RSA256 2048 key and send value outside system network. We also sign JWT with different RSA256 2048 key
-and send the token over HTTPS.
+and send the token over HTTPS. 
 
 ###### Accessing service without gateway
-A simple way to make sure that services are only accessible trought gateway is to have all services on same network and give all services, except gateway, local ip-address.
+A simple way to make sure that services are only accessible thought gateway is to have all services on same network and give all services, except gateway, local ip-address. 
+Also all endpoints that are not public requires an authorization token. Even if  
 
 ###### Encrypting all client-traffic
-To encrypt traffic to gateway we are using SSL. 
-We have self-signed certificate with RSA256 2048 key exchange and AES_128_GCM cipher. That way all traffic is encrypted.
+To encrypt traffic to gateway system is using SSL. 
+System have self-signed certificate with RSA256 2048 key exchange and AES_128_GCM cipher. That way all traffic is encrypted.
 
 ###### Access to config files
-Access to config files is restricted and only config service has credentials. Credentials are not saved in repository but 
- distributed between developers. In future, information in config-files can be encrypted.
+Access to config files is restricted and only config-service has credentials. Credentials are not saved in repository but 
+ distributed between developers. In future, information in config-files can be encrypted. Traffic between config-service and configuration information it self if encrypted using SSL.
  
 ###### Access to credentials files
-There are several files holding sensitive information like secret to private keys. Whose files will never made it to git repository.
+There are several files holding sensitive information like secret to private keys. Those files will never made it to git repository.
 Those files are distributed between developers.
 
-### 4. Data View
+### 5. Data View <a href = "#data_view"/>
 
 ###### Structure
 There are two data sources for this project. 
@@ -200,7 +204,7 @@ public interface CompetenceProfileRepository extends CrudRepository<CompetencePr
 ```
 4.3. repository
 
-### 5. Non-Functional View 
+### 6. Non-Functional View  <a href = "#non_func_view"/>
 This part includes information about non-functional requirements that are not mentioned in other parts of the documentation.
  For security see security section, for packaging see implementation view and so on.
  
@@ -214,19 +218,19 @@ Independent services package in a Docker container are easy to scale. Just start
 
 ###### Availability
 Since we have independent services that can be horizontally scaled something has to handle which request should go to proper instance.
- Otherwise no there is no way to use scaling if all requests will go to the same service which eventually will not be able to handle all requests.
- That is why a load balancer is used. Load balancer will keep track on load on each service and choose one a right one to send request to. Also 
- load balancer keeps track of which servers are down and makes sure that no request goes to a down service. Since this system used Zuul as gateway 
- a load balancer comes in the same package and automatically is used by the proxy. 
- <br/>
- <br/>
- Also all services will in future release have a load balancer to perform client-side load balancing.
+Otherwise no there is no way to use scaling if all requests will go to the same service which eventually will not be able to handle all requests.
+That is why a load balancer is used. Load balancer will keep track on load on each service and choose one a right one to send request to. Also 
+load balancer keeps track of which servers are down and makes sure that no request goes to a down service. Since this system used Zuul as gateway 
+a load balancer comes in the same package and automatically is used by the proxy. 
+<br/>
+<br/>
+Also all services will in future release have a load balancer to perform client-side load balancing.
 
 ###### Reliability
 Services can go down. That happens. To make sure that no write (POST/PUT) request gets lost due to down service
 we send all POST/PUT traffic will be send using Redis message broker. As long as message broker is up no write request will be lost.
 
-### 6. Deployment View
+### 7. Deployment View <a href = "#deployment"/>
 
 Though the structure on this project is micro-services, every service could run on separate hardware. The different services all have an important part in the system.
  
@@ -249,7 +253,7 @@ Explanation to the diagram:
 * <b>Red containers</b> - databases
 * <b>White components</b> - components inside a service
 
-### 7. Implementation View
+### 8. Implementation View <a href = "#implementation_view"/>
 
 ###### Instruction to build and run the system:
 
@@ -366,7 +370,7 @@ Every release should be documented in the (DockerReleses/Versions/releases.md) f
 - [Docker](https://www.docker.com/) - packeting and deployment tool
 - [AngularJS](https://angularjs.org/) - client side model
 
-### Problems
+### Problems <a href = "problems" />
 ###### Data consistency in Microservices
 Most important im this architecture is that services are independent. Developers can easily work on changes and depend on others except 
 public API. Services can be horizontally scaled easily. Sounds good, but when it comes to question of database and data consistency there is a problem.
@@ -381,6 +385,12 @@ How can teams work independently when database is used by everyone? Solution is 
 Due to time constraint and resources limitation in this course project we implemented different solution. We have only one database and different
  services has a limited access to database tables using database build-in authentication and authorisation.
  <br/><br/>
+
+##### Distribution of sensitive data between developers
+Sensitive information like password and keys is distributed between developer without using open public channels like version control system.
+Developers get information using USB or could use LassPass secure notes. The problem lies in people them selves. How to handles situations where
+developers 
+ 
   
   Outdated docker start image Java:8 will be changed to openjdk image, "This image is officially deprecated in favor of the openjdk image, and will receive no further updates after 2016-12-31 (Dec 31, 2016). Please adjust your usage accordingly." [7]
 ### References

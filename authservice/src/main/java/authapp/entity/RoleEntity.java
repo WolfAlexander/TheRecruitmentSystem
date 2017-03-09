@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Role")
 @Getter
-@Setter
 @NoArgsConstructor
 @ToString
 public class RoleEntity {

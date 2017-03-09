@@ -6,6 +6,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import registrationapp.RegistrationServiceApplication;
@@ -16,10 +18,13 @@ import registrationapp.entity.CredentialEntity;
 import registrationapp.entity.PersonEntity;
 import registrationapp.entity.RoleEntity;
 import registrationapp.inputForm.RegistrationForm;
+import registrationapp.security.JwtUserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -118,19 +123,28 @@ public class UserManagerTest
         Collection<Integer> users = userManager.getUserIdsByName("albin");
         assertEquals(3, users.size());
     }
-    /*
+
+    /**
+     * Tests if user credentials can be found by username in a correct way
+     */
     @Test
     public void getUserAndCredentialsByUsernameTest()
     {
-        given(mysqlUserServiceDao.getUserAndCredentialsByUsername(any(String.class), any(String.class)))
-                .willReturn(new UserCredentialsDTO(new PersonEntity("test", "testsson", new Date(1994, 3, 20)
-                        , "albin@example.com", new RoleEntity("Testroll"))
-                        , new CredentialEntity(5, "testuser", "testpassword")));
+        RoleEntity roleEntity = new RoleEntity("Testrole");
+        ArrayList<RoleEntity> roleEntities = new ArrayList<>();
+        roleEntities.add(roleEntity);
+        Collection<GrantedAuthority> grantedAuthorities = mapToGrantedAuthorities(roleEntities);
+        given(mysqlUserServiceDao.getUserAndCredentialsByUsername(any(String.class)))
+                .willReturn(new JwtUserDetails(5L, "testuser", "testpassword", grantedAuthorities));
 
-        UserCredentialsDTO userCredentialsDTO = userManager.getUserAndCredentialsByUsername("sv", "testuser");
+        JwtUserDetails jwtUserDetails = userManager.getUserAndCredentialsByUsername("testuser");
 
-        assertEquals("test", userCredentialsDTO.getPersonEntity().getFirstName());
-        assertEquals(5, (long)userCredentialsDTO.getCredentialEntity().getPersonId());
+        assertEquals("testuser", jwtUserDetails.getUsername());
     }
-    */
+
+    private List<GrantedAuthority> mapToGrantedAuthorities(List<RoleEntity> roles){
+        return roles.stream()
+                .map(r -> new SimpleGrantedAuthority(r.getName()))
+                .collect(Collectors.toList());
+    }
 }

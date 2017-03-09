@@ -8,5 +8,11 @@ spring:
           uri: ${config.git.uri}
           username: ${config.git.user}
           password: ${config.git.pass}
+
 server:
   port: 9999
+
+security:
+  user:
+    name: ${this.service.security.username}
+    password: ${this.service.security.pass}

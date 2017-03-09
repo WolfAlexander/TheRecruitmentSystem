@@ -4,7 +4,9 @@ spring:
     name: edgeservice
   cloud:
     config:
-      uri: http://localhost:9999
+      uri: http://192.168.99.100:9999
+      username: ${config.service.username}
+      password: ${config.service.password}
 ---
 # Properties in case developer is using Docker Toolbox
 # Config-uri: Define --docker-host as commandline property when starting application to enter custom URI or default will be used
@@ -20,3 +22,22 @@ spring:
   cloud:
       config:
         uri: http://localhost:9999
+---
+# Properties for testing
+spring:
+  profiles: testing
+  cloud:
+    config:
+      enabled: false
+eureka:
+  client:
+    enabled: false
+
+zuul:
+  routes:
+    auth-service:
+        serviceId: auth-service
+        path: /auth/**
+    test-service:
+      path: /test/**
+      url: http://localhost:9876

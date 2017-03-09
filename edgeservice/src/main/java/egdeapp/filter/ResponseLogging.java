@@ -51,7 +51,7 @@ public class ResponseLogging extends ZuulFilter{
     public Object run() {
         HttpServletResponse response = RequestContext.getCurrentContext().getResponse();
 
-        log.info("Response with statu s" + response.getStatus() + ", with content type " + response.getContentType());
+        log.info("Response with status " + response.getStatus() + ", with content type " + response.getContentType());
 
         return null;
     }
