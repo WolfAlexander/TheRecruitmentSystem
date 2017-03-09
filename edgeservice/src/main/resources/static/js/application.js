@@ -1,4 +1,4 @@
-angular.module("application", ['ngRoute','selector', 'ngCookies',  'ngMessages', 'pascalprecht.translate']).config(function ($routeProvider, $translateProvider, $locationProvider) {
+angular.module("application", ['ngRoute', 'ngCookies', 'selector',  'ngMessages', 'pascalprecht.translate']).config(function ($routeProvider, $translateProvider, $locationProvider) {
     $locationProvider.hashPrefix('');
 
     /*Routing*/

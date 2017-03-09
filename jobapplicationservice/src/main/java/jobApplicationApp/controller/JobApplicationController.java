@@ -38,7 +38,7 @@ public class JobApplicationController {
      * @param language of the application's parameters
      * @return an application and a http status or an error message
      */
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('APPLICANT')")
     @GetMapping(value = "/{language}/by/id/{id}")
     public ResponseEntity getApplicationById(@PathVariable(value = "id") int id, @PathVariable(value = "language") String language){
         try{

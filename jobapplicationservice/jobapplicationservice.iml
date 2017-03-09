@@ -13,6 +13,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-eureka:1.2.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-netflix-core:1.2.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-netflix-eureka-client:1.2.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-archaius:1.2.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-ribbon:1.2.5.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.h2database:h2:1.4.182" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-eureka:1.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter:1.1.7.RELEASE" level="project" />
