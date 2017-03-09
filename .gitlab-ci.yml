@@ -1,5 +1,5 @@
 jobapplication-service:
   script:
     - cd jobapplicationservice/
-    - mvn install -B
+    - mvn test -B
     - cat target/site/jacoco/index.html
