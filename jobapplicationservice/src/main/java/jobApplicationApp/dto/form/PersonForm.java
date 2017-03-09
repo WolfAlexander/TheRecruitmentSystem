@@ -1,15 +1,21 @@
 package jobApplicationApp.dto.form;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 
 /**
  * Form for retrieving user information
  */
 @Getter
+@NoArgsConstructor
 public class PersonForm {
 
+    @JsonIgnore
+    private int id;
 
     /**
      * The first name of the user

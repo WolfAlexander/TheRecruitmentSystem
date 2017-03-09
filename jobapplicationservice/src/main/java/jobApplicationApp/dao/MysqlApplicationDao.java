@@ -141,7 +141,7 @@ public class MysqlApplicationDao implements ApplicationDao{
      * @return collection of applications
      */
     public Collection<ApplicationEntity> getXApplicationsFrom(int startId, int numberOfApplication, String language) {
-        Collection<ApplicationEntity> listOfApplications = applicationRepository.getXApplicationsFrom(startId,numberOfApplication);
+        Collection<ApplicationEntity> listOfApplications = applicationRepository.getXApplicationsFrom(startId);
         listOfApplications.forEach((application)->{
             application = translateApplication(application,language);
         });

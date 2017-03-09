@@ -114,7 +114,7 @@ public class JobApplicationServiceTest {
             collection.add(new ApplicationEntity());
         }
         given(this.mysqlApplicationDao.getXApplicationsFrom(0,10, "en")).willReturn(collection);
-        Collection<ApplicationEntity> returnApplicationEntities  = jobApplicationService.getApplicationsPage(10,0, "en");
+        Collection<ApplicationResponse> returnApplicationEntities  = jobApplicationService.getApplicationsPage(10,0, "en");
         assertEquals(returnApplicationEntities.size(),10);
     }
 
@@ -126,7 +126,7 @@ public class JobApplicationServiceTest {
         }
         given(this.mysqlApplicationDao.getXApplicationsFrom(0,-5, "en")).willReturn(collection);
         try {
-            Collection<ApplicationEntity> returnApplicationEntities  = jobApplicationService.getApplicationsPage(-5,0, "en");
+            Collection<ApplicationResponse> returnApplicationEntities  = jobApplicationService.getApplicationsPage(-5,0, "en");
             fail("Not valid page size was accepted");
         }catch (NotValidArgumentException e){
         }
@@ -140,7 +140,7 @@ public class JobApplicationServiceTest {
         }
         given(this.mysqlApplicationDao.getXApplicationsFrom(-5,10, "en")).willReturn(collection);
         try {
-            Collection<ApplicationEntity> returnApplicationEntities  = jobApplicationService.getApplicationsPage(10,-5, "en");
+            Collection<ApplicationResponse> returnApplicationEntities  = jobApplicationService.getApplicationsPage(10,-5, "en");
             fail("Not valid page size was accepted");
         }catch (NotValidArgumentException e){
         }

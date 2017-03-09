@@ -77,7 +77,7 @@ public class JobApplicationController {
      * @param pageSize of a page (in applications)
      * @return collection of application and a http status
      */
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('APPLICANT')")
     @GetMapping(value = "/{language}/page/{pageSize}/{pageNmr}")
     public ResponseEntity getApplicationsPage(@PathVariable(value = "pageNmr") int pageNmr,@PathVariable(value = "language") String language, @PathVariable(value = "pageSize") int pageSize){
         try{
@@ -138,7 +138,7 @@ public class JobApplicationController {
      * @param language on the status
      * @return collection of application statuses and a http status
      */
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('APPLICANT')")
     @GetMapping(value = "/{language}/getAllValidStatus")
     public ResponseEntity getAllValidStatus(@PathVariable(value = "language") String language){
         try {

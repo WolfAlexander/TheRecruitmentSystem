@@ -68,7 +68,7 @@ public class JobApplicationControllerTest {
 
     @Test
     public void getApplicationPage(){
-        given(jobApplicationService.getApplicationsPage(0,10,"en")).willReturn(jobApplicationEntityGenerator.generateApplicationEntityList());
+        given(jobApplicationService.getApplicationsPage(0,10,"en")).willReturn(jobApplicationFormGenerater.generateListOfApplicationResponse());
         ResponseEntity<String> response = this.restTemplate.getForEntity("/en/page/0/10", String.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }

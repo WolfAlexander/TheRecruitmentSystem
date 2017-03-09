@@ -79,12 +79,13 @@ public class JobApplicationService {
      * @return a collection of applications
      * @throws NotValidArgumentException
      */
-    public Collection<ApplicationEntity> getApplicationsPage(int pageSize, int pageNmr, String language) throws NotValidArgumentException {
+    public Collection<ApplicationResponse> getApplicationsPage(int pageSize, int pageNmr, String language) throws NotValidArgumentException {
         validateId(pageNmr,"page number");
         validateId(pageSize,"page size");
+
         Collection<ApplicationEntity>  applications = applicationDao.getXApplicationsFrom(pageNmr*pageSize,pageSize,language);
         log.info("applications page " + pageNmr + " with size " + pageSize + " was retrieved");
-        return applications;
+        return convertListToApplicationResponse(applications);
     }
 
     /**

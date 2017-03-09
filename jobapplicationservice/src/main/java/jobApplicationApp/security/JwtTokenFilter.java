@@ -47,13 +47,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 
     private void setSecurityContext(RSAEncryptedRSASignedJWT token){
         if(token != null){
             if(SecurityContextHolder.getContext().getAuthentication() == null){
                 JwtUserDetails user = (JwtUserDetails) getUserDetails(token);
-                log.error(user.getAuthorities().toArray()[0].toString());
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

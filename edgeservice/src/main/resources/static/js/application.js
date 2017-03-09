@@ -1,3 +1,6 @@
+
+var lastApplicationId = 0;
+
 angular.module("application", ['ngRoute', 'ngCookies', 'selector',  'ngMessages', 'pascalprecht.translate']).config(function ($routeProvider, $translateProvider, $locationProvider) {
     $locationProvider.hashPrefix('');
 
@@ -49,32 +52,65 @@ angular.module("application", ['ngRoute', 'ngCookies', 'selector',  'ngMessages'
     $translateProvider.preferredLanguage('en');
     $translateProvider.fallbackLanguage('en');
 
-})  .controller('jobApplication', function ($scope, $translate, $rootScope,  $location, $routeParams) {
+})
+
+
+
+    .controller('jobApplication', function ($scope, $translate,$http,  $cookies, $rootScope,  $location, $routeParams) {
     if(!$rootScope.authenticated){
         $location.path("/login");
     }
-    alert($routeParams.id);
-    //  $http.get("localhost:9876/en/by/id/1")
-    //     .then(function(response){ alert(response.data)});
-    $scope.application= {"id":3,"person":{"firstName":"Adrian","lastName":"Gortzak","dateOfBirth":61416313200000,"email":"addegor@hotmail.com","role":{"name":"test"}},"status":{"id":0,"name":"PENDING"},"competenceProfile":[{"competence":{"id":0,"name":"sausage grilling"}},{"competence":{"id":1,"name":"carousel operation"}}],"dateOfRegistration":1487890001000,"availableForWork":{"fromDate":1426291200000,"toDate":1463011200000}};
+        $scope.statuses = [{id:0,label:"PENDING"},{id:1,label:"REJECTED"},{id:2,label:"ACCEPTED"}];
+
+    lastApplicationId =$routeParams.id;
+
+    getApplication("en", $http, $cookies,$rootScope);
+/**
+    $http({
+        method: 'GET',
+        url: '/api/jobapplication/en/by/id/'+$routeParams.id,
+        headers: {'Authorization':  $cookies.get("token")}
+    }) .then(function(response){
+        $scope.application=response.data;
+        $scope.newStatus = response.data.status.name; });
+**/
 
 
-}) .controller('jobApplicationList', function ($scope, $http,$rootScope,  $translate, $location) {
+       /**
+        $http({
+            method: 'GET',
+            url: '/api/jobapplication/en/getAllValidStatus',
+            headers: {'Authorization':  $cookies.get("token")}
+        }) .then(function(response){
+            alert(response.data);
+
+            angular.forEach(response.data, function(status) {
+                $scope.statuses.push({value:status.id,label:status.name});
+            });
+        });
+        */
+})
+
+
+
+
+    .controller('jobApplicationList', function ($scope, $http,$rootScope,$cookies,  $translate, $location) {
     if(!$rootScope.authenticated){
         $location.path("/login");
     }
-  //  $http.get("localhost:9876/en/page/10/0")
-   //     .then(function(response){ alert(response.data)});
+    $http({
+        method: 'GET',
+        url: '/api/jobapplication/en/page/10/0',
+        headers: {'Authorization':  $cookies.get("token")}
+    }) .then(function(response){$scope.jobapplications=response.data});
 
-
-    $scope.jobapplications = [
-        {"id":3,"person":{"firstName":"Adrian","lastName":"Gortzak","dateOfBirth":61416313200000,"email":"addegor@hotmail.com","role":{"name":"test"}},"status":{"id":0,"name":"PENDING"},"competenceProfile":[{"competence":{"id":0,"name":"sausage grilling"}},{"competence":{"id":1,"name":"carousel operation"}}],"dateOfRegistration":1487890001000,"availableForWork":{"fromDate":1426291200000,"toDate":1463011200000}}
-        ];
-
-   $scope.cregister_applicationhangePage = function(pageNmr) {
-        alert(pageNmr);
-       //  $http.get("localhost:9876/en/page/10/pageNmr")
-       //     .then(function(response){ alert(response.data)});
+   $scope.changePage = function(pageNmr) {
+       var newPage = pageNmr-1;
+       $http({
+           method: 'GET',
+           url: '/api/jobapplication/en/page/10/'+newPage,
+           headers: {'Authorization':  $cookies.get("token")}
+       }) .then(function(response){$scope.jobapplications=response.data});
 
    }
 
@@ -97,10 +133,11 @@ angular.module("application", ['ngRoute', 'ngCookies', 'selector',  'ngMessages'
 /**
  * Alex
  */
-    }).controller('navigation', function ($scope, $translate, $location) {
+    }).controller('navigation', function ($scope, $translate, $location,$cookies,$http,$rootScope) {
     $scope.changeLanguage = function (lang) {
         $translate.use(lang);
         $location.search('lang', lang);
+        getApplication(lang, $http, $cookies,$rootScope);
     }
 }).controller('registration', function ($scope, $rootScope, $http, $location) {
     var self = this;
@@ -255,4 +292,15 @@ function showErrorMessageForGiveField(registrationForm, field) {
 function handleSuccessfulRegistration($rootScope, $location) {
     $location.path("/login");
     $rootScope.registration_success_alert = true;
+}
+
+function getApplication(lang, $http, $cookies,$scope){
+    $http({
+        method: 'GET',
+        url: '/api/jobapplication/'+ lang + '/by/id/'+lastApplicationId,
+        headers: {'Authorization':  $cookies.get("token")}
+    }) .then(function(response){
+        $scope.application=response.data;
+        $scope.newStatus = response.data.status.name; });
+
 }
