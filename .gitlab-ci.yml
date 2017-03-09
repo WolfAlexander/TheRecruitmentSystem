@@ -3,3 +3,33 @@ jobapplication-service:
     - cd jobapplicationservice/
     - mvn test -B
     - cat target/site/jacoco/index.html
+
+auth-service:
+  script:
+    - cd authservice/
+    - mvn test -B
+    - cat target/site/jacoco/index.html
+
+config-service:
+  script:
+    - cd configservice/
+    - mvn test -B
+    - cat target/site/jacoco/index.html
+
+discovery-service:
+  script:
+    - cd discoveryservice/
+    - mvn test -B
+    - cat target/site/jacoco/index.html
+
+edge-service:
+  script:
+    - cd edgeservice/
+    - mvn test -B
+    - cat target/site/jacoco/index.html
+
+registration-service:
+  script:
+    - cd registration-service/
+    - mvn test -B
+    - cat target/site/jacoco/index.html

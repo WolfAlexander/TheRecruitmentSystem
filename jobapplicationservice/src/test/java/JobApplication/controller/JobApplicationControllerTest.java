@@ -45,14 +45,14 @@ public class JobApplicationControllerTest {
     @Test
     public void getApplicationById() {
         given(jobApplicationService.getApplicationById(1,"en")).willReturn(jobApplicationFormGenerater.generateApplicationResponse());
-        ResponseEntity<String> response = this.restTemplate.getForEntity("/en/by/id/1", String.class);
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/en/jobapplications/1", String.class);
         assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
 
     @Test
     public void getApplicationByBadId() {
         given(jobApplicationService.getApplicationById(-1,"en")).willThrow(new NotValidArgumentException("oh no"));
-        ResponseEntity<String> response = this.restTemplate.getForEntity("/en/by/id/-1", String.class);
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/en/jobapplications/-1", String.class);
         assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
@@ -62,28 +62,28 @@ public class JobApplicationControllerTest {
         CompetenceForm cf = new CompetenceForm("dsföäsdölföalösfaäsdfläösdf",8);
         acf.add(cf);
         ApplicationParamForm inputParam = new ApplicationParamForm(null,null,acf);
-        ResponseEntity response = this.restTemplate.postForEntity("/en/by/param", inputParam, String.class);
+        ResponseEntity response = this.restTemplate.postForEntity("/en/jobapplications/params", inputParam, String.class);
         assertEquals(response.getStatusCode(),HttpStatus.OK);
     }
 
     @Test
     public void getApplicationPage(){
-        given(jobApplicationService.getApplicationsPage(0,10,"en")).willReturn(jobApplicationFormGenerater.generateListOfApplicationResponse());
-        ResponseEntity<String> response = this.restTemplate.getForEntity("/en/page/0/10", String.class);
+        given(jobApplicationService.getApplicationsPage(0,"en")).willReturn(jobApplicationFormGenerater.generateListOfApplicationResponse());
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/en/jobapplications/pages/0", String.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     public void getBadApplicationPage(){
-        given(jobApplicationService.getApplicationsPage(0,-10,"en")).willThrow(new NotValidArgumentException("oh no"));
-        ResponseEntity<String> response = this.restTemplate.getForEntity("/en/page/0/-10", String.class);
+        given(jobApplicationService.getApplicationsPage(0,"en")).willThrow(new NotValidArgumentException("oh no"));
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/en/jobapplications/pages/0", String.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
 
     @Test
     public void registerJobApplicationWithNoneExistingApplication() {
-        ResponseEntity response = this.restTemplate.postForEntity("/en/",null,String.class);
+        ResponseEntity response = this.restTemplate.postForEntity("/en/jobapplications",null,String.class);
         assertEquals(HttpStatus.UNSUPPORTED_MEDIA_TYPE, response.getStatusCode());
     }
 
@@ -94,7 +94,7 @@ public class JobApplicationControllerTest {
         ApplicationForm application = jobApplicationFormGenerater.generateApplicationForm();
         doNothing().when(jobApplicationService).registerJobApplication(any(ApplicationForm.class),anyString());
 
-        ResponseEntity response = this.restTemplate.exchange("/en/",HttpMethod.POST,generateJsonApplicationForm(1,1426291200000L,1463011200000L), String.class);
+        ResponseEntity response = this.restTemplate.exchange("/en/jobapplications",HttpMethod.POST,generateJsonApplicationForm(1,1426291200000L,1463011200000L), String.class);
 
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
     }
@@ -103,7 +103,7 @@ public class JobApplicationControllerTest {
     public void registerJobApplicationWithTooLowId() {
         ApplicationForm application = jobApplicationFormGenerater.generateApplicationForm();
         doNothing().when(jobApplicationService).registerJobApplication(any(ApplicationForm.class),anyString());
-        ResponseEntity response = this.restTemplate.exchange("/en/",HttpMethod.POST,generateJsonApplicationForm(-1,1426291200000L,1463011200000L), String.class);
+        ResponseEntity response = this.restTemplate.exchange("/en/jobapplications",HttpMethod.POST,generateJsonApplicationForm(-1,1426291200000L,1463011200000L), String.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("{\"messages\":[\"must be greater than or equal to 0\"]}",response.getBody().toString());
@@ -113,7 +113,7 @@ public class JobApplicationControllerTest {
     public void changeApplicationStatus() {
         ApplicationForm application = jobApplicationFormGenerater.generateApplicationForm();
         doNothing().when(jobApplicationService).changeStatusOnApplicationById(anyInt(),any(),anyString());
-        ResponseEntity response = this.restTemplate.exchange("/en/change/status/9",HttpMethod.PUT,generateJsonStatusForm("PENDING"), String.class);
+        ResponseEntity response = this.restTemplate.exchange("/en/jobapplications/status/9",HttpMethod.PUT,generateJsonStatusForm("PENDING"), String.class);
 
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
     }
@@ -122,7 +122,7 @@ public class JobApplicationControllerTest {
     public void changeApplicationStatusWithoutAnyNameOnStatus() {
         ApplicationForm application = jobApplicationFormGenerater.generateApplicationForm();
         doNothing().when(jobApplicationService).changeStatusOnApplicationById(anyInt(),any(),anyString());
-        ResponseEntity response = this.restTemplate.exchange("/en/change/status/9",HttpMethod.PUT,generateJsonStatusForm(null), String.class);
+        ResponseEntity response = this.restTemplate.exchange("/en/jobapplications/status/9",HttpMethod.PUT,generateJsonStatusForm(null), String.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
@@ -162,40 +162,40 @@ public class JobApplicationControllerTest {
 
     @Test
     public void changeStatusOnApplicationByIdWithNoNewStatus(){
-        ResponseEntity<String> response = this.restTemplate.exchange("/en/change/status/2", HttpMethod.PUT,null, String.class);
+        ResponseEntity<String> response = this.restTemplate.exchange("/en/jobapplications/status/2", HttpMethod.PUT,null, String.class);
         assertEquals(HttpStatus.UNSUPPORTED_MEDIA_TYPE, response.getStatusCode());
     }
 
     @Test
     public void changeStatusOnApplicationById(){
-        ResponseEntity<String> response = this.restTemplate.exchange("/en/change/status/2", HttpMethod.PUT,null, String.class);
+        ResponseEntity<String> response = this.restTemplate.exchange("/en/jobapplications/status/2", HttpMethod.PUT,null, String.class);
         assertEquals(HttpStatus.UNSUPPORTED_MEDIA_TYPE, response.getStatusCode());
     }
 
     @Test
     public void getAllValidStatus(){
         given(jobApplicationService.getAllValidStatus("en")).willReturn(jobApplicationEntityGenerator.generateListOfApplicationStatus());
-        ResponseEntity<String> response = this.restTemplate.getForEntity("/en/getAllValidStatus", String.class);
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/en/statuses", String.class);
         assertEquals(HttpStatus.OK,response.getStatusCode());
     }
 
     @Test
     public void getAllValidStatusBadLanguage(){
         given(jobApplicationService.getAllValidStatus("sdfsdfsdf")).willThrow(new NotValidArgumentException("oh no"));
-        ResponseEntity<String> response = this.restTemplate.getForEntity("/sdfsdfsdf/getAllValidStatus", String.class);
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/sdfsdfsdf/statuses", String.class);
         assertEquals(HttpStatus.BAD_REQUEST,response.getStatusCode());
     }
 
     @Test
     public void getAllValidCompetences(){
         given(jobApplicationService.getAllValidCompetences("en")).willReturn(jobApplicationEntityGenerator.generateListOfCompetences());
-        ResponseEntity<String> response = this.restTemplate.getForEntity("/en/getAllValidCompetences", String.class);
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/en/competences", String.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
     @Test
     public void getAllValidCompetencesBadLanguage(){
         given(jobApplicationService.getAllValidCompetences("asdasdasd")).willThrow(new NotValidArgumentException("oh no"));
-        ResponseEntity<String> response = this.restTemplate.getForEntity("/asdasdasd/getAllValidCompetences", String.class);
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/asdasdasd/competences", String.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 }

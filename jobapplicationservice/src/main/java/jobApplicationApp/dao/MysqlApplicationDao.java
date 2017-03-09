@@ -135,13 +135,12 @@ public class MysqlApplicationDao implements ApplicationDao{
 
     /**
      * Get a specified number of applications from a specified application defined by id from database
-     * @param startId is the start point of the list of applications
-     * @param numberOfApplication to retrieve
+     * @param pageNmr to retrieve
      * @param language of applications
      * @return collection of applications
      */
-    public Collection<ApplicationEntity> getXApplicationsFrom(int startId, int numberOfApplication, String language) {
-        Collection<ApplicationEntity> listOfApplications = applicationRepository.getXApplicationsFrom(startId);
+    public Collection<ApplicationEntity> get10ApplicationsPage(int pageNmr, String language) {
+        Collection<ApplicationEntity> listOfApplications = applicationRepository.get20ApplicationsPageFrom(pageNmr*10);
         listOfApplications.forEach((application)->{
             application = translateApplication(application,language);
         });

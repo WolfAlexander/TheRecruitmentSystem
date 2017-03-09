@@ -100,7 +100,7 @@ angular.module("application", ['ngRoute', 'ngCookies', 'selector',  'ngMessages'
     }
     $http({
         method: 'GET',
-        url: '/api/jobapplication/en/page/10/0',
+        url: '/api/jobapplication/en/jobapplications/pages/0',
         headers: {'Authorization':  $cookies.get("token")}
     }) .then(function(response){$scope.jobapplications=response.data});
 
@@ -108,7 +108,7 @@ angular.module("application", ['ngRoute', 'ngCookies', 'selector',  'ngMessages'
        var newPage = pageNmr-1;
        $http({
            method: 'GET',
-           url: '/api/jobapplication/en/page/10/'+newPage,
+           url: '/api/jobapplication/en/jobapplications/pages/'+newPage,
            headers: {'Authorization':  $cookies.get("token")}
        }) .then(function(response){$scope.jobapplications=response.data});
 
@@ -297,7 +297,7 @@ function handleSuccessfulRegistration($rootScope, $location) {
 function getApplication(lang, $http, $cookies,$scope){
     $http({
         method: 'GET',
-        url: '/api/jobapplication/'+ lang + '/by/id/'+lastApplicationId,
+        url: '/api/jobapplication/'+ lang + '/jobapplications/'+lastApplicationId,
         headers: {'Authorization':  $cookies.get("token")}
     }) .then(function(response){
         $scope.application=response.data;

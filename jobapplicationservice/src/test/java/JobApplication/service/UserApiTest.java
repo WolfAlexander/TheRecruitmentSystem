@@ -26,12 +26,7 @@ public class UserApiTest {
     private JobApplicationFormGenerater jobApplicationFormGenerater = new JobApplicationFormGenerater();
     private JobApplicationEntityGenerator jobApplicationEntityGenerator = new JobApplicationEntityGenerator();
     UserApi userApi = new UserApi();
-
-    @Test
-    public void getUserById(){
-        assertThat(userApi.getUserById(2)).isInstanceOf(PersonForm.class);
-    }
-
+    
     @Test
     public void getIdsOfUsersWithName(){
         assertThat(userApi.getIdOfUsersWithName("henrik")).isInstanceOf(Collection.class);

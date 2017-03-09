@@ -38,8 +38,8 @@ public class JobApplicationController {
      * @param language of the application's parameters
      * @return an application and a http status or an error message
      */
-    @PreAuthorize("hasRole('APPLICANT')")
-    @GetMapping(value = "/{language}/by/id/{id}")
+    @PreAuthorize("hasRole('RECRUITER')")
+    @GetMapping(value = "/{language}/jobapplications/{id}")
     public ResponseEntity getApplicationById(@PathVariable(value = "id") int id, @PathVariable(value = "language") String language){
         try{
             return new ResponseEntity<>(jobApplicationService.getApplicationById(id,language), HttpStatus.OK);
@@ -56,8 +56,8 @@ public class JobApplicationController {
      * @param bindingResult handles validation of input from user
      * @return collection of application and a http status or an error message
      */
-    @PreAuthorize("hasRole('USER')")
-    @PostMapping(value = "/{language}/by/param",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PreAuthorize("hasRole('RECRUITER')")
+    @PostMapping(value = "/{language}/jobapplications/params",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity getApplicationsByParam(@Valid @RequestBody ApplicationParamForm param, @PathVariable(value = "language") String language, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return new ResponseEntity<>(new RequestListResponse(errorBindHandler("param",bindingResult)), HttpStatus.BAD_REQUEST);
@@ -74,14 +74,13 @@ public class JobApplicationController {
      * Get an application page, containing a defined amount of applications starting from a specific page number
      * @param pageNmr of the page to retrieve
      * @param language on applications' parameters
-     * @param pageSize of a page (in applications)
      * @return collection of application and a http status
      */
-    @PreAuthorize("hasRole('APPLICANT')")
-    @GetMapping(value = "/{language}/page/{pageSize}/{pageNmr}")
-    public ResponseEntity getApplicationsPage(@PathVariable(value = "pageNmr") int pageNmr,@PathVariable(value = "language") String language, @PathVariable(value = "pageSize") int pageSize){
+    @PreAuthorize("hasRole('RECRUITER')")
+    @GetMapping(value = "/{language}/jobapplications/pages/{pageNmr}")
+    public ResponseEntity getApplicationsPage(@PathVariable(value = "pageNmr") int pageNmr,@PathVariable(value = "language") String language){
         try{
-            return new ResponseEntity<>(jobApplicationService.getApplicationsPage(pageSize, pageNmr,language),HttpStatus.OK);
+            return new ResponseEntity<>(jobApplicationService.getApplicationsPage(pageNmr,language),HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(new RequestResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
@@ -94,8 +93,8 @@ public class JobApplicationController {
      * @param bindingResult  handles validation of input from user
      * @return a message and http status describing if the application was accepted
      */
-    @PreAuthorize("hasRole('USER')")
-    @PostMapping(value = "/{language}/",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PreAuthorize("hasRole('APPLICANT')")
+    @PostMapping(value = "/{language}/jobapplications",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity registerJobApplication(@Valid @RequestBody ApplicationForm application, BindingResult bindingResult, @PathVariable(value = "language") String language) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(new RequestListResponse(errorBindHandler("application",bindingResult)),HttpStatus.BAD_REQUEST);
@@ -118,8 +117,8 @@ public class JobApplicationController {
      * @param bindingResult handles validation of input from user
      * @return a message and http status describing if the status change was accepted
      */
-    @PreAuthorize("hasRole('USER')")
-    @PutMapping(value = "/{language}/change/status/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('RECRUITER')")
+    @PutMapping(value = "/{language}/jobapplications/status/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity changeStatusOnApplicationById(@PathVariable(value = "id") int id, @Valid @RequestBody ApplicationStatusForm newStatus, @PathVariable(value = "language") String language, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(new RequestListResponse(errorBindHandler("status",bindingResult)),HttpStatus.BAD_REQUEST);
@@ -138,8 +137,8 @@ public class JobApplicationController {
      * @param language on the status
      * @return collection of application statuses and a http status
      */
-    @PreAuthorize("hasRole('APPLICANT')")
-    @GetMapping(value = "/{language}/getAllValidStatus")
+    @PreAuthorize("hasRole('RECRUITER')")
+    @GetMapping(value = "/{language}/statuses")
     public ResponseEntity getAllValidStatus(@PathVariable(value = "language") String language){
         try {
             return new ResponseEntity<>(jobApplicationService.getAllValidStatus(language),HttpStatus.OK);
@@ -153,8 +152,8 @@ public class JobApplicationController {
      * @param language on the competences
      * @return collection of competences and a http status
      */
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping(value = "/{language}/getAllValidCompetences")
+    @PreAuthorize("hasRole({'APPLICANT','RECRUITER'})")
+    @GetMapping(value = "/{language}/competences")
     public ResponseEntity getAllValidCompetences(@PathVariable(value = "language") String language){
         try {
             return new ResponseEntity<>(jobApplicationService.getAllValidCompetences(language),HttpStatus.OK);

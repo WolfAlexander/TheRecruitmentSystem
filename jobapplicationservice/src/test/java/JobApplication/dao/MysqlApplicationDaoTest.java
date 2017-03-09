@@ -137,8 +137,8 @@ public class MysqlApplicationDaoTest {
     @Test
     public void getXApplicationFrom(){
         mockTranslation();
-        given(applicationRepository.getXApplicationsFrom(0)).willReturn(jobApplicationEntityGenerator.generateListOfApplicationWithTheSize(10));
-        assertEquals(10, mysqlApplicationDao.getXApplicationsFrom(0,20,"en").size());
+        given(applicationRepository.get20ApplicationsPageFrom(anyInt())).willReturn(jobApplicationEntityGenerator.generateListOfApplicationWithTheSize(10));
+        assertEquals(10, mysqlApplicationDao.get10ApplicationsPage(0,"en").size());
     }
 
 

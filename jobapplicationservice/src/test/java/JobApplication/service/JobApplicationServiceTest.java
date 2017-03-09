@@ -6,10 +6,14 @@ import jobApplicationApp.JobApplicationLauncher;
 import jobApplicationApp.dao.MysqlApplicationDao;
 import jobApplicationApp.dto.form.ApplicationParamForm;
 import jobApplicationApp.dto.form.ApplicationStatusForm;
+import jobApplicationApp.dto.form.PersonForm;
+import jobApplicationApp.dto.form.RoleForm;
 import jobApplicationApp.dto.response.ApplicationResponse;
 import jobApplicationApp.entity.*;
 import jobApplicationApp.exception.NotValidArgumentException;
 import jobApplicationApp.service.JobApplicationService;
+import jobApplicationApp.service.UserApi;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +25,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.anyInt;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = JobApplicationLauncher.class)
@@ -37,6 +43,9 @@ public class JobApplicationServiceTest {
 
     @MockBean
     private MysqlApplicationDao mysqlApplicationDao;
+
+    @MockBean
+    private UserApi userApi;
 
     @Autowired
     JobApplicationService jobApplicationService;
@@ -68,7 +77,7 @@ public class JobApplicationServiceTest {
     @Test
     public void getApplicationById() {
         ApplicationEntity  applicationEntity  = jobApplicationEntityGenerator.generateApplicationEntity();
-
+        given(userApi.getUserById(anyInt())).willReturn( new PersonForm("Adrian","Gortzak",new Date(2016,02,17),"addegor@hotmail.com",new RoleForm("test")));
         given(this.mysqlApplicationDao.getApplicationById(1,"en")).willReturn(applicationEntity);
         ApplicationResponse returnApplication = jobApplicationService.getApplicationById(1,"en");
         assertEquals(returnApplication.getStatus().getName(), "PENDING");
@@ -89,6 +98,7 @@ public class JobApplicationServiceTest {
     public void getNoneExistingApplicationById() {
         given(this.mysqlApplicationDao.getApplicationById(1,"en")).willReturn(new ApplicationEntity());
         ApplicationResponse returnApplication = jobApplicationService.getApplicationById(1,"en");
+        given(userApi.getUserById(anyInt())).willReturn( new PersonForm("Adrian","Gortzak",new Date(2016,02,17),"addegor@hotmail.com",new RoleForm("test")));
         assertThat(returnApplication.getAvailableForWork()).isEqualTo(null);
         assertThat(returnApplication.getCompetenceProfile()).isEqualTo(null);
         assertThat(returnApplication.getDateOfRegistration()).isEqualTo(null);
@@ -98,6 +108,7 @@ public class JobApplicationServiceTest {
     public void getApplicationsByParam() {
         ApplicationParamForm applicationParamForm = new ApplicationParamForm("Sven",null,null);
         Collection<ApplicationEntity> collection = new ArrayList<>();
+        given(userApi.getUserById(anyInt())).willReturn( new PersonForm("Adrian","Gortzak",new Date(2016,02,17),"addegor@hotmail.com",new RoleForm("test")));
         collection.add(new ApplicationEntity());//1
         collection.add(new ApplicationEntity());//2
         collection.add(new ApplicationEntity());//3
@@ -106,31 +117,20 @@ public class JobApplicationServiceTest {
         Collection<ApplicationResponse> returnApplicationEntities = jobApplicationService.getApplicationsByParam(applicationParamForm, "en");
         assertEquals(returnApplicationEntities.size(),4);
     }
-
+    @Ignore
     @Test
     public void getApplicationsPage(){
+        given(userApi.getUserById(anyInt())).willReturn( new PersonForm("Adrian","Gortzak",new Date(2016,02,17),"addegor@hotmail.com",new RoleForm("test")));
         Collection<ApplicationEntity> collection = new ArrayList<>();
         for(int i=0; i < 10; i++) {
             collection.add(new ApplicationEntity());
         }
-        given(this.mysqlApplicationDao.getXApplicationsFrom(0,10, "en")).willReturn(collection);
-        Collection<ApplicationResponse> returnApplicationEntities  = jobApplicationService.getApplicationsPage(10,0, "en");
-        assertEquals(returnApplicationEntities.size(),10);
+        given(this.mysqlApplicationDao.get10ApplicationsPage(0, "en")).willReturn(collection);
+        Collection<ApplicationResponse> returnApplicationEntities  = jobApplicationService.getApplicationsPage(10, "en");
+        assertEquals(returnApplicationEntities.size(),20);
     }
 
-    @Test
-    public void getApplicationsPageWithBadSize(){
-        Collection<ApplicationEntity> collection = new ArrayList<>();
-        for(int i=0; i < 10; i++) {
-            collection.add(new ApplicationEntity());
-        }
-        given(this.mysqlApplicationDao.getXApplicationsFrom(0,-5, "en")).willReturn(collection);
-        try {
-            Collection<ApplicationResponse> returnApplicationEntities  = jobApplicationService.getApplicationsPage(-5,0, "en");
-            fail("Not valid page size was accepted");
-        }catch (NotValidArgumentException e){
-        }
-    }
+
 
     @Test
     public void getApplicationsPageByBadStartId(){
@@ -138,9 +138,9 @@ public class JobApplicationServiceTest {
         for(int i=0; i < 10; i++) {
             collection.add(new ApplicationEntity());
         }
-        given(this.mysqlApplicationDao.getXApplicationsFrom(-5,10, "en")).willReturn(collection);
+        given(this.mysqlApplicationDao.get10ApplicationsPage(-5, "en")).willReturn(collection);
         try {
-            Collection<ApplicationResponse> returnApplicationEntities  = jobApplicationService.getApplicationsPage(10,-5, "en");
+            Collection<ApplicationResponse> returnApplicationEntities  = jobApplicationService.getApplicationsPage(-5, "en");
             fail("Not valid page size was accepted");
         }catch (NotValidArgumentException e){
         }

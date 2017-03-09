@@ -44,7 +44,7 @@ public class JobApplicationService {
         validateId(id,"application id");
         ApplicationEntity applicationEntity = applicationDao.getApplicationById(id,language);
         log.info("Application with id " + String.valueOf(id) + " was retrieved");
-        return new ApplicationResponse(applicationEntity,userApi.getUserById(applicationEntity.getId()));
+        return convertToApplicationResponse(applicationEntity);
     }
 
     /**
@@ -73,18 +73,16 @@ public class JobApplicationService {
 
     /**
      * Get a page with specific amount of applications and also which page to retrieve
-     * @param pageSize of the retrieved page
      * @param pageNmr of page to be retrieved
      * @param language of application
      * @return a collection of applications
      * @throws NotValidArgumentException
      */
-    public Collection<ApplicationResponse> getApplicationsPage(int pageSize, int pageNmr, String language) throws NotValidArgumentException {
+    public Collection<ApplicationResponse> getApplicationsPage( int pageNmr, String language) throws NotValidArgumentException {
         validateId(pageNmr,"page number");
-        validateId(pageSize,"page size");
 
-        Collection<ApplicationEntity>  applications = applicationDao.getXApplicationsFrom(pageNmr*pageSize,pageSize,language);
-        log.info("applications page " + pageNmr + " with size " + pageSize + " was retrieved");
+        Collection<ApplicationEntity>  applications = applicationDao.get10ApplicationsPage(pageNmr,language);
+        log.info("applications page " + pageNmr + " was retrieved");
         return convertListToApplicationResponse(applications);
     }
 
@@ -101,7 +99,7 @@ public class JobApplicationService {
     }
 
     private ApplicationResponse convertToApplicationResponse(ApplicationEntity application){
-        return new ApplicationResponse(application,userApi.getUserById(application.getPersonId()));
+            return new ApplicationResponse(application, userApi.getUserById(application.getPersonId()));
     }
     private Collection<ApplicationResponse> convertListToApplicationResponse(Collection<ApplicationEntity> applications){
         ArrayList<ApplicationResponse> responses = new ArrayList<>();
