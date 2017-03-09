@@ -1,4 +1,4 @@
-angular.module("application", ['ngRoute', 'ngCookies',  'ngMessages', 'pascalprecht.translate']).config(function ($routeProvider, $translateProvider, $locationProvider) {
+angular.module("application", ['ngRoute','selector', 'ngCookies',  'ngMessages', 'pascalprecht.translate']).config(function ($routeProvider, $translateProvider, $locationProvider) {
     $locationProvider.hashPrefix('');
 
     /*Routing*/
@@ -27,12 +27,21 @@ angular.module("application", ['ngRoute', 'ngCookies',  'ngMessages', 'pascalpre
     /**
      *Adrian
      */
-        .when("/application", {
+        .when("/application/:id", {
             templateUrl: 'application.html',
             controller: 'jobApplication',
-            controllerAs: 'application'
+            controllerAs: 'jobApplication'
         })
-    ;
+        .when("/application_list", {
+            templateUrl: 'application_list.html',
+            controller: 'jobApplicationList',
+            controllerAs: 'jobApplicationList'
+        })
+        .when("/register_application", {
+        templateUrl: 'register_application.html',
+        controller: 'jobApplicationRegister',
+        controllerAs: 'jobApplicationRegister'
+    });
 
     /*Translate config*/
     $translateProvider.useUrlLoader('/messageBundle');
@@ -40,7 +49,49 @@ angular.module("application", ['ngRoute', 'ngCookies',  'ngMessages', 'pascalpre
     $translateProvider.preferredLanguage('en');
     $translateProvider.fallbackLanguage('en');
 
-})    .controller('jobApplication', function ($scope, $translate, $location) {
+})  .controller('jobApplication', function ($scope, $translate, $rootScope,  $location, $routeParams) {
+    if(!$rootScope.authenticated){
+        $location.path("/login");
+    }
+    alert($routeParams.id);
+    //  $http.get("localhost:9876/en/by/id/1")
+    //     .then(function(response){ alert(response.data)});
+    $scope.application= {"id":3,"person":{"firstName":"Adrian","lastName":"Gortzak","dateOfBirth":61416313200000,"email":"addegor@hotmail.com","role":{"name":"test"}},"status":{"id":0,"name":"PENDING"},"competenceProfile":[{"competence":{"id":0,"name":"sausage grilling"}},{"competence":{"id":1,"name":"carousel operation"}}],"dateOfRegistration":1487890001000,"availableForWork":{"fromDate":1426291200000,"toDate":1463011200000}};
+
+
+}) .controller('jobApplicationList', function ($scope, $http,$rootScope,  $translate, $location) {
+    if(!$rootScope.authenticated){
+        $location.path("/login");
+    }
+  //  $http.get("localhost:9876/en/page/10/0")
+   //     .then(function(response){ alert(response.data)});
+
+
+    $scope.jobapplications = [
+        {"id":3,"person":{"firstName":"Adrian","lastName":"Gortzak","dateOfBirth":61416313200000,"email":"addegor@hotmail.com","role":{"name":"test"}},"status":{"id":0,"name":"PENDING"},"competenceProfile":[{"competence":{"id":0,"name":"sausage grilling"}},{"competence":{"id":1,"name":"carousel operation"}}],"dateOfRegistration":1487890001000,"availableForWork":{"fromDate":1426291200000,"toDate":1463011200000}}
+        ];
+
+   $scope.cregister_applicationhangePage = function(pageNmr) {
+        alert(pageNmr);
+       //  $http.get("localhost:9876/en/page/10/pageNmr")
+       //     .then(function(response){ alert(response.data)});
+
+   }
+
+})
+
+    .controller('jobApplicationRegister',  function ($scope, $rootScope, $translate, $location){
+
+        $scope.myBrowsers = [];
+        var competenceList = [{"id":0,"name":"sausage grilling"},{"id":1,"name":"carousel operation"}];
+
+
+        $scope.browsers = [];
+        angular.forEach(competenceList, function(competence) {
+            $scope.browsers.push({value:competence.id,label:competence.name});
+        });
+
+
     //todo
 
 /**
@@ -139,7 +190,9 @@ angular.module("application", ['ngRoute', 'ngCookies',  'ngMessages', 'pascalpre
     }
 
 }).controller('content', function ($rootScope, $scope, $http, $location) {
-
+    if(!$rootScope.authenticated){
+        $location.path("/login");
+    }
 }).controller('logout', function ($rootScope, $location, $cookies) {
     $cookies.remove("token");
     $rootScope.authenticated = false;
