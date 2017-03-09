@@ -31,6 +31,8 @@ the decision of a solution. Non-functional requirements and possible unsolved is
 ![use_cases](./images/Use_cases.png)
 2.1 use cases
 
+This use case diagram shows that there are several actors and all they have different functionality. 
+
 ### 3. Design View <a href = "#design_view"/> 
 ##### Architecture choice
 This application is implemented as microservices distributed-system. Microservices architecture means separately deployed 

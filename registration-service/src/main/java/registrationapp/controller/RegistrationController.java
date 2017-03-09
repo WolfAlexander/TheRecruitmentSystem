@@ -128,7 +128,7 @@ public class RegistrationController
      * @return  the user and its credentials for the specified username
      */
     @PreAuthorize("hasRole('SERVICE')")
-    @GetMapping(value="/{lang}/persons/{username}/details")
+    @GetMapping(value="/persons/{username}/details")
     public JwtUserDetails getUserAndCredentialsByUsername(@PathVariable(value = "username") String username)
     {
         return userManager.getUserAndCredentialsByUsername(username);
