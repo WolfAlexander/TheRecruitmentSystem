@@ -29,7 +29,7 @@ import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = JobApplicationLauncher.class)
-@ActiveProfiles("test")
+@ActiveProfiles("testing")
 public class JobApplicationServiceTest {
 
     private JobApplicationFormGenerater jobApplicationFormGenerater = new JobApplicationFormGenerater();
