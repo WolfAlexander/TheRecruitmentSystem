@@ -40,12 +40,6 @@ public class RegistrationController
     @Autowired
     UserManager userManager;
 
-    @GetMapping("/test")
-    @PreAuthorize("hasRole('USER')")
-    public String test(){
-        return "Works!";
-    }
-
     /**
      * Receives a HTTP Post request from a registration form. Redirects
      * the handling of the request to the domain for handling user registration.

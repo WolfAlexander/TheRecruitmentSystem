@@ -32,6 +32,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = httpServletRequest.getHeader(this.tokenHeader);
 
+        System.err.println("HEADER: " + authHeader);
+
         try{
             RSAEncryptedRSASignedJWT authToken = new RSAEncryptedRSASignedJWT(authHeader);
             authToken.decrypt();

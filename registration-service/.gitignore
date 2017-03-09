@@ -1,2 +1,2 @@
 target
-src/main/resources/security/registration_secret.properties
+src/main/resources/security

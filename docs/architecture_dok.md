@@ -19,6 +19,7 @@
 8. [<b>Implementation View</b>](#implementation_view)
 9. [<b>Problems</b>](#problems)
 
+
  ### 1. Introduction <a href = "#introduction"/> 
 In this document the architecture for the recruit system we have developed is explained. The document will describe
 the features and properties as well as the decisions behind them. We also explain considerations we have made before 
@@ -31,55 +32,64 @@ the decision of a solution. Non-functional requirements and possible unsolved is
 ![use_cases](./images/Use_cases.png)
 2.1 use cases
 
-This use case diagram shows that there are several actors and all they have different functionality. 
+This use case diagram shows that there are several actors and all they have different functionality. This system has:
+* Applicants - they can register them selves, they can login to the system and register an job application by filling a form
+* Recruiters - they can login to the system, list job applications made by applicants, they can perform search of job applications with filtering, they can 
+ look at an application and change application status, for example from "PENDING" to "ACCEPTED".
+* Admins - those who can add new recruiters to the system
 
 ### 3. Design View <a href = "#design_view"/> 
 ##### Architecture choice
-This application is implemented as microservices distributed-system. Microservices architecture means separately deployed 
-units and each unit(microservice) has it own objective[1]. Reasons for choosing microservices pattern are: 
+This application is implemented as Microservices distributed-system. Microservices architecture means separately deployed, independent 
+units and each unit(microservice) has it own objective[1]. Reasons for choosing Microservices architecture pattern are: 
 - High cohesion and low coupling - all parts of the system are maximum decoupled, every microservice has it own objective 
 and can exist on their own [2]
 - High scalability and ease of deployment - since all parts of the system are decoupled each microservice can be deployed 
-in any numbers if needed which makes better use of hardware resources than monotolic application [2]
+in any numbers if needed which makes better use of hardware resources than monotonic application [2]
 - Easy to maintain and continue development - each team can independently work on their particular microseviceservice as 
 long as everyone is following agreed public API [2]
-- Good testability - decoupled parts are simple to test since every test can be targeted for a specific code without any dependencies on other services [2]
+- Good unit testability - decoupled parts are simple to test since every test can be targeted for a specific code without any dependencies on other services [2]. 
 
 
 ##### Topology choice
-There are several topologies of microservices. I this case we implement API-REST-based topology. API-REST-based topology 
-means that clients request goes thought public API and API is talking to fine-grained independent microservices using REST-based interface. [3]
-
+There are several topologies of Microservices. I this case we implement API-REST-based topology. API-REST-based topology 
+means that clients request goes thought public API and API is talking to fine-grained independent Microservices using REST-based interface. [3]
+One of the alternative could be a fat client that would have direct access to all Microservices. Since this system intended to be used
+by different client platforms API-REST based topology suites better.
 
 ##### Design choices
 ###### Client-side load balancing
-This system is using client-side balancing. That means that all clients(services that need other services) are keeping track of which instance of a service to ask. One alternative
+This system is using client-side balancing. That means that all client services in the system (services that contact other services) are keeping track of other service instances in the system. One alternative
 would be a centralized load-balancing where one service is a load balancer and other services would go thought it to get to other services. That could create bottlenecks. Client-side 
 load balancing solves that problem. [4]
 <br/>
 <br/>
-We are using Ribbon as load balancer. It is also used by Zuul Gateway by default.
+This system is using Ribbon as load balancer. It is also used by Zuul Gateway by default.
 
 ###### Redis for POST-requests
-This system is using Redis message broker for any "write" requests. That is used to make sure that no requests that are changing state are lost due to a down service.
+This system is using Redis message broker for any "write"(HTTP POST, PUT) requests. That is used to make sure that no requests that are changing state are lost due to a down service.
+This feature is intended to be implemented in the future.
 
 #### Microservices in the system
+(See [deployment diagram](#deployment) to get overall picture)
 ###### Edge service
-Edge service is gateway för this system. That is were all client request goes thought. We are using Spring Cloud Netflix projects to implement this. Netflix Zuul as gateway 
+Edge service is gateway for this system. That is were all client request goes thought. Reasons to use a gateway and not let users get to microservices directly are to load balance
+requests, to use gateway for security (not in this system), client has to know only one address and one port - not all services, structure of the system is not revealed. 
+ The system is using Spring Cloud Netflix projects to implement this. Netflix Zuul as gateway 
 since it is a reliable easy to use gateway library that also implements load balancer and circuit breaker design pattern so we do not have to do it manually. [5]
 
 ###### Configuration Service
-Configuration Service is one of the core components in this system. This service holds configuration for all services and keys for all shared resources.
-Reason to use Configuration service is that our system uses a database and we will have only one physical DB. Every DB have 
-a location and credentials and so on. If we would for example move the DB - then we would have to change information on all services and also restart all of them. 
-To prevent that configuration service will have all configuration and services will as it for configuration information. Also, services will be
+Configuration Service is one of the core components of this system. This service provides configuration for all other services and keys for all shared resources.
+Reason to use Configuration service is that this system uses a database and in this implementation only one physical DB. Every DB have 
+a location and credentials and so on. If DB would be moved - then we would have to change information on all services and also restart all of them. 
+To prevent that configuration service will provide all configuration and services will ask it for configuration information. Also, services will be
 able to update their configuration on run-time. Also, no need to rely on every service to keep sensitive information safe - only one service has to be secured to hold sensitive information save.
 <br/>
 <br/>
-Configuration service also will be secured so security of credentials and other sensitive information will be handled at one place.[5]
+Configuration service also is secured with basic security with so sensitive information can be given only to authorized services.[5]
 
 ###### Eureka Discovery Service
-Eureka is an discovery service developed by Netflix and used by services to find each other. The idea is that to make services independent from ip-addresses and ports. 
+Eureka is an discovery service developed by Netflix and used by services to find each other. The idea is that to make services independent from ip-addresses and ports and give them all a name. 
 <br/>
 <br/>
 Problem is that when new service is added or some service got scaled(deployed on several nodes), all services has to get some kind of reference to be able to use newly deployed service.
@@ -87,35 +97,37 @@ Since this is a distributed system - ip-addresses and ports are the references. 
 give list of services to other services manually.
 <br/>
 <br/>
-That is why when new service is being deployed it will register it self on discovery service under a certain name. Then all services inside the system will be able 
-to call this service by name, not ip-address and port. If several instances of same service is up them load balanser can easily find one that is best suited to perform the task. [5]
+That is why when a new service is being deployed it will register it self on discovery service under a certain name. Then all services inside the system will be able 
+to call this service by name, not ip-address and port. If several instances of same service is up them load balanser can easily find one that is best suited - less load and not down - to perform the task. [5]
 
 ###### Redis Service
-Redis will de used as message broker. Idea is to use Redis in future stage for POST requests - so that no POST request will be lost due to a down service.[5]
+Redis will de used as message broker. Idea is to use Redis in future stage for HTTP POST and PUT requests - so that no "writing" request will be lost due to a down service.[5]
+This will be implemented in the future.
 
 ###### Authentication Service
 Authentication service provides authentication and also serves as JWT(Json Web Token) provider. This service will use registration-service to get user credentials,
-perform check, create and return JWT if proper credentials are given.[6] More on security could be found in [security section](#security_view).
+perform check, create and return JWT if proper credentials are given.[6] More on security could be read in [security section](#security_view).
 
 ###### Registration Service
 Registration service will perform registration of new users. This service has a REST API that accepts HTTP POST requests from
 a form on the client side. The form input is validated by the service and persisted in a database. The service is also 
  going to assign the role 'Applicant' to each new user that registers. Later on Redis will be configured.
+ Service is implemented with Spring Boot and Spring Cloud.
 
 The structure of the register services can be seen in picture 2.1
 ![register-service_architecture](./images/RegistrationService_ClassPackageDiagram.png)
 2.1. Register service architecture
 
 ###### JobApplication Service
-Job application service will handle all interactions with the job applications. it has a RESTapi and is used to create new applications, updating application statuses by a recruiter after being looked over, retrieving a single application or a list of applications in a more page-like form, filtering applications by parameters and storing everything consistently. 
+Job application service will handle all interactions with the job applications. 
+It has a RESTapi and is used to create new applications, updating application statuses by a recruiter after being looked over, 
+retrieving a single application or a list of applications in a more page-like form, filtering applications by parameters and storing everything consistently. 
+Service is implemented with Spring Boot and Spring Cloud.
 
 The structure of the JobApplication services can be seen in picture 2.2
 ![job-application-service_architecture](./images/JobApplicationService.png)
 2.2. JobApplication service architecture
 
-###### Logging
-* **Information logging** - Every call should be logged when the required task is done. Not before!
-* **Error logging** - Should be logged at the place the error occur
 
 ###### Testing
 To merge with the developer branch the project needs to:
@@ -169,6 +181,14 @@ Access to config files is restricted and only config-service has credentials. Cr
 There are several files holding sensitive information like secret to private keys. Those files will never made it to git repository.
 Those files are distributed between developers.
 
+###### Logging
+* **Information logging** - Each service has different needs to store different information. 
+    Each team decides which information will be logged. General rules are to log incoming request and preferably different stages so a flow of execution can be seen for debugging. 
+    One very important rule is that no sensitive information should be in logging files. For example: no passwords and username+ROLE information should be stored in logs. 
+
+* **Error logging** - Should be logged at the place the error occur. Also preferable with programmes own error message to understand error from this particular system view - 
+java exception are very general, adding custom exception explanation can make debugging much faster.
+
 ### 5. Data View <a href = "#data_view"/>
 
 ###### Structure
@@ -214,7 +234,7 @@ This part includes information about non-functional requirements that are not me
 - Reliability
 
 ###### Scaling
-Independent services package in a Docker container are easy to scale. Just start a new container. 
+Independent services that are packaged in a Docker container are easy to scale. Just start a new container. 
 
 ###### Availability
 Since we have independent services that can be horizontally scaled something has to handle which request should go to proper instance.
@@ -232,9 +252,13 @@ we send all POST/PUT traffic will be send using Redis message broker. As long as
 
 ### 7. Deployment View <a href = "#deployment"/>
 
-Though the structure on this project is micro-services, every service could run on separate hardware. The different services all have an important part in the system.
+Since the structure of this project is Microservices, every service can run on separate hardware. Different nodes communicate 
+by different 
+
+
+Different services all have an important part in the system.
  
-1. <b>systemConfiguration Service</b> has secured connection to all services in the systems and holds configuration for every service and
+1. <b>Configuration Service</b> has secured connection to all services in the systems and holds configuration for every service and
 shared resources - for example password to DB which are of course decrypted
 2. <b>Discovery Service</b> is connected to all bussiness-logic services so they can be found by load balancer and them selves.
 3. <b>Registration and JobApplication Services</b> has several ways of communication - using RestAPI for read and Redis for write to
@@ -244,7 +268,6 @@ The structure of the micro-services can be seen in picture 6.1
 
 ![micro-services-deployment_diagram](./images/deployment_diagram.PNG)
 6.1 micro-services deployment diagram
-
 
 Explanation to the diagram:
 * <b>Blue containers</b> - has connection to outside world
@@ -389,7 +412,8 @@ Due to time constraint and resources limitation in this course project we implem
 ##### Distribution of sensitive data between developers
 Sensitive information like password and keys is distributed between developer without using open public channels like version control system.
 Developers get information using USB or could use LassPass secure notes. The problem lies in people them selves. How to handles situations where
-developers 
+developers are leaving the team but still has access to sensitive information? One way is to use an account for each developer and using 
+that account each developer has a 
  
   
   Outdated docker start image Java:8 will be changed to openjdk image, "This image is officially deprecated in favor of the openjdk image, and will receive no further updates after 2016-12-31 (Dec 31, 2016). Please adjust your usage accordingly." [7]
