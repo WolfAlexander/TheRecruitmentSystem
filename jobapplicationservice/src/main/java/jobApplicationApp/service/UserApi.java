@@ -1,7 +1,14 @@
 package jobApplicationApp.service;
 
+import jobApplicationApp.dto.AuthRequest;
+import jobApplicationApp.dto.AuthTokeResponse;
 import jobApplicationApp.dto.form.PersonForm;
 import jobApplicationApp.dto.form.RoleForm;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import sun.swing.BakedArrayList;
@@ -17,7 +24,11 @@ import java.util.Date;
 @Service
 public class UserApi {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private String serviceToken;
+    private final AuthRequest authRequest = new AuthRequest("jobapplicationservice","password");
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     /**
      * Get user by id
@@ -25,8 +36,22 @@ public class UserApi {
      * @return user information
      */
     public PersonForm getUserById(int id){
-        return new PersonForm("Adrian","Gortzak",new Date(2016,02,17),"addegor@hotmail.com",new RoleForm("test"));
-        //ResponseEntity<String> response = restTemplate.getForEntity("https://data.sparkfun.com/streams/dZ4EVmE8yGCRGx5XRX1W.json",  String.class);
+        createToken();
+
+       // return new PersonForm("Adrian","Gortzak",new Date(2016,02,17),"addegor@hotmail.com",new RoleForm("test"));
+        return restTemplate.exchange("http://REGISTRATION-SERVICE/en/persons/"+id, HttpMethod.GET, createRequestEntity(), PersonForm.class).getBody();
+    }
+
+    private void createToken() {
+        if(serviceToken == null) {
+            String newToken = restTemplate.postForObject("http://AUTH-SERVICE/auth/login", authRequest, AuthTokeResponse.class).getToken();
+            if (newToken == null) {
+                throw new InternalAuthenticationServiceException("token have not been created");
+            } else {
+
+                serviceToken = newToken;
+            }
+        }
     }
 
     /**
@@ -48,5 +73,17 @@ public class UserApi {
      */
     public boolean validUserId(int id){
         return true;
+    }
+
+
+    private HttpEntity createRequestEntity(){
+        return new HttpEntity<>(createRequestHeaders());
+    }
+
+    private HttpHeaders createRequestHeaders(){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", serviceToken);
+
+        return headers;
     }
 }

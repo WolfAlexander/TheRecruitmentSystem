@@ -57,4 +57,11 @@ public class JobApplicationFormGenerater {
        return new AvailabilityForm(fromDate,toDate);
     }
 
+    public Collection<ApplicationResponse> generateListOfApplicationResponse() {
+        ArrayList<ApplicationResponse> a = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            a.add(generateApplicationResponse());
+        }
+        return a;
+    }
 }

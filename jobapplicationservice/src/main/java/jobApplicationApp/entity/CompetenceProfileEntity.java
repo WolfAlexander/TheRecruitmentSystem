@@ -44,6 +44,7 @@ public class CompetenceProfileEntity {
      * The years of experience in the field
      * @return the years of experience
      */
+    @Getter
     private int yearsOfExperience;
 
     public CompetenceProfileEntity(ApplicationEntity application, CompetenceEntity competence, int years_of_experience) {

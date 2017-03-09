@@ -16,8 +16,8 @@ import java.util.Date;
 @Transactional
 public interface ApplicationRepository extends CrudRepository<ApplicationEntity, Integer> {
 
-    @Query(value = "SELECT * FROM application LIMIT :numberOfApplications OFFSET :startId", nativeQuery = true)
-    Collection<ApplicationEntity> getXApplicationsFrom(@Param("startId") int startId,@Param("numberOfApplication") int numberOfApplications);
+    @Query(value = "SELECT * FROM application LIMIT 20 OFFSET :startId", nativeQuery = true)
+    Collection<ApplicationEntity> getXApplicationsFrom(@Param("startId") int startId);
 
     @Query(value = "SELECT application.*  from application, availability WHERE application.availability_id=availability.id AND from_date <= :fromDate AND to_date > :fromDate ", nativeQuery = true)
     Collection<ApplicationEntity> getApplicationsThatCanWorkFrom(@Param("fromDate")Date fromDate);
