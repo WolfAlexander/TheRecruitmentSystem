@@ -1,2 +1,3 @@
 target
+src/main/resources/security/auth_secrets.properties
 src/main/resources/security

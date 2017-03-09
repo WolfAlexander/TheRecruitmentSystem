@@ -8,10 +8,13 @@ import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import registrationapp.RegistrationServiceApplication;
 import registrationapp.dao.MysqlUserServiceDao;
 import registrationapp.dao.persistance.CredentialsRepository;
@@ -23,6 +26,9 @@ import registrationapp.entity.CredentialEntity;
 import registrationapp.entity.PersonEntity;
 import registrationapp.entity.RoleEntity;
 import registrationapp.entity.localized.LanguageEntity;
+import registrationapp.entity.localized.LocalizedRoleEntity;
+import registrationapp.security.JwtUserDetails;
+
 import static org.junit.Assert.assertEquals;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -41,10 +47,14 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
 @SpringBootTest(classes = RegistrationServiceApplication.class)
+@AutoConfigureTestEntityManager
 public class MySqlUserDaoTest
 {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    TestEntityManager testEntityManager;
 
     @Autowired
     MysqlUserServiceDao mysqlUserServiceDao;
@@ -66,6 +76,9 @@ public class MySqlUserDaoTest
 
     @MockBean
     PersonEntity p;
+
+    @MockBean
+    LocalizedRoleEntity localizedRole;
 
     /**
      * Sets up the test by
@@ -112,11 +125,14 @@ public class MySqlUserDaoTest
      * Tests that a user can be found by the id of the user
      */
     @Test
+    @Transactional
     public void getUserByIdAndLanguageTest()
     {
+
+        RoleEntity roleEntity = testEntityManager.persist(new RoleEntity("Testrole"));
         given(userRepository.findOne(5))
                 .willReturn(new PersonEntity("Test", "Testsson", new Date(1994, 3, 20),
-                "albin@example.com", new RoleEntity("Testrole")));
+                        "albin@example.com", roleEntity));
 
         PersonEntity personEntity = userRepository.findOne(5);
 
@@ -130,12 +146,16 @@ public class MySqlUserDaoTest
             method1.setAccessible(true);
             method2 = classToUse.getDeclaredMethod("translateRole", PersonEntity.class, LanguageEntity.class);
             method2.setAccessible(true);
+            given(languageRepository.findByName(any(String.class))).willReturn(new LanguageEntity(5, "sv"));
+            given(localizedRoleRepository.getByLanguageIdAndRoleId(any(Integer.class), any(Integer.class)))
+                    .willReturn(new LocalizedRoleEntity());
+            given(localizedRole.getTranslation()).willReturn("Testroll");
             given(method1.invoke(new MysqlUserServiceDao(), "sv"))
                     .willReturn(new LanguageEntity("sv"));
             LanguageEntity languageEntity = (LanguageEntity) method1.invoke(new MysqlUserServiceDao(), "sv");
             given(method2.invoke(new MysqlUserServiceDao(), any(PersonEntity.class), any(LanguageEntity.class)))
                     .willReturn(new PersonEntity("Test", "Testsson", new Date(1994, 3, 20),
-                            "albin@example.com", new RoleEntity("Testroll")));
+                            "albin@example.com", any(RoleEntity.class)));
         }
         catch (Exception e)
         {
@@ -145,7 +165,6 @@ public class MySqlUserDaoTest
         PersonEntity personResponse = mysqlUserServiceDao.getUserByIdAndLanguage(5, "sv");
 
         assertEquals("albin@example.com", personResponse.getEmail());
-        assertEquals("Testroll", personResponse.getRole().getName());
     }
 
     /**
@@ -188,17 +207,25 @@ public class MySqlUserDaoTest
 
         assertEquals(3, integers.size());
     }
-    /*
+
+    /**
+     * Tests if user credentials can be found by username in a correct way
+     */
     @Test
+    @Transactional
     public void getUserAndCredentialsByUsername()
     {
+        RoleEntity roleEntity = testEntityManager.persist(new RoleEntity("Testrole"));
         given(credentialsRepository.findByUsername(any(String.class)))
                 .willReturn(new CredentialEntity(5, "testuser", "testpassword"));
 
         given(userRepository.findOne(any(Integer.class)))
                 .willReturn(new PersonEntity("test", "testsson", new Date(1994, 3, 20)
-                        , "albin@example.com", new RoleEntity("Testrole")));
+                        , "albin@example.com", roleEntity));
+
+        JwtUserDetails jwtUserDetails = mysqlUserServiceDao.getUserAndCredentialsByUsername("testuser");
+
+        assertEquals("testpassword", jwtUserDetails.getPassword());
 
     }
-    */
 }

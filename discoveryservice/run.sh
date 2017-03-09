@@ -10,4 +10,4 @@ docker rm discovery-service
 
 # Start new container from an existing image
 echo Starting new container
-docker run --net="host"  -d --name discovery-service   -p "9090:9090" -e "SPRING_PROFILES_ACTIVE=local"  iv1201/discovery-service
+docker run --net="host" -d --name discovery-service -p "9090:9090" -e "SPRING_CONFIG_LOCATION=classpath:discovery_secrets.properties" iv1201/discovery-service

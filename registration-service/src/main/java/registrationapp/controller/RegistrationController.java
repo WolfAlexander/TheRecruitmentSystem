@@ -57,13 +57,19 @@ public class RegistrationController
     @PostMapping(value = "/register")
     public RegistrationResponse register(@Valid @RequestBody RegistrationForm registrationForm, BindingResult bindingResult)
     {
-        if(bindingResult.hasErrors()) {
+        if(bindingResult.hasErrors())
+        {
             return new RegistrationResponse(HttpStatus.BAD_REQUEST, bindingResult.getFieldErrors());
-        }else{
-            try{
+        }
+        else
+        {
+            try
+            {
                 userManager.register(registrationForm);
                 return new RegistrationResponse(HttpStatus.CREATED);
-            }catch (RuntimeException ex){
+            }
+            catch (RuntimeException ex)
+            {
                 logger.error("Unchecked exception was thrown. ", ex);
                 return new RegistrationResponse(HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -78,9 +84,9 @@ public class RegistrationController
      * @param lang The language that the client is using
      * @return An entity representing the user being looked up
      */
-    // "/{lang}/persons/{id}"
-    @GetMapping(value = "/{lang}/get/by/{id}")
-    public PersonEntity getPersonById(@PathVariable(value = "id") int id, @PathVariable(value = "lang") String lang){
+    @GetMapping(value = "/{lang}/persons/{id}")
+    public PersonEntity getPersonById(@PathVariable(value = "id") int id, @PathVariable(value = "lang") String lang)
+    {
         return userManager.getUserById(id,lang);
     }
 
@@ -92,9 +98,9 @@ public class RegistrationController
      * @param lang The language that the client is using
      * @return true if the user exists in the database. false otherwise.
      */
-    // "/{lang}/persons/{id}/valid"
-    @GetMapping(value = "{lang}/validate/{id}")
-    public Boolean validateUserId(@PathVariable(value = "id") int id, @PathVariable(value = "lang") String lang){
+    @GetMapping(value = "/{lang}/persons/{id}/valid")
+    public Boolean validateUserId(@PathVariable(value = "id") int id, @PathVariable(value = "lang") String lang)
+    {
         return userManager.validate(id);
     }
 
@@ -107,9 +113,9 @@ public class RegistrationController
      * @param name  the first name of the user(s) being looked up
      * @return true if the user exists in the database. false otherwise.
      */
-    // "/{lang}/persons/{name}"
-    @GetMapping(value = "{lang}/get/users/by/name/{name}")
-    public Collection<Integer> getUserIdsByName(@PathVariable(value = "lang") String lang, @PathVariable(value = "name") String name){
+    @GetMapping(value = "/{lang}/persons")
+    public Collection<Integer> getUserIdsByName(@PathVariable(value = "lang") String lang, @RequestParam(value = "name") String name)
+    {
         return userManager.getUserIdsByName(name);
     }
 
@@ -121,14 +127,11 @@ public class RegistrationController
      * @param username  the username of the user being looked up
      * @return  the user and its credentials for the specified username
      */
-    // "/{lang}/persons/{name}/details"
     @PreAuthorize("hasRole('SERVICE')")
-    @GetMapping(value="/get/usercredentials/by/{username}")
-    public JwtUserDetails getUserAndCredentialsByUsername(@PathVariable(value = "username") String username) {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        return new JwtUserDetails(1L, "user", "password", grantedAuthorities);
-        //return userManager.getUserAndCredentialsByUsername(username);
+    @GetMapping(value="/{lang}/persons/{username}/details")
+    public JwtUserDetails getUserAndCredentialsByUsername(@PathVariable(value = "username") String username)
+    {
+        return userManager.getUserAndCredentialsByUsername(username);
     }
 
 }

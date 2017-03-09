@@ -5,15 +5,32 @@ import authapp.entity.UserEntity;
 import authapp.profile.ForTesting;
 import authapp.repository.RoleRepository;
 import authapp.repository.UserRepository;
+import authapp.security.JwtUserDetails;
+import authapp.service.UserDetailsRetrieverService;
 import authapp.service.UserDetailsServiceTestImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.netflix.ribbon.proxy.annotation.Http;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.test.web.client.ExpectedCount;
+import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
+
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 /**
  * Application configuration for testing
@@ -22,6 +39,9 @@ import java.util.stream.StreamSupport;
 @Configuration
 @SuppressWarnings("SpringJavaAutowiringInspection")
 public class TestBeanConfig {
+    @Autowired
+    private UserRepository repository;
+
     /**
      * Create testing embedded db information
      * @param userRepository
@@ -60,5 +80,20 @@ public class TestBeanConfig {
     @Bean(name = "userDetailsService")
     public UserDetailsService userDetailsServiceForTesting(){
         return new UserDetailsServiceTestImpl();
+    }
+
+    @Bean(name = "userDetailsRetriverForTesting")
+    public UserDetailsService userDetailsService() throws JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        MockRestServiceServer registerService = MockRestServiceServer.bindTo(restTemplate).build();
+
+        ObjectMapper mapper = new ObjectMapper();
+        JwtUserDetails testDetails = new JwtUserDetails(1L, "user", "password", new SimpleGrantedAuthority("ROLE_USER"));
+
+        registerService.expect(
+                ExpectedCount.manyTimes(),
+                requestTo("http://REGISTRATION-SERVICE/get/usercredentials/by/realuser")).andExpect(method(HttpMethod.GET)).andRespond(withSuccess(mapper.writeValueAsString(testDetails), MediaType.APPLICATION_JSON));
+
+        return new UserDetailsRetrieverService(new RestTemplate(), repository);
     }
 }

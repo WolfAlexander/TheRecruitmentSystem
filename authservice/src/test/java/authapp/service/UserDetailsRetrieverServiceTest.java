@@ -1,12 +1,17 @@
 package authapp.service;
 
 import authapp.AuthServiceLauncher;
+import authapp.entity.UserEntity;
 import authapp.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,7 +37,9 @@ public class UserDetailsRetrieverServiceTest {
     @Autowired
     private UserRepository userRepository;
 
-    private UserDetailsRetrieverService retrieverService = new UserDetailsRetrieverService(new RestTemplate(), userRepository);
+    @Autowired
+    @Qualifier("userDetailsRetriverForTesting")
+    private UserDetailsRetrieverService retrieverService;
 
     @Test
     public void gettingUserDetailsExistingInLocalDB(){
@@ -66,11 +73,8 @@ public class UserDetailsRetrieverServiceTest {
         try{
             UserDetails userDetails = retrieverService.loadUserByUsername("notexisting");
             fail();
-        }catch (UsernameNotFoundException ex){
-            // successful test
         }catch (Exception ex) {
-            System.out.println(ex);
-            fail();
+            //Successful test
         }
     }
 
