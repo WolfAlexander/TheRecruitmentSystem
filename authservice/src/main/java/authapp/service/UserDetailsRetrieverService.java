@@ -1,6 +1,7 @@
 package authapp.service;
 
 import authapp.entity.UserEntity;
+import authapp.profile.ForTesting;
 import authapp.profile.Production;
 import authapp.repository.UserRepository;
 import authapp.security.JwtUserDetails;
@@ -63,7 +64,6 @@ public class UserDetailsRetrieverService implements UserDetailsService{
         if(userDetails != null){
             return userDetails;
         }else{
-
             return getUserFromUserService(username);
         }
     }
@@ -106,7 +106,7 @@ public class UserDetailsRetrieverService implements UserDetailsService{
 
     private JwtUserDetails getUserDetailsByName(String username){
         log.info("Getting user details from " + SERVICE_NAME + " about user: " + username);
-        return restTemplate.exchange("http://"+SERVICE_NAME+"/get/usercredentials/by/"+username, HttpMethod.GET, createRequestEntity(), JwtUserDetails.class).getBody();
+        return restTemplate.exchange("http://"+SERVICE_NAME+"/persons/"+username+"/details", HttpMethod.GET, createRequestEntity(), JwtUserDetails.class).getBody();
     }
 
     private HttpEntity createRequestEntity(){
