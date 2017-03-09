@@ -1,3 +1,47 @@
 <section ng-controller="content" class="container">
-ass
+    <div class="container">
+<div class="row">
+    <!-- Left-aligned -->
+    <div class="media">
+        <div class="media-left">
+            <img src="https://www.w3schools.com/bootstrap/img_avatar3.png" class="media-object" style="width:60px">
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading" > {{application.person.firstName}} {{application.person.lastName}}</h4>
+            <p> <b>Email: </b>{{application.person.email}}</p>
+        </div>
+    </div>
+</div>
+<br/>
+<div class="row">
+    <h4><b>Status: </b>{{application.status.name}}</h4>
+</div>
+
+<div class="row">
+<h4>Competences</h4>
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>years of experience</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="competence in application.competenceProfile">
+            <td>{{competence.competence.name}}</td>
+            <td>4</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+
+
+        <div class="row">
+        <h4><b>Date of registration:  </b>{{application.dateOfRegistration}}</h4>
+        </div>
+        <div class="row">
+        <h4><b>Available for work:  </b>2013-03-23 to 2013-03-31</h4>
+        </div>
+    </div>
 </section>
