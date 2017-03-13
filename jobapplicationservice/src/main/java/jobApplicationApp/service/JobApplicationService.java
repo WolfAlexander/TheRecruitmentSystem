@@ -21,6 +21,8 @@ import java.util.Collection;
 
 /**
  * Service for handling job application
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Service
 public class JobApplicationService {

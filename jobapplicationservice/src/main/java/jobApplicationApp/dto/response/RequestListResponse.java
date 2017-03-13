@@ -8,6 +8,8 @@ import java.util.Collection;
 
 /**
  * Response for when the user needs more then one message
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Getter
 @AllArgsConstructor

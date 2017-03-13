@@ -24,6 +24,8 @@ import java.util.*;
 
 /**
  * DAO for mysql implementation
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Repository
 @Qualifier("mysql")

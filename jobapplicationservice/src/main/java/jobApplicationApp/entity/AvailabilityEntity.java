@@ -10,6 +10,8 @@ import java.util.Date;
 
 /**
  * Availability entity
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Entity
 @Table(name="availability")

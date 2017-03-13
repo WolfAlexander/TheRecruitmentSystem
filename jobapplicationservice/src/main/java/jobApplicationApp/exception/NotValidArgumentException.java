@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * Exception for invalid parameters from the user
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 public class NotValidArgumentException extends IllegalArgumentException{
     /**

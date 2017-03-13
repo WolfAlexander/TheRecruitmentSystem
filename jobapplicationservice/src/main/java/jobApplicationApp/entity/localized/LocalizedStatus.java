@@ -11,6 +11,8 @@ import java.io.Serializable;
 
 /**
  * Translation to application status
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Getter
 @Entity

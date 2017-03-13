@@ -12,6 +12,8 @@ import java.io.Serializable;
 
 /**
  * Translation to competence
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Getter
 @Entity

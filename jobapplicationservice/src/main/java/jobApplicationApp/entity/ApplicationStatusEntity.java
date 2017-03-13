@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Status entity
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Entity
 @NoArgsConstructor

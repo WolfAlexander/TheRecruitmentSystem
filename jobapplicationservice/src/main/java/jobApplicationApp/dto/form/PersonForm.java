@@ -9,6 +9,8 @@ import java.util.Date;
 
 /**
  * Form for retrieving user information
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Getter
 @NoArgsConstructor

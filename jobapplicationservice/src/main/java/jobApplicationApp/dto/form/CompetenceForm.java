@@ -13,6 +13,8 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Form for one competence
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Component
 @Getter

@@ -5,6 +5,8 @@ import lombok.Getter;
 
 /**
  * Form for the user's role on the system
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @AllArgsConstructor
 @Getter

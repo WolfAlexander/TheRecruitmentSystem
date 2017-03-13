@@ -10,6 +10,8 @@ import javax.persistence.*;
 
 /**
  * Competence profile entity
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Entity
 @Table(name = "competence_profile")

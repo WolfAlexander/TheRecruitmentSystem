@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * Exception for when key can't be matched with something in the database
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 public class NoMatchException extends IllegalArgumentException{
 

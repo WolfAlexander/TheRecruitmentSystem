@@ -22,6 +22,8 @@ import java.util.ArrayList;
 
 /**
  * Controller for url mapping
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @RestController
 @RequestMapping("/")

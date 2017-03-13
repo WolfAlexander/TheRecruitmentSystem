@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Competence entity
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Entity
 @Table(name = "competence")

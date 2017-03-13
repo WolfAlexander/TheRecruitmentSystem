@@ -14,6 +14,8 @@ import java.util.Date;
 
 /**
  * The full application response
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 
 @Getter

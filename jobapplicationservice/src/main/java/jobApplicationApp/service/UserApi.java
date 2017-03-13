@@ -20,6 +20,8 @@ import java.util.Date;
 
 /**
  * Api to retrieve user information
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Service
 public class UserApi {

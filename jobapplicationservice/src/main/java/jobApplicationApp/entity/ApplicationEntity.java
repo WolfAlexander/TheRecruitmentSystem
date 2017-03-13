@@ -12,6 +12,8 @@ import java.util.Date;
 
 /**
  * Application entity
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Entity
 @Getter

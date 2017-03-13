@@ -9,6 +9,8 @@ import java.util.Collection;
 
 /**
  * Form for parameter filtering search
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Getter
 @AllArgsConstructor

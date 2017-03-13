@@ -8,6 +8,8 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Languages translated to
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Entity
 @AllArgsConstructor

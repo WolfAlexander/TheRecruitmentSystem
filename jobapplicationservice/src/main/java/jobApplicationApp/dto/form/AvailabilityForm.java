@@ -10,6 +10,8 @@ import java.util.Date;
 
 /**
  *  Form for working period
+ *
+ *  @author Adrian Gortzak gortzak@kth.se
  *  */
 @Component
 @Getter

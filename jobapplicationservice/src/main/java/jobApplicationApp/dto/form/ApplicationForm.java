@@ -10,6 +10,8 @@ import java.util.Collection;
 
 /**
  * Form for retrieving application
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @Getter
 @AllArgsConstructor

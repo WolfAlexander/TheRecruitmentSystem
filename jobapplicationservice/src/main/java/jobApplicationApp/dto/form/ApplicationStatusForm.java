@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Form for status change
+ *
+ * @author Adrian Gortzak gortzak@kth.se
  */
 @AllArgsConstructor
 @Getter
