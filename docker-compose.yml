@@ -1,4 +1,5 @@
 #This should be run after config-service is up
+#NOT USED FOR NOW: use shell_scripts/start-services.sh
 
 version: '2'
 services:

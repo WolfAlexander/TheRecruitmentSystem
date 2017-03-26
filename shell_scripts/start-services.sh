@@ -43,4 +43,4 @@ echo
 echo
 
 #Run jobapplication-service
-# ./jobapplicationservice/run.sh
+./jobapplicationservice/run.sh

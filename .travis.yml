@@ -17,3 +17,7 @@ script:
 script:
   - cd discoveryservice
   - mvn test -B
+
+script:
+  - cd jobapplicationservice
+  - mvn test -B
