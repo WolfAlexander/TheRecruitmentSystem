@@ -5,6 +5,7 @@ import egdeapp.EdgeServiceApplication;
 import egdeapp.fallback.AuthServiceFallback;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +76,7 @@ public class AuthServiceFallbackTest {
         assertEquals(MediaType.APPLICATION_JSON_UTF8, responseHeaders.getContentType());
     }
 
+    @Ignore
     @Test
     public void testingFallbackResponse() throws JSONException {
         ResponseEntity<String> response = restTemplate.getForEntity("/auth", String.class);
@@ -82,6 +84,7 @@ public class AuthServiceFallbackTest {
 
         System.out.println(jsonResponse);
 
+        assertEquals(HttpStatus.GONE, response.getStatusCode());
         assertEquals(410, jsonResponse.get("status"));
         assertEquals("Authentication service is unavailable!", jsonResponse.get("message"));
     }
