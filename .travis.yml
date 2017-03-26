@@ -21,3 +21,7 @@ script:
 script:
   - cd jobapplicationservice
   - mvn test -B
+
+script:
+  - cd registration-service
+  - mvn test -B

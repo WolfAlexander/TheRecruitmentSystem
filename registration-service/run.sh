@@ -10,4 +10,4 @@ docker rm registration-service
 
 # Start new container from an existing image
 echo Starting new container
-docker run -d --name registration-service -p "8888:8888" iv1201/registration-service
+docker run -d --name registration-service -p "8888:8888" -e "SPRING_PROFILES_ACTIVE=production" iv1201/registration-service

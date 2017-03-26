@@ -48,5 +48,5 @@ mvn package docker:build -Ddocker.host=$DOCKER_HOST -Ddocker.cert.path=$DOCKER_C
 #Building jobapplication-service with maven docker plugin
 echo Building jobapplication service
 cd ..
-cd jobapplication
+cd jobapplicationservice
 mvn package docker:build -Ddocker.host=$DOCKER_HOST -Ddocker.cert.path=$DOCKER_CERT_PATH

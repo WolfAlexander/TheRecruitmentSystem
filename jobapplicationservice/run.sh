@@ -10,4 +10,4 @@ docker rm jobapplication-service
 
 # Start new container from an existing image
 echo Starting new container
-docker run -d --name jobapplication-service -p "8585:8585" iv1201/jobapplication-service
+docker run -d --name jobapplication-service -p "8585:8585" -e "SPRING_PROFILES_ACTIVE=production" iv1201/jobapplication-service
