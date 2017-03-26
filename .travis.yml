@@ -1,0 +1,27 @@
+language: java
+jdk:
+  - oraclejdk8
+
+script:
+  - cd authservice
+  - mvn test -B
+
+script:
+  - cd edgeservice
+  - mvn test -B
+
+script:
+  - cd configservice
+  - mvn test -B
+
+script:
+  - cd discoveryservice
+  - mvn test -B
+
+script:
+  - cd jobapplicationservice
+  - mvn test -B
+
+script:
+  - cd registration-service
+  - mvn test -B

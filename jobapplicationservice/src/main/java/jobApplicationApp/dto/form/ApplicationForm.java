@@ -1,31 +1,42 @@
 package jobApplicationApp.dto.form;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 
-@Component
+/**
+ * Form for retrieving application
+ *
+ * @author Adrian Gortzak gortzak@kth.se
+ */
 @Getter
-@NoArgsConstructor
-public class ApplicationForm {
+@AllArgsConstructor
+public class ApplicationForm  {
 
-  @NotNull
-  @Min(0)
-  int personId;
+    /**
+     * Person id of application
+     * @return The person's id of the application.
+     */
+    @NotNull
+    @Min(0)
+    private int personId;
 
-  @NotNull
-  AvailabilityForm availableForWork;
 
-  @NotNull
-  Collection<CompetenceForm> competenceProfile;
+    /**
+     * The period the applicant can work
+     * @return a period where the applicant can work
+     */
+    @NotNull
+    private AvailabilityForm availableForWork;
 
-    public ApplicationForm(Integer personId, AvailabilityForm availableForWork, Collection<CompetenceForm> competenceProfile) {
-        this.personId = personId;
-        this.availableForWork = availableForWork;
-        this.competenceProfile = competenceProfile;
-    }
+    /**
+     * List of all competences the person provided
+     * @return list of competences with years of experience in the specified field
+     */
+    @NotNull
+    private Collection<CompetenceForm> competenceProfile;
 }

@@ -14,7 +14,7 @@
         <module>edgeservice</module>
         <module>registration-service</module>
         <module>jobapplicationservice</module>
-
+        <module>authservice</module>
     </modules>
 
     <properties>

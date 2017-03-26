@@ -1,0 +1,42 @@
+<div class="container">
+    <h2>Job applicants</h2>
+
+    <div class="form-group">
+        <label for="usr">Name:</label>
+        <input type="date" class="form-control" id="usr">
+    </div>
+    <div class="form-group">
+        <label for="workPeriod">Period you can work:</label>
+        <div class="input-group input-daterange" id="workPeriod">
+            <input type="text" class="form-control" value="2012-04-05"/>
+            <div class="input-group-addon">to</div>
+            <input type="text" class="form-control" value="2012-04-19"/>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label for="usr">Competences:</label>
+        <select selector
+                multi="true"
+                model="myBrowsers"
+                options="browsers"
+                value-attr="value"></select>
+    </div>
+
+
+</div>
+
+
+
+<link rel="stylesheet" href="//cdn.rawgit.com/indrimuska/angular-selector/master/dist/angular-selector.css"/>
+
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.js"></script>
+<script src="//cdn.rawgit.com/indrimuska/angular-selector/master/dist/angular-selector.js"></script>
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
