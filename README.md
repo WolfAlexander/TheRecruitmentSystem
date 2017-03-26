@@ -4,7 +4,7 @@
 Project in IV1201 Architecture and design of global applications
 
 ## General
-Requirement system implemented using **Microservices architecture**.
+A recruitment system implemented using **Microservices architecture**. This project is part of the course in global system architecture, but unfortunately the course only covers building a monolithic application using Java EE. We decided that we want to do something new for us and more useful in 2017. So, we implemented the project with Microservices architecture using Spring Framework and other tools mentioned below. 
 
 Details:
 * **Project task** - docs/project-task.pdf
