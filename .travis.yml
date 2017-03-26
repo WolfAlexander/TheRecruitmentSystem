@@ -3,6 +3,14 @@ jdk:
   - oraclejdk8
 
 script:
+  - cd authservice
+  - mvn test -B
+
+script:
+  - cd edgeservice
+  - mvn test -B
+
+script:
   - cd configservice
   - mvn test -B
 

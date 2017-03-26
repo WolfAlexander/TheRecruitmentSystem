@@ -1,5 +1,5 @@
 # The Recruitment System
-[![build status](https://git.gortz.org/IV1201/TheRecruitmentSystem/badges/develop/build.svg)](https://git.gortz.org/IV1201/TheRecruitmentSystem/commits/develop)
+[![Build Status](https://travis-ci.org/WolfAlexander/TheRecruitmentSystem.svg?branch=master)](https://travis-ci.org/WolfAlexander/TheRecruitmentSystem)
 
 Project in IV1201 Architecture and design of global applications
 
