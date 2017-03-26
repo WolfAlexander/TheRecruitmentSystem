@@ -1,22 +1,40 @@
 package jobApplicationApp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * Availability entity
+ *
+ * @author Adrian Gortzak gortzak@kth.se
+ */
 @Entity
 @Table(name="availability")
 @NoArgsConstructor
 public class AvailabilityEntity {
 
+    /**
+     * The id of the availability object
+     * @return the availability's id
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    /**
+     *The start date of availability
+     */
     @Column(name = "from_date")
     private Date fromDate;
 
+    /**
+     * The end date of availability
+     */
     @Column(name = "to_date")
     private Date toDate;
 
@@ -26,18 +44,18 @@ public class AvailabilityEntity {
     }
 
     /**
-     * Get from date of period
-     * @return fromDate of period
+     *The start date of availability
+     * @return start date of availability
      */
-    public Date getFromDate(){
+    public Date getFromDate() {
         return fromDate;
     }
 
     /**
-     * Get to date of period
-     * @return toDate of period
+     * The end date of availability
+     * @return end date of availability
      */
-    public Date getToDate(){
+    public Date getToDate() {
         return toDate;
     }
 }

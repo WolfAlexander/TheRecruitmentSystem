@@ -2,9 +2,7 @@ package jobApplicationApp.dao.repository;
 
 import jobApplicationApp.entity.ApplicationStatusEntity;
 import org.springframework.data.repository.CrudRepository;
-
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Transactional

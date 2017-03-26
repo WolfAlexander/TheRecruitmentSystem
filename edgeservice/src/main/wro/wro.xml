@@ -6,6 +6,7 @@
         <js>webjar:angularjs/1.6.1/angular.min.js</js>
         <js>webjar:angularjs/1.6.1/angular-route.min.js</js>
         <js>webjar:angularjs/1.6.1/angular-cookies.min.js</js>
+        <js>webjar:angular-cookies/1.6.1/angular-cookies.min.js</js>
         <js>webjar:angular-messages/1.6.1/angular-messages.min.js</js>
         <js>webjar:angular-translate/2.13.1/angular-translate.min.js</js>
         <js>webjar:angular-translate-storage-local/2.10.0/angular-translate-storage-local.min.js</js>

@@ -6,8 +6,18 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Collection;
 
+/**
+ * Response for when the user needs more then one message
+ *
+ * @author Adrian Gortzak gortzak@kth.se
+ */
 @Getter
 @AllArgsConstructor
 public class RequestListResponse {
+
+    /**
+     * Messages for the user
+     * @return the messages
+     */
     private Collection<String> messages;
 }

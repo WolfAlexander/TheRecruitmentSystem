@@ -1,0 +1,54 @@
+<section ng-controller="content" class="container">
+    <div class="container">
+<div class="row">
+    <!-- Left-aligned -->
+    <div class="media">
+        <div class="media-left">
+            <img src="https://www.w3schools.com/bootstrap/img_avatar3.png" class="media-object" style="width:60px">
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading" > {{application.person.firstName}} {{application.person.lastName}}</h4>
+            <p> <b>Email: </b>{{application.person.email}}</p>
+        </div>
+    </div>
+</div>
+<br/>
+<div class="row">
+
+    <div class="col-sm-1"> <h4><b>Status:   </b></h4></div>
+        <div class="col-sm-3">
+            <select selector
+                    model="newStatus"
+                    options="statuses"
+                    value-attr="value"></select>
+        </div>
+</div>
+
+<div class="row">
+<h4 translate>applicationpage.competences</h4>
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th translate>applicationpage.competences.title.name</th>
+            <th translate>applicationpage.competences.title.yearsOfExperience</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="competence in application.competenceProfile">
+                <td>{{competence.competence.name}}</td>
+                <td>{{competence.yearsOfExperience}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+        <div class="row">
+        <h4><b translate>applicationpage.DateOfRegistration  </b>:{{application.dateOfRegistration | date : "MM/dd/yyyy '[' h:mma ']'"}}</h4>
+        </div>
+        <div class="row">
+        <h4><b translate>applicationpage.availableForWork  </b>:{{application.availableForWork.fromDate | date : "MM/dd/yyyy"}} to {{application.availableForWork.toDate | date : "MM/dd/yyyy"}}</h4>
+        </div>
+        <a href="#" class="btn btn-info" role="button" translate>applicationpage.updateButton</a>
+    </div>
+</section>

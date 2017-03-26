@@ -1,2 +1,2 @@
-src/main/resources/conf_cred.properties
+src/main/resources/config_secrets.properties
 target

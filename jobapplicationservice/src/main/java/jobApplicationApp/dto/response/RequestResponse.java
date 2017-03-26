@@ -6,10 +6,20 @@ import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
+/**
+ * Response to the user with one message
+ *
+ * @author Adrian Gortzak gortzak@kth.se
+ */
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ControllerAdvice
 public class RequestResponse {
+
+    /**
+     * Message for the user
+     * @return the message
+     */
     private String message;
 }
