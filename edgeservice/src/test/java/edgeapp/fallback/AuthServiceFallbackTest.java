@@ -3,9 +3,8 @@ package edgeapp.fallback;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import egdeapp.EdgeServiceApplication;
 import egdeapp.fallback.AuthServiceFallback;
-import jdk.nashorn.internal.parser.JSONParser;
+import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +76,7 @@ public class AuthServiceFallbackTest {
     }
 
     @Test
-    public void testingFallbackResponse(){
+    public void testingFallbackResponse() throws JSONException {
         ResponseEntity<String> response = restTemplate.getForEntity("/auth", String.class);
         JSONObject jsonResponse = new JSONObject(response.getBody());
 

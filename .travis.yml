@@ -1,0 +1,11 @@
+language: java
+jdk:
+  - oraclejdk8
+
+script:
+  - cd configservice
+  - mvn test -B
+
+script:
+  - cd discoveryservice
+  - mvn test -B
