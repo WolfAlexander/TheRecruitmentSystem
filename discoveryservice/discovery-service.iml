@@ -12,6 +12,19 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-eureka-server:1.2.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-crypto:4.2.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-netflix-eureka-server:1.2.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.hibernate:hibernate-validator:5.3.4.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-actuator:1.5.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-actuator:1.5.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-freemarker:1.5.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-netflix-core:1.2.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-netflix-eureka-client:1.2.5.RELEASE" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.google.code.gson:gson:2.8.0" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-archaius:1.2.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-ribbon:1.2.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.retry:spring-retry:1.2.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-eureka-server:1.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter:1.1.7.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:1.5.1.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-logging:1.5.1.RELEASE" level="project" />

@@ -11,7 +11,6 @@ import org.springframework.context.annotation.PropertySource;
  */
 @SpringBootApplication
 @EnableConfigServer
-@PropertySource("classpath:config_secrets.properties")
 public class ConfigLauncher {
     public static void main(String[] args) {
         SpringApplication.run(ConfigLauncher.class, args);
