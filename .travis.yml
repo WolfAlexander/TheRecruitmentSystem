@@ -6,17 +6,17 @@ script:
   - cd authservice
   - mvn test -B
 
-  - cd edgeservice
+  - cd ../edgeservice
   - mvn test -B
 
-  - cd configservice
+  - cd ../configservice
   - mvn test -B
 
-  - cd discoveryservice
+  - cd ../discoveryservice
   - mvn test -B
 
-  - cd jobapplicationservice
+  - cd ../jobapplicationservice
   - mvn test -B
 
-  - cd registration-service
+  - cd ../registration-service
   - mvn test -B
